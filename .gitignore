@@ -1,2 +1,13 @@
-f105_CMSIS/DebugConfig/DEBUG_STM32F105RC.dbgconf
-f105_CMSIS/DebugConfig/
+keilprj/JLinkLog.txt
+keilprj/DebugConfig/
+output/
+*.uvguix.*
+*.plg
+*.lst
+*.crf
+*.d
+*.o
+*.dep
+*.axf
+*.lnp
+*.map
