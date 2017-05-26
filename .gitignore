@@ -11,3 +11,5 @@ output/
 *.axf
 *.lnp
 *.map
+f105_CMSIS/out/
+f105_CMSIS/DebugConfig/
