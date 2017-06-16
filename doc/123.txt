@@ -54,16 +54,16 @@ test [CAN1|CAN2|LIN1|LIN2|UART1|UART2|CON] - вывод информации о 
         stop bits [0.5, 1, 1.5, 2]
         parity [even, odd, mark, space, none]
 
-    set_param [CAN1|CAN2|LIN1|LIN2|UART1|UART2|CON]
-        -[e|d] {can/lin/uart only}
-        -b <baudrate>
-        -ps <prop seg> {can only}
-        -p1 <phase seg1> {can only}
-        -p2 <phase seg2> {can only}
-        -sgw <sjw range> {can only}
-        -s <stop bits> {uart only}
-        -[even|odd|mark|space|none] {uart only}
-        -brk <10|11> {lin only}
+set [CAN1|CAN2|LIN1|LIN2|UART1|UART2|CON]
+    -[e|d]
+    -b <baudrate>
+    -ps <prop seg> {can only}
+    -p1 <phase seg1> {can only}
+    -p2 <phase seg2> {can only}
+    -sgw <sjw range> {can only}
+    -s <stop bits> {uart only}
+    -[even|odd|mark|space|none] {uart only}
+    -brk <10|11> {lin only}
 
 send <CAN1|CAN2|LIN1|LIN2|UART1|UART2>
     -id<uint32_t>

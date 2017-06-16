@@ -389,6 +389,11 @@
               <FileType>5</FileType>
               <FilePath>.\src\main\fifo.h</FilePath>
             </File>
+            <File>
+              <FileName>bsp_con.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\main\bsp_con.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

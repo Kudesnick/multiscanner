@@ -11,7 +11,7 @@
 #define BSP_CON_UNIT_CLK        RCC_APB1Periph_USART2
 #define BSP_CON_IRQn            USART2_IRQn
 #define BSP_CON_IRQ_PRIORITY    0xF
-#define bsp_con_handler         UART2_IRQHandler
+#define bsp_con_handler         USART2_IRQHandler
 
 #define BSP_CON_BAUDRATE        9600
 #define BSP_CON_PARITY          USART_Parity_No
