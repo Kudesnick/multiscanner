@@ -394,6 +394,11 @@
               <FileType>1</FileType>
               <FilePath>.\src\main\bsp_con.c</FilePath>
             </File>
+            <File>
+              <FileName>console.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\main\console.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
