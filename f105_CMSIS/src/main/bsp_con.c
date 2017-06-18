@@ -16,21 +16,27 @@ FIFO_T(uint8_t,TX_BUFFER_SIZE) bsp_con_tx_buffer;
 
 bsp_con_rx_handler_t * bsp_con_rx_handler = NULL;
 
+static USART_InitTypeDef bsp_usart_init_struct_default =
+{
+    .USART_BaudRate            = BSP_CON_BAUDRATE,
+    .USART_WordLength          = USART_WordLength_8b,
+    .USART_StopBits            = USART_StopBits_1,
+    .USART_Parity              = BSP_CON_PARITY,
+    .USART_Mode                = USART_Mode_Rx | USART_Mode_Tx,
+    .USART_HardwareFlowControl = USART_HardwareFlowControl_None,
+};
+
+USART_InitTypeDef *bsp_con_get_setting(void)
+{
+    return &bsp_usart_init_struct_default;
+}
+
 // Инициализация модуля консоли
 // con_rx_handler - внешний парсер принятой строки
 // buf - буфер данных
 // size - количество принятых данных
 void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler)
 {
-    USART_InitTypeDef usart_init_struct =
-    {
-        .USART_BaudRate            = BSP_CON_BAUDRATE,
-        .USART_WordLength          = USART_WordLength_8b,
-        .USART_StopBits            = USART_StopBits_1,
-        .USART_Parity              = BSP_CON_PARITY,
-        .USART_Mode                = USART_Mode_Rx | USART_Mode_Tx,
-        .USART_HardwareFlowControl = USART_HardwareFlowControl_None,
-    };
     GPIO_InitTypeDef gpio_init_struct =
     {
         .GPIO_Speed = GPIO_Speed_50MHz,
@@ -54,7 +60,7 @@ void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler)
     gpio_init_struct.GPIO_Pin = BSP_CON_RX_PIN;
     GPIO_Init(BSP_CON_RX_PORT, &gpio_init_struct);
     
-    USART_Init(BSP_CON_UNIT, &usart_init_struct);
+    USART_Init(BSP_CON_UNIT, &bsp_usart_init_struct_default);
     
     NVIC_SetPriority(BSP_CON_IRQn, BSP_CON_IRQ_PRIORITY);
     NVIC_EnableIRQ(BSP_CON_IRQn);
@@ -70,7 +76,7 @@ void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler)
 }
 
 // Переслать данные
-bool bsp_con_send(uint8_t *buf, uint8_t size)
+bool bsp_con_send(const uint8_t *buf, const uint8_t size)
 {
     bool result = ((FIFO_GET_FULL(bsp_con_tx_buffer) + size) <= FIFO_GET_SIZE(bsp_con_tx_buffer));
     
