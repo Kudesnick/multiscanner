@@ -11,8 +11,8 @@
 #define RX_BUFFER_SIZE 256
 #define TX_BUFFER_SIZE 256
 
-FIFO_T(uint8_t,RX_BUFFER_SIZE) bsp_con_rx_buffer;
-FIFO_T(uint8_t,TX_BUFFER_SIZE) bsp_con_tx_buffer;
+FIFO_T(char, RX_BUFFER_SIZE) bsp_con_rx_buffer;
+FIFO_T(char, TX_BUFFER_SIZE) bsp_con_tx_buffer;
 
 bsp_con_rx_handler_t * bsp_con_rx_handler = NULL;
 
@@ -76,13 +76,13 @@ void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler)
 }
 
 // Переслать данные
-bool bsp_con_send(const uint8_t *buf, const uint8_t size)
+bool bsp_con_send(const char *buf)
 {
-    bool result = ((FIFO_GET_FULL(bsp_con_tx_buffer) + size) <= FIFO_GET_SIZE(bsp_con_tx_buffer));
+    bool result = ((FIFO_GET_FULL(bsp_con_tx_buffer) + strlen(buf)) <= FIFO_GET_SIZE(bsp_con_tx_buffer));
     
     if (result == true)
     {
-        for (uint_fast16_t i = 0; i < size; i++)
+        for (uint_fast16_t i = 0; i < strlen(buf); i++)
         {
             FIFO_ADD(bsp_con_tx_buffer, buf[i]);
         }
@@ -117,16 +117,29 @@ void bsp_con_handler(void)
             && (FIFO_GET_FULL(bsp_con_rx_buffer) != 0)
             )
         {
+            FIFO_ADD(bsp_con_rx_buffer, 0x00);
+            
             if (bsp_con_rx_handler != NULL)
             {
                 bsp_con_rx_handler(&bsp_con_rx_buffer.data[bsp_con_rx_buffer.begin_idx], FIFO_GET_FULL(bsp_con_rx_buffer));
             }
+            
             FIFO_CLEAR(bsp_con_rx_buffer);
         }
         
         else if (FIFO_GET_FULL(bsp_con_rx_buffer) < FIFO_GET_SIZE(bsp_con_rx_buffer))
         {
-            FIFO_ADD(bsp_con_rx_buffer, data);
+            if (data == ' ')
+            {
+                if (FIFO_READ_END(bsp_con_rx_buffer) != 0x00)
+                {
+                    FIFO_ADD(bsp_con_rx_buffer, 0x00);
+                }
+            }
+            else
+            {
+                FIFO_ADD(bsp_con_rx_buffer, data);
+            }
         }
     }
 }

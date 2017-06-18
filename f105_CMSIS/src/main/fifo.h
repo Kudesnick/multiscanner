@@ -14,6 +14,7 @@
 #define FIFO_ADD(queue,item)        (queue.data[queue.end_idx++ & (FIFO_GET_SIZE(queue) - 1)] = item)
 #define FIFO_EXTRACT(queue)         (queue.data[queue.begin_idx++ & (FIFO_GET_SIZE(queue) - 1)])
 #define FIFO_READ_HEAD(queue)       (queue.data[queue.begin_idx & (FIFO_GET_SIZE(queue) - 1)])
+#define FIFO_READ_END(queue)        (queue.data[(queue.end_idx - 1) & (FIFO_GET_SIZE(queue) - 1)])
 #define FIFO_READ_ITEM(queue,item)  (queue.data[((queue.begin_idx) + item) & (FIFO_GET_SIZE(queue) - 1)])
 #define FIFO_CLEAR(queue)           (queue.end_idx = queue.begin_idx)
 
