@@ -202,16 +202,16 @@ static void console_cmd_help(char *buf, uint8_t size)
 
 static void console_cmd_get_con(uint8_t *buf, uint8_t size)
 {
-    bsp_con_send("Interface name: console.\r\n");
+    bsp_con_send("Interface name: console\r\n");
     
-    bsp_con_send("Baudrate: ");
+    bsp_con_send("    Baudrate: ");
     bsp_con_send(console_uint_to_str(bsp_con_get_setting()->baudrate));
     
-    bsp_con_send("\r\nParity: ");
-    bsp_con_send((bsp_con_get_setting()->parity == USART_Parity_Even) ? "Even" : 
-                 (bsp_con_get_setting()->parity == USART_Parity_Odd) ? "Odd" : "No");
+    bsp_con_send("\r\n    Parity: ");
+    bsp_con_send((bsp_con_get_setting()->parity == USART_Parity_Even) ? "even" : 
+                 (bsp_con_get_setting()->parity == USART_Parity_Odd) ? "odd" : "no");
     
-    bsp_con_send("\r\nStop bits: ");
+    bsp_con_send("\r\n    Stop bits: ");
     bsp_con_send((bsp_con_get_setting()->stop_bits == USART_StopBits_2) ? "2" :
                  (bsp_con_get_setting()->stop_bits == USART_StopBits_0_5) ? "0.5" :
                  (bsp_con_get_setting()->stop_bits == USART_StopBits_1_5) ? "1.5" : "1");
