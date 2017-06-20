@@ -16,17 +16,14 @@ FIFO_T(char, TX_BUFFER_SIZE) bsp_con_tx_buffer;
 
 bsp_con_rx_handler_t * bsp_con_rx_handler = NULL;
 
-static USART_InitTypeDef bsp_usart_init_struct_default =
+static bsp_con_config_t bsp_usart_init_struct_default =
 {
-    .USART_BaudRate            = BSP_CON_BAUDRATE,
-    .USART_WordLength          = USART_WordLength_8b,
-    .USART_StopBits            = USART_StopBits_1,
-    .USART_Parity              = BSP_CON_PARITY,
-    .USART_Mode                = USART_Mode_Rx | USART_Mode_Tx,
-    .USART_HardwareFlowControl = USART_HardwareFlowControl_None,
+    .baudrate        = BSP_CON_BAUDRATE,
+    .parity          = BSP_CON_PARITY,
+    .stop_bits       = USART_StopBits_1,
 };
 
-USART_InitTypeDef *bsp_con_get_setting(void)
+bsp_con_config_t *bsp_con_get_setting(void)
 {
     return &bsp_usart_init_struct_default;
 }
@@ -37,6 +34,15 @@ USART_InitTypeDef *bsp_con_get_setting(void)
 // size - количество принятых данных
 void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler)
 {
+    USART_InitTypeDef usart_init_struct =
+    {
+        .USART_BaudRate            = bsp_usart_init_struct_default.baudrate,
+        .USART_WordLength          = USART_WordLength_8b,
+        .USART_StopBits            = bsp_usart_init_struct_default.stop_bits,
+        .USART_Parity              = bsp_usart_init_struct_default.parity,
+        .USART_Mode                = USART_Mode_Rx | USART_Mode_Tx,
+        .USART_HardwareFlowControl = USART_HardwareFlowControl_None,
+    };
     GPIO_InitTypeDef gpio_init_struct =
     {
         .GPIO_Speed = GPIO_Speed_50MHz,
@@ -60,7 +66,7 @@ void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler)
     gpio_init_struct.GPIO_Pin = BSP_CON_RX_PIN;
     GPIO_Init(BSP_CON_RX_PORT, &gpio_init_struct);
     
-    USART_Init(BSP_CON_UNIT, &bsp_usart_init_struct_default);
+    USART_Init(BSP_CON_UNIT, &usart_init_struct);
     
     NVIC_SetPriority(BSP_CON_IRQn, BSP_CON_IRQ_PRIORITY);
     NVIC_EnableIRQ(BSP_CON_IRQn);
