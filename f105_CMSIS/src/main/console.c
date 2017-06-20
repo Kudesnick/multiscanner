@@ -92,20 +92,12 @@ static char *console_get_param(uint8_t num, char *buf, uint8_t size)
     uint8_t count = 0; // текущий номер лексемы
     char *result = NULL;
 
-    num++;
-    
-    for (uint_fast16_t i = 0; i < size; i++)
+    for (uint_fast16_t i = 0; i < size && result == NULL; i++)
     {
         if (strlen(&buf[i]) > 0)
         {
-            count++;
+            if (count++ == num) result = &buf[i];
             i += strlen(&buf[i]);
-            
-            if (count == num)
-            {
-                result = &buf[i];
-                break;
-            }
         }
     }
     
