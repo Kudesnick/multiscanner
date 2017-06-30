@@ -25,13 +25,14 @@ typedef const struct
 
 extern void console_cmd_help(char *buf, uint8_t size);
 extern void console_cmd_get(char *buf, uint8_t size);
+extern void console_cmd_set(char *buf, uint8_t size);
 
 // константы команд консоли
 console_cmd_t console_cmd_list[] =
 {
     {"help", console_cmd_help}, // Получить справку о программе
     { "get", console_cmd_get},  // Получить параметры настройки интерфейса
-    { "set", NULL}, // Настроить интерфейс
+    { "set", console_cmd_set}, // Настроить интерфейс
     {"can1", NULL}, // Отправить сообщение по can1
     {"can2", NULL}, // Отправить сообщение по can2
     {"lin1", NULL}, // Отправить сообщение по lin1
@@ -60,6 +61,26 @@ static char * console_uint_to_str(uint32_t num)
     while (num > 0);
     
     return &str[i];
+}
+
+// перевод строки в число
+static uint32_t console_str_to_uint(char * str)
+{
+    uint32_t result = 0;
+    
+    for (uint8_t i = 0; str[i] != '\0'; i++)
+    {
+        result *= 10;
+        if (str[i] < '0' || str[i] > '9')
+        {
+            str = NULL;
+            result = NULL;
+            break;
+        }
+        result += str[i] - '0';
+    }
+    
+    return result;
 }
 
 // Приведение к нижнему регистру
@@ -267,18 +288,64 @@ static void console_cmd_get(char *buf, uint8_t size)
 // Реализация команды set
 // =========================================================================
 
+int32_t console_cmd_set_con_baud(char *buf, uint8_t size, uint8_t *param, void * sett)
+{
+    int32_t result = 0;
+    
+    if (console_get_param_count(buf, size) < *param + 2)
+    {
+        result = PARAM_ERR;
+    }
+    else
+    {
+        (*param)++;
+        uint32_t baud = console_str_to_uint(console_get_param(*param, buf, size));
+        if (baud > 0)
+        {
+            ((bsp_con_config_t*)sett)->baudrate = baud;
+        }
+        else
+        {
+            result = PARAM_ERR;
+        }
+    }
+    
+    return result;
+}
+
+int32_t console_cmd_set_con_even(char *buf, uint8_t size, uint8_t *param, void * sett)
+{
+    ((bsp_con_config_t*)sett)->parity = USART_Parity_Even;
+    
+    return USART_Parity_Even;
+}
+
+int32_t console_cmd_set_con_odd(char *buf, uint8_t size, uint8_t *param, void * sett)
+{
+    ((bsp_con_config_t*)sett)->parity = USART_Parity_Odd;
+    
+    return USART_Parity_Odd;
+}
+
+int32_t console_cmd_set_con_none(char *buf, uint8_t size, uint8_t *param, void * sett)
+{
+    ((bsp_con_config_t*)sett)->parity = USART_Parity_No;
+    
+    return USART_Parity_No;
+}
+
 static bool console_cmd_set_con(char *buf, uint8_t size)
 {
     console_cmd_t param_list[] =
     {
-        {   "-b", NULL},
-        {"-baud", NULL},
-        {"-even", NULL},
-        {  "-ev", NULL},
-        { "-odd", NULL},
-        {  "-od", NULL},
-        {"-none", NULL},
-        {  "-no", NULL},
+        {   "-b", console_cmd_set_con_baud},
+        {"-baud", console_cmd_set_con_baud},
+        {"-even", console_cmd_set_con_even},
+        {  "-ev", console_cmd_set_con_even},
+        { "-odd", console_cmd_set_con_odd},
+        {  "-od", console_cmd_set_con_odd},
+        {"-none", console_cmd_set_con_none},
+        {  "-no", console_cmd_set_con_none},
         {"-stop", NULL},
         {   "-s", NULL},
         {"-echo", NULL},
@@ -287,8 +354,6 @@ static bool console_cmd_set_con(char *buf, uint8_t size)
     bool bad_cmd = false;
     
     uint8_t lim = console_get_param_count(buf, size);
-    
-    bsp_con_config_t con_init_struct_default = *bsp_con_get_setting();
     
     if (lim < 3)
     {
