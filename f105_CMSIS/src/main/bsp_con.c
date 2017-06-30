@@ -16,16 +16,17 @@ FIFO_T(char, TX_BUFFER_SIZE) bsp_con_tx_buffer;
 
 bsp_con_rx_handler_t * bsp_con_rx_handler = NULL;
 
-static bsp_con_config_t bsp_usart_init_struct_default =
+static bsp_con_config_t bsp_con_init_struct_default =
 {
-    .baudrate        = BSP_CON_BAUDRATE,
-    .parity          = BSP_CON_PARITY,
-    .stop_bits       = USART_StopBits_1,
+    .baudrate  = BSP_CON_BAUDRATE,
+    .parity    = BSP_CON_PARITY,
+    .stop_bits = USART_StopBits_1,
+    .echo      = false,
 };
 
 bsp_con_config_t *bsp_con_get_setting(void)
 {
-    return &bsp_usart_init_struct_default;
+    return &bsp_con_init_struct_default;
 }
 
 // Инициализация модуля консоли
@@ -36,10 +37,10 @@ void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler)
 {
     USART_InitTypeDef usart_init_struct =
     {
-        .USART_BaudRate            = bsp_usart_init_struct_default.baudrate,
+        .USART_BaudRate            = bsp_con_init_struct_default.baudrate,
         .USART_WordLength          = USART_WordLength_8b,
-        .USART_StopBits            = bsp_usart_init_struct_default.stop_bits,
-        .USART_Parity              = bsp_usart_init_struct_default.parity,
+        .USART_StopBits            = bsp_con_init_struct_default.stop_bits,
+        .USART_Parity              = bsp_con_init_struct_default.parity,
         .USART_Mode                = USART_Mode_Rx | USART_Mode_Tx,
         .USART_HardwareFlowControl = USART_HardwareFlowControl_None,
     };

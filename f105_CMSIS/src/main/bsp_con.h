@@ -12,6 +12,7 @@ typedef struct
     uint32_t baudrate;
     uint16_t parity;
     uint16_t stop_bits;
+        bool echo;
 } bsp_con_config_t;
 
 void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler);

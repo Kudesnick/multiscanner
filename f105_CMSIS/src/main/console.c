@@ -10,7 +10,12 @@
 #include "fifo.h"
 #include "bsp_con.h"
 
-typedef void(*cmd_func_t)(char *buf, uint8_t size);
+#define PARAM_ERR ((int32_t)-1)
+
+typedef void(*cmd_func_void_t )(char *buf, uint8_t size);
+typedef bool(*cmd_func_bool_t )(char *buf, uint8_t size);
+
+typedef int32_t(*cmd_param_int32_t)(char *buf, uint8_t size, uint8_t *param, void * sett);
 
 typedef const struct
 {
@@ -25,8 +30,8 @@ extern void console_cmd_get(char *buf, uint8_t size);
 console_cmd_t console_cmd_list[] =
 {
     {"help", console_cmd_help}, // Получить справку о программе
-    {"get" , console_cmd_get},  // Получить параметры настройки интерфейса
-    {"set" , NULL}, // Настроить интерфейс
+    { "get", console_cmd_get},  // Получить параметры настройки интерфейса
+    { "set", NULL}, // Настроить интерфейс
     {"can1", NULL}, // Отправить сообщение по can1
     {"can2", NULL}, // Отправить сообщение по can2
     {"lin1", NULL}, // Отправить сообщение по lin1
@@ -126,7 +131,7 @@ static void console_cmd_parser(char *buf, const uint8_t size)
         {
             if (console_cmd_list[i].func != NULL)
             {
-                ((cmd_func_t)console_cmd_list[i].func)(buf, size);
+                ((cmd_func_void_t)console_cmd_list[i].func)(buf, size);
             }
             else
             {
@@ -163,8 +168,8 @@ const char str_help_uart[] = "Send UART msg. Syntax:\r\n urt[1|2] <data hex form
 
 console_cmd_t console_cmd_help_param_list[] =
 {
-    {"get" , str_help_get},
-    {"set" , str_help_set},
+    { "get", str_help_get},
+    { "set", str_help_set},
     {"can1", str_help_can},
     {"can2", str_help_can},
     {"lin1", str_help_lin},
@@ -219,32 +224,127 @@ static void console_cmd_get_con(uint8_t *buf, uint8_t size)
     bsp_con_send("\r\n");
 }
 
-console_cmd_t console_cmd_get_param_list[] =
-{
-    {"con",  console_cmd_get_con},
-    {"can1", NULL},
-    {"can2", NULL},
-    {"lin1", NULL},
-    {"lin2", NULL},
-    {"urt1", NULL},
-    {"urt2", NULL},
-};
-
 static void console_cmd_get(char *buf, uint8_t size)
 {
+    console_cmd_t param_list[] =
+    {
+        { "con", console_cmd_get_con},
+        {"can1", NULL},
+        {"can2", NULL},
+        {"lin1", NULL},
+        {"lin2", NULL},
+        {"urt1", NULL},
+        {"urt2", NULL},
+    };
+    
     bool bad_cmd = true;
     
     if (console_get_param_count(buf, size) > 0)
     {
-        for (uint8_t i = 0; i < sizeof_arr(console_cmd_get_param_list); i++)
+        for (uint8_t i = 0; i < sizeof_arr(param_list); i++)
         {
-            if (console_param_cmp(1, &console_cmd_get_param_list[i], buf, size))
+            if (console_param_cmp(1, &param_list[i], buf, size))
             {
                 
-                if (console_cmd_get_param_list[i].func != NULL)
+                if (param_list[i].func != NULL)
                 {
                     bad_cmd = false;
-                    ((cmd_func_t)console_cmd_get_param_list[i].func)(buf, size);
+                    ((cmd_func_void_t)param_list[i].func)(buf, size);
+                }
+
+                break;
+            }
+        }
+    }
+    
+    if (bad_cmd)
+    {
+        bsp_con_send(str_err_syntax_cmd);
+    }
+}
+
+// =========================================================================
+// Реализация команды set
+// =========================================================================
+
+static bool console_cmd_set_con(char *buf, uint8_t size)
+{
+    console_cmd_t param_list[] =
+    {
+        {   "-b", NULL},
+        {"-baud", NULL},
+        {"-even", NULL},
+        {  "-ev", NULL},
+        { "-odd", NULL},
+        {  "-od", NULL},
+        {"-none", NULL},
+        {  "-no", NULL},
+        {"-stop", NULL},
+        {   "-s", NULL},
+        {"-echo", NULL},
+    };
+
+    bool bad_cmd = false;
+    
+    uint8_t lim = console_get_param_count(buf, size);
+    
+    bsp_con_config_t con_init_struct_default = *bsp_con_get_setting();
+    
+    if (lim < 3)
+    {
+        bad_cmd = true;
+    }
+    else
+    {
+        for (uint8_t i = 2; i < lim; i++)
+        {
+            for (uint8_t j = 0; j < sizeof_arr(param_list); j++)
+            {
+                if (console_param_cmp(i, &param_list[j], buf, size))
+                {
+                    if (param_list[i].func != NULL)
+                    {
+                        bad_cmd = (((cmd_param_int32_t)param_list[i].func)(buf, size, &i, (void *)bsp_con_get_setting()) == PARAM_ERR);
+                    }
+                    break;
+                }
+            }
+            if (bad_cmd == true)
+            {
+                break;
+            }
+        }
+    }
+    
+    return bad_cmd;
+}
+
+
+static void console_cmd_set(char *buf, uint8_t size)
+{
+    console_cmd_t param_list[] =
+    {
+        { "con", console_cmd_set_con},
+        {"can1", NULL},
+        {"can2", NULL},
+        {"lin1", NULL},
+        {"lin2", NULL},
+        {"urt1", NULL},
+        {"urt2", NULL},
+    };
+
+    bool bad_cmd = true;
+    
+    if (console_get_param_count(buf, size) > 0)
+    {
+        for (uint8_t i = 0; i < sizeof_arr(param_list); i++)
+        {
+            if (console_param_cmp(1, &param_list[i], buf, size))
+            {
+                
+                if (param_list[i].func != NULL)
+                {
+                    bad_cmd = !((cmd_func_bool_t)param_list[i].func)(buf, size);
                 }
 
                 break;
