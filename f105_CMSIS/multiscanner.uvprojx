@@ -322,7 +322,7 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
+            <uC99>1</uC99>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
@@ -384,6 +384,21 @@
               <FileType>1</FileType>
               <FilePath>.\src\main\main.c</FilePath>
             </File>
+            <File>
+              <FileName>fifo.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\main\fifo.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_con.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\main\bsp_con.c</FilePath>
+            </File>
+            <File>
+              <FileName>console.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\main\console.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -398,6 +413,11 @@
               <FileName>ifaces_types.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\src\config\ifaces_types.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_con_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\config\bsp_con_config.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -427,6 +447,24 @@
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="Framework" Cvendor="Keil" Cversion="3.5.1" condition="STM32F1xx STDPERIPH">
+        <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
+        <targetInfos>
+          <targetInfo name="DEBUG"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="GPIO" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH RCC">
+        <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
+        <targetInfos>
+          <targetInfo name="DEBUG"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="RCC" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH">
+        <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
+        <targetInfos>
+          <targetInfo name="DEBUG"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="USART" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH RCC">
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
         <targetInfos>
           <targetInfo name="DEBUG"/>

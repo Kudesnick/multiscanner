@@ -10,79 +10,69 @@
 1. Интерфейсы CAN и LIN/UART должны работать в режиме моста (ретрансляции сообщений). Т.е. при установке устройства "в разрыв". Должна быть возможность "прозрачной" передачи пакетов.
 
 Консольные команды:
-test [CAN1|CAN2|LIN1|LIN2|UART1|UART2|CON] - вывод информации о доступных интерфейсах либо детальная информация по конкретному интерфейсу
+get [can[1|2]|lin[1|2]|urt[1|2]|con] - вывод информации о доступных интерфейсах либо детальная информация по конкретному интерфейсу
 Ответ:
-    CAN1 <enable|disable|not available>
-        baudrates range [range]
-        prop seg range [range]
-        phase seg1 range [range]
-        phase seg2 range [range]
-        sjw range [range]
-        fd <enable|disable|not supported>
+get can[1|2]
+    Interface name: CAN[1|2]
+    mode: [normal|silent|off]
+    baudrate: <num. value>
+    prop seg: <num. value>
+    phase seg1: <num. value>
+    phase seg2: <num. value>
+    sjw range: <num. value>
 
-    CAN2 <enable|disable|not available>
-        baudrates range [range]
-        prop seg range [range]
-        phase seg1 range [range]
-        phase seg2 range [range]
-        sjw range [range]
-        fd <enable|disable|not supported>
+get lin[1|2]
+    Interface name: LIN[1|2]
+    mode: [on|off]
+    baudrate: <num. value>
+    break detect length: [11|12]
 
-    LIN1 <enable|disable|not available>
-        baudrates range [range]
-        break detect length [10 - 11]
+get urt[1|2]
+    Interface name: UART[1|2]
+    mode: [on|off]
+    baudrate: <num. value>
+    parity: [none|even|odd]
+    stop bits: [1|2]
 
-    LIN2 <enable|disable|not available>
-        baudrates range [range]
-        break detect length [10 - 11]
+get con
+    Interface name: console
+    mode: [on|off]
+    baudrate: <num. value>
+    parity: [none|even|odd]
+    stop bits: [1|2]
+    echo: [on|off]
 
-    UART1 <enable|disable|not available>
-        baudrates range [range]
-        byte length range [8 - 9]
-        stop bits [0.5, 1, 1.5, 2]
-        parity [even, odd, mark, space, none]
+set [can[1|2]|lin[1|2]|urt[1|2]]
+    -[on|off|slnt] {slnt - can only}
+    -b <num. value> {baudrate}
+    -[propseg|ps] <num. value> {can only}
+    -[pseg1|p1] <num. value> {can only}
+    -[pseg2|p2] <num. value> {can only}
+    -[sjw|s] <num. value> {can only}
+    -[even|odd|none]|[ev|od|no] {uart only}
+    -[stop|s] <stop bits> {uart only}
+    -brk [10|11] {lin only}
+    
+set con
+    -b <num. value>
+    -[even|odd|none]|[ev|od|no]
+    -[stop|s] <stop bits>
+    -echo [on|off]
 
-    UART2 <enable|disable|not available>
-        baudrates range [range]
-        byte length range [8 - 9]
-        stop bits [0.5, 1, 1.5, 2]
-        parity [even, odd, mark, space, none]
-
-    CON
-        baudrates range [range]
-        byte length range [8 - 9]
-        stop bits [0.5, 1, 1.5, 2]
-        parity [even, odd, mark, space, none]
-
-    set_param [CAN1|CAN2|LIN1|LIN2|UART1|UART2|CON]
-        -[e|d] {can/lin/uart only}
-        -b <baudrate>
-        -ps <prop seg> {can only}
-        -p1 <phase seg1> {can only}
-        -p2 <phase seg2> {can only}
-        -sgw <sjw range> {can only}
-        -s <stop bits> {uart only}
-        -[even|odd|mark|space|none] {uart only}
-        -brk <10|11> {lin only}
-
-send <CAN1|CAN2|LIN1|LIN2|UART1|UART2>
-    -id<uint32_t>
-        [a] {a - automatic parity (only for lin)}
-        [s] {standard (only for can) default for id <= 1FF}
-        [ex] {extended (only for can)}
-    -l <uint8_t> {depends of interface}
-    -d <uint8_t[]> {AABBCCDDEEFF format}
-    -chs <uint8|std|ext> {only for lin: fixed, data standart or extended checksum}
-    [-r <uint8_t>] {auto retransmit uint8_t times (0 - infinity)}
-
-get_err <uint32_t> // Возвращает расшифровку ошибки, полученной в ответ на какое-либо действие
+[can[1|2]|lin[1|2]|urt[1|2]] {send msg}
+    0x00 {id - can or lin only, must be first}
+    [0000000000000000]|[00 00 00 00 00 00 00 00] {hex data, must be second}
+    -a {a - automatic parity (only for lin)}
+    -[s|e] {standard or extended checksum (lin only) e - default}
+    -n {not wait ask (can only)}
+    -r <num. value> <num. value> {auto retransmit. First param - interval (ms), second param - num of repeat (0 or none - infinity)}
 
 Формат возвращаемого сообщения:
-[Rx|Tx]                             - Направление (прием.передача)
-<timestamp>                         - Метка времени фиксации сообщения
-<CAN1|CAN2|LIN1|LIN2|UART1|UART2>   - Интерфейс
-<id> [s|ex]                         - Id сообщения {стандартное/расширенное (только для can)}
-<length> [fd]                       - Длина сообщения {fd - faster data transfers mode (только для can)}
-<data[]>                            - "Сырые данные"
-[<chs> <uint8_t> [s|ex]]            - {только для lin. s/ex - стандартная/расширенная контрольная сумма}
-[<err> <uint32_t>]                  - Код ошибки или предупреждающего сообщения. Расшифровывается в get_err
+[RX|TX]                                 {receive|transmit(echo)}
+<num. value>                            {timestamp (ms)}
+[CAN1|CAN2|LIN1|LIN2|URT1|URT2]         {interface}
+0x00(0x00)                              {id (and id without priority bits, for lin)}
+[<num. value>]                          {data length}
+<data[]>                                {hex data}
+[st|ex]                                 {lin only. Standard or extended checksum}
+[[timeout|parity|chksm|nask] err]|[ok]  {error flags}

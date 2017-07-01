@@ -380,7 +380,7 @@
 //     <o3> Priority <0=>Low <1=>Medium <2=>High <3=>Very high
 //     <i>  Set DMA Channel priority
 //   </e>
-#define RTE_USART2_TX_DMA               0
+#define RTE_USART2_TX_DMA               1
 #define RTE_USART2_TX_DMA_NUMBER        1
 #define RTE_USART2_TX_DMA_CHANNEL       7
 #define RTE_USART2_TX_DMA_PRIORITY      0
@@ -695,7 +695,7 @@
 //     <o3> Priority <0=>Low <1=>Medium <2=>High <3=>Very high
 //     <i>  Sets DMA Channel priority
 //   </e>
-#define RTE_UART4_TX_DMA                0
+#define RTE_UART4_TX_DMA                1
 #define RTE_UART4_TX_DMA_NUMBER         2
 #define RTE_UART4_TX_DMA_CHANNEL        5
 #define RTE_UART4_TX_DMA_PRIORITY       0
