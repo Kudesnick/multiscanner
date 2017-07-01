@@ -23,24 +23,6 @@ typedef const struct
     const void *func;
 } console_cmd_t;
 
-extern void console_cmd_help(char *buf, uint8_t size);
-extern void console_cmd_get(char *buf, uint8_t size);
-extern void console_cmd_set(char *buf, uint8_t size);
-
-// константы команд консоли
-console_cmd_t console_cmd_list[] =
-{
-    {"help", console_cmd_help}, // Получить справку о программе
-    { "get", console_cmd_get},  // Получить параметры настройки интерфейса
-    { "set", console_cmd_set}, // Настроить интерфейс
-    {"can1", NULL}, // Отправить сообщение по can1
-    {"can2", NULL}, // Отправить сообщение по can2
-    {"lin1", NULL}, // Отправить сообщение по lin1
-    {"lin2", NULL}, // Отправить сообщение по lin2
-    {"urt1", NULL}, // Отправить сообщение по uart1
-    {"urt2", NULL}, // Отправить сообщение по uart2 
-};
-
 // Строки кодов ошибок
 const char str_err_bad_cmd[]    = "Error! This command is invalid.\r\n";
 const char str_err_null_cmd[]   = "Error! This command is not realised.\r\n";
@@ -139,20 +121,38 @@ static bool console_param_cmp(uint8_t num, console_cmd_t *cmd, char *buf, uint8_
             && memcmp(cmd->name, cmd_str, strlen(cmd_str)) == 0);
 };
 
+
 // Парсинг команд консоли
+extern void console_cmd_help(char *buf, uint8_t size);
+extern void console_cmd_get(char *buf, uint8_t size);
+extern void console_cmd_set(char *buf, uint8_t size);
+
 static void console_cmd_parser(char *buf, const uint8_t size)
 {
+    console_cmd_t cmd_list[] =
+    {
+        {"help", console_cmd_help}, // Получить справку о программе
+        { "get", console_cmd_get},  // Получить параметры настройки интерфейса
+        { "set", console_cmd_set}, // Настроить интерфейс
+        {"can1", NULL}, // Отправить сообщение по can1
+        {"can2", NULL}, // Отправить сообщение по can2
+        {"lin1", NULL}, // Отправить сообщение по lin1
+        {"lin2", NULL}, // Отправить сообщение по lin2
+        {"urt1", NULL}, // Отправить сообщение по uart1
+        {"urt2", NULL}, // Отправить сообщение по uart2 
+    };
+
     bool bad_cmd = true;
     
     console_lowercase(buf, size);
     
-    for (uint8_t i = 0; i < sizeof_arr(console_cmd_list); i++)
+    for (uint8_t i = 0; i < sizeof_arr(cmd_list); i++)
     {
-        if (console_param_cmp(0, &console_cmd_list[i], buf, size))
+        if (console_param_cmp(0, &cmd_list[i], buf, size))
         {
-            if (console_cmd_list[i].func != NULL)
+            if (cmd_list[i].func != NULL)
             {
-                ((cmd_func_void_t)console_cmd_list[i].func)(buf, size);
+                ((cmd_func_void_t)cmd_list[i].func)(buf, size);
             }
             else
             {
@@ -290,27 +290,23 @@ static void console_cmd_get(char *buf, uint8_t size)
 
 int32_t console_cmd_set_con_baud(char *buf, uint8_t size, uint8_t *param, void * sett)
 {
-    int32_t result = 0;
-    
     if (console_get_param_count(buf, size) < *param + 2)
     {
-        result = PARAM_ERR;
+        return PARAM_ERR;
+    }
+    
+    (*param)++;
+    uint32_t baud = console_str_to_uint(console_get_param(*param, buf, size));
+    if (baud > 0)
+    {
+        ((bsp_con_config_t*)sett)->baudrate = baud;
     }
     else
     {
-        (*param)++;
-        uint32_t baud = console_str_to_uint(console_get_param(*param, buf, size));
-        if (baud > 0)
-        {
-            ((bsp_con_config_t*)sett)->baudrate = baud;
-        }
-        else
-        {
-            result = PARAM_ERR;
-        }
+        return PARAM_ERR;
     }
-    
-    return result;
+
+    return baud;
 }
 
 int32_t console_cmd_set_con_even(char *buf, uint8_t size, uint8_t *param, void * sett)
@@ -351,37 +347,31 @@ static bool console_cmd_set_con(char *buf, uint8_t size)
         {"-echo", NULL},
     };
 
-    bool bad_cmd = false;
-    
     uint8_t lim = console_get_param_count(buf, size);
     
-    if (lim < 3)
+    if (lim < 3) return false;
+
+    for (uint8_t i = 2; i < lim; i++)
     {
-        bad_cmd = true;
-    }
-    else
-    {
-        for (uint8_t i = 2; i < lim; i++)
+        for (uint8_t j = 0; j < sizeof_arr(param_list); j++)
         {
-            for (uint8_t j = 0; j < sizeof_arr(param_list); j++)
+            if (console_param_cmp(i, &param_list[j], buf, size))
             {
-                if (console_param_cmp(i, &param_list[j], buf, size))
+                if (param_list[i].func != NULL)
                 {
-                    if (param_list[i].func != NULL)
+                    if (((cmd_param_int32_t)param_list[j].func)(buf, size, &i, (void *)bsp_con_get_setting()) == PARAM_ERR)
                     {
-                        bad_cmd = (((cmd_param_int32_t)param_list[i].func)(buf, size, &i, (void *)bsp_con_get_setting()) == PARAM_ERR);
+                        return false;
                     }
-                    break;
                 }
-            }
-            if (bad_cmd == true)
-            {
                 break;
             }
         }
     }
     
-    return bad_cmd;
+    console_init();
+    
+    return true;
 }
 
 
@@ -406,12 +396,10 @@ static void console_cmd_set(char *buf, uint8_t size)
         {
             if (console_param_cmp(1, &param_list[i], buf, size))
             {
-                
                 if (param_list[i].func != NULL)
                 {
                     bad_cmd = !((cmd_func_bool_t)param_list[i].func)(buf, size);
                 }
-
                 break;
             }
         }
