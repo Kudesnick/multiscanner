@@ -1,21 +1,16 @@
 /********************************************************************
- * Основная программа
+ * cpp_multiscanner класс основного приложения
  ********************************************************************/
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <string.h>
-
+#include "cpp_multiscanner.h"
 #include "console.h"
 
-int main (void)
+cpp_multiscanner::cpp_multiscanner(void)
 {
-    static volatile uint8_t tmp = 0;
-
     console_init();
+}
 
-    while(true)
-    {
-        tmp = ~tmp;
-    }
+void cpp_multiscanner::run(void)
+{
+    while(1);
 }
