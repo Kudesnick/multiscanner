@@ -24,15 +24,15 @@ typedef const struct
 } console_cmd_t;
 
 // Строки кодов ошибок
-const char str_err_bad_cmd[]    = "Error! This command is invalid.\r\n";
-const char str_err_null_cmd[]   = "Error! This command is not realised.\r\n";
-const char str_err_syntax_cmd[] = "Error! This command syntax is invalid. Print help.\r\n";
+static const char str_err_bad_cmd[]    = "Error! This command is invalid.\r\n";
+static const char str_err_null_cmd[]   = "Error! This command is not realised.\r\n";
+static const char str_err_syntax_cmd[] = "Error! This command syntax is invalid. Print help.\r\n";
 
 // перевод числа в строку
 static char * console_uint_to_str(uint32_t num)
 {
     static char str[] = "4294967295";// 0xFFFFFFFF
-    uint8_t i = strlen(str);
+    uint8_t i = (uint8_t)strlen(str);
     
     do
     {
@@ -119,21 +119,21 @@ static bool console_param_cmp(uint8_t num, console_cmd_t *cmd, char *buf, uint8_
 
     return (strlen(cmd->name) == strlen(cmd_str)
             && memcmp(cmd->name, cmd_str, strlen(cmd_str)) == 0);
-};
+}
 
 
 // Парсинг команд консоли
-extern void console_cmd_help(char *buf, uint8_t size);
-extern void console_cmd_get(char *buf, uint8_t size);
-extern void console_cmd_set(char *buf, uint8_t size);
+static void console_cmd_help(char *buf, uint8_t size);
+static void console_cmd_get(char *buf, uint8_t size);
+static void console_cmd_set(char *buf, uint8_t size);
 
 static void console_cmd_parser(char *buf, const uint8_t size)
 {
     console_cmd_t cmd_list[] =
     {
-        {"help", console_cmd_help}, // Получить справку о программе
-        { "get", console_cmd_get},  // Получить параметры настройки интерфейса
-        { "set", console_cmd_set}, // Настроить интерфейс
+        {"help", (const void *)console_cmd_help}, // Получить справку о программе
+        { "get", (const void *)console_cmd_get},  // Получить параметры настройки интерфейса
+        { "set", (const void *)console_cmd_set}, // Настроить интерфейс
         {"can1", NULL}, // Отправить сообщение по can1
         {"can2", NULL}, // Отправить сообщение по can2
         {"lin1", NULL}, // Отправить сообщение по lin1
@@ -189,14 +189,14 @@ const char str_help_uart[] = "Send UART msg. Syntax:\r\n urt[1|2] <data hex form
 
 console_cmd_t console_cmd_help_param_list[] =
 {
-    { "get", str_help_get},
-    { "set", str_help_set},
-    {"can1", str_help_can},
-    {"can2", str_help_can},
-    {"lin1", str_help_lin},
-    {"lin2", str_help_lin},
-    {"urt1", str_help_uart},
-    {"urt2", str_help_uart},
+    { "get", (const void *)str_help_get},
+    { "set", (const void *)str_help_set},
+    {"can1", (const void *)str_help_can},
+    {"can2", (const void *)str_help_can},
+    {"lin1", (const void *)str_help_lin},
+    {"lin2", (const void *)str_help_lin},
+    {"urt1", (const void *)str_help_uart},
+    {"urt2", (const void *)str_help_uart},
 };
 
 static void console_cmd_help(char *buf, uint8_t size)
@@ -249,7 +249,7 @@ static void console_cmd_get(char *buf, uint8_t size)
 {
     console_cmd_t param_list[] =
     {
-        { "con", console_cmd_get_con},
+        { "con", (const void *)console_cmd_get_con},
         {"can1", NULL},
         {"can2", NULL},
         {"lin1", NULL},
@@ -334,14 +334,14 @@ static bool console_cmd_set_con(char *buf, uint8_t size)
 {
     console_cmd_t param_list[] =
     {
-        {   "-b", console_cmd_set_con_baud},
-        {"-baud", console_cmd_set_con_baud},
-        {"-even", console_cmd_set_con_even},
-        {  "-ev", console_cmd_set_con_even},
-        { "-odd", console_cmd_set_con_odd},
-        {  "-od", console_cmd_set_con_odd},
-        {"-none", console_cmd_set_con_none},
-        {  "-no", console_cmd_set_con_none},
+        {   "-b", (const void *)console_cmd_set_con_baud},
+        {"-baud", (const void *)console_cmd_set_con_baud},
+        {"-even", (const void *)console_cmd_set_con_even},
+        {  "-ev", (const void *)console_cmd_set_con_even},
+        { "-odd", (const void *)console_cmd_set_con_odd},
+        {  "-od", (const void *)console_cmd_set_con_odd},
+        {"-none", (const void *)console_cmd_set_con_none},
+        {  "-no", (const void *)console_cmd_set_con_none},
         {"-stop", NULL},
         {   "-s", NULL},
         {"-echo", NULL},
@@ -379,7 +379,7 @@ static void console_cmd_set(char *buf, uint8_t size)
 {
     console_cmd_t param_list[] =
     {
-        { "con", console_cmd_set_con},
+        { "con", (const void *)console_cmd_set_con},
         {"can1", NULL},
         {"can2", NULL},
         {"lin1", NULL},
