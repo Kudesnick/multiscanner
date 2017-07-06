@@ -7,25 +7,14 @@
 
 #include "ifaces_config.h"
 
-#define MSG_LEN_STANDARD 8
+#define MSG_LEN_MAX 9
 
 typedef enum
 {
-    #if (CAN1_ENABLED == 1)
-        IFACE_CAN1,
-    #endif
-    #if (CAN2_ENABLED == 1)
-        IFACE_CAN2,
-    #endif
-    #if (LIN1_ENABLED == 1)
-        IFACE_UART1,
-        IFACE_LIN1,
-    #endif
-    #if (LIN2_ENABLED == 1)
-        IFACE_UART2,
-        IFACE_LIN2,
-    #endif
-    IFACE_CON
+    IFACE_TYPE_CAN,
+    IFACE_TYPE_UART,
+    IFACE_TYPE_LIN,
+    IFACE_TYPE_CON
 } iface_type_t;
 
 typedef enum
