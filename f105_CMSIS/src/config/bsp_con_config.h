@@ -13,7 +13,7 @@
 #define BSP_CON_IRQ_PRIORITY    0xF
 #define bsp_con_handler         USART2_IRQHandler
 
-#define BSP_CON_BAUDRATE        9600
+#define BSP_CON_BAUDRATE        ((uint32_t)9600)
 #define BSP_CON_PARITY          USART_Parity_No
 
 #define BSP_CON_TX_PORT         GPIOA                 

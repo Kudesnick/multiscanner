@@ -85,7 +85,7 @@ void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler)
 // Переслать данные
 bool bsp_con_send(const char *buf)
 {
-    bool result = ((FIFO_GET_FULL(bsp_con_tx_buffer) + strlen(buf)) <= FIFO_GET_SIZE(bsp_con_tx_buffer));
+    bool result = ((FIFO_GET_FULL_COUNT(bsp_con_tx_buffer) + strlen(buf)) <= FIFO_GET_SIZE(bsp_con_tx_buffer));
     
     if (result == true)
     {
@@ -105,12 +105,12 @@ void bsp_con_handler(void)
 {
     if (USART_GetITStatus(BSP_CON_UNIT, USART_IT_TXE) == SET)
     {
-        if (FIFO_GET_FULL(bsp_con_tx_buffer) != 0)
+        if (!FIFO_IS_EMPTY(bsp_con_tx_buffer))
         {
             USART_SendData(BSP_CON_UNIT, FIFO_EXTRACT(bsp_con_tx_buffer));
         }
         
-        if (FIFO_GET_FULL(bsp_con_tx_buffer) == 0)
+        if (FIFO_IS_EMPTY(bsp_con_tx_buffer))
         {
             USART_ITConfig(BSP_CON_UNIT, USART_IT_TXE, DISABLE);
         }
@@ -121,20 +121,20 @@ void bsp_con_handler(void)
         uint_fast8_t data = USART_ReceiveData(BSP_CON_UNIT);
         
         if ((data == 0x0A || data == 0x0D)
-            && (FIFO_GET_FULL(bsp_con_rx_buffer) != 0)
+            && (!FIFO_IS_EMPTY(bsp_con_rx_buffer))
             )
         {
             FIFO_ADD(bsp_con_rx_buffer, 0x00);
             
             if (bsp_con_rx_handler != NULL)
             {
-                bsp_con_rx_handler(&bsp_con_rx_buffer.data[bsp_con_rx_buffer.begin_idx], FIFO_GET_FULL(bsp_con_rx_buffer));
+                bsp_con_rx_handler(&bsp_con_rx_buffer.data[bsp_con_rx_buffer.begin_idx], FIFO_GET_FULL_COUNT(bsp_con_rx_buffer));
             }
             
             FIFO_CLEAR(bsp_con_rx_buffer);
         }
         
-        else if (FIFO_GET_FULL(bsp_con_rx_buffer) < FIFO_GET_SIZE(bsp_con_rx_buffer))
+        else if (!FIFO_IS_FULL(bsp_con_rx_buffer))
         {
             if (data == ' ')
             {

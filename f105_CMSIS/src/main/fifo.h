@@ -11,7 +11,7 @@
 
 #define FIFO_GET_SIZE(queue)        (sizeof_arr(queue.data))
 #define FIFO_GET_FULL_COUNT(queue)  (queue.end_idx - queue.begin_idx)
-#define FIFO_IS_FULL(queue)         (FIFO_GET_EMPTY_COUNT(queue) >= FIFO_GET_SIZE(queue))
+#define FIFO_IS_FULL(queue)         (FIFO_GET_FULL_COUNT(queue) >= FIFO_GET_SIZE(queue))
 #define FIFO_IS_EMPTY(queue)        (queue.end_idx == queue.begin_idx)
 #define FIFO_ADD(queue,item)        (queue.data[queue.end_idx++ & (FIFO_GET_SIZE(queue) - 1)] = item)
 #define FIFO_EXTRACT(queue)         (queue.data[queue.begin_idx++ & (FIFO_GET_SIZE(queue) - 1)])

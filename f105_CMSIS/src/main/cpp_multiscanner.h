@@ -7,11 +7,9 @@
 
 class cpp_multiscanner
 {
-    private:
     public:
         cpp_multiscanner(void);
         void run(void);
-    protected:
 };
 
 #endif /* _CPP_MULTISCANNER_ */

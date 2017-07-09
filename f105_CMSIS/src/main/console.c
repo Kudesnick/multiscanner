@@ -131,6 +131,7 @@ static void console_cmd_parser(char *buf, const uint8_t size)
 {
     console_cmd_t cmd_list[] =
     {
+        {   "?", (const void *)console_cmd_help},
         {"help", (const void *)console_cmd_help}, // Получить справку о программе
         { "get", (const void *)console_cmd_get},  // Получить параметры настройки интерфейса
         { "set", (const void *)console_cmd_set}, // Настроить интерфейс
