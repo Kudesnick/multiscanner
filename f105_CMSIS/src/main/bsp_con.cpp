@@ -18,10 +18,10 @@ bsp_con_rx_handler_t * bsp_con_rx_handler = NULL;
 
 static bsp_con_config_t bsp_con_init_struct_default =
 {
-    .baudrate  = BSP_CON_BAUDRATE,
-    .parity    = BSP_CON_PARITY,
-    .stop_bits = USART_StopBits_1,
-    .echo      = false,
+    /* .baudrate  = */BSP_CON_BAUDRATE,
+    /* .parity    = */BSP_CON_PARITY,
+    /* .stop_bits = */USART_StopBits_1,
+    /* .echo      = */false,
 };
 
 bsp_con_config_t *bsp_con_get_setting(void)
@@ -37,16 +37,17 @@ void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler)
 {
     USART_InitTypeDef usart_init_struct =
     {
-        .USART_BaudRate            = bsp_con_init_struct_default.baudrate,
-        .USART_WordLength          = USART_WordLength_8b,
-        .USART_StopBits            = bsp_con_init_struct_default.stop_bits,
-        .USART_Parity              = bsp_con_init_struct_default.parity,
-        .USART_Mode                = USART_Mode_Rx | USART_Mode_Tx,
-        .USART_HardwareFlowControl = USART_HardwareFlowControl_None,
+        /*.USART_BaudRate            = */bsp_con_init_struct_default.baudrate,
+        /*.USART_WordLength          = */USART_WordLength_8b,
+        /*.USART_StopBits            = */bsp_con_init_struct_default.stop_bits,
+        /*.USART_Parity              = */bsp_con_init_struct_default.parity,
+        /*.USART_Mode                = */USART_Mode_Rx | USART_Mode_Tx,
+        /*.USART_HardwareFlowControl = */USART_HardwareFlowControl_None,
     };
     GPIO_InitTypeDef gpio_init_struct =
     {
-        .GPIO_Speed = GPIO_Speed_50MHz,
+        /*.GPIO_Pin   = */NULL,
+        /*.GPIO_Speed = */GPIO_Speed_50MHz,
     };
     
     RCC_ClocksTypeDef rcc_clocks;
@@ -101,7 +102,7 @@ bool bsp_con_send(const char *buf)
 }
 
 // Прерывание по приему/передаче
-void bsp_con_handler(void)
+extern "C" void bsp_con_handler(void)
 {
     if (USART_GetITStatus(BSP_CON_UNIT, USART_IT_TXE) == SET)
     {
