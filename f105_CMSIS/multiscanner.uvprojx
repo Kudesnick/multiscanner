@@ -391,11 +391,6 @@
               <FilePath>.\src\main\bsp_con.c</FilePath>
             </File>
             <File>
-              <FileName>console.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\main\console.c</FilePath>
-            </File>
-            <File>
               <FileName>cpp_multiscanner.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\cpp_multiscanner.cpp</FilePath>
@@ -404,6 +399,16 @@
               <FileName>main.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\main.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>fifo.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\fifo.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>console.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\main\console.c</FilePath>
             </File>
           </Files>
         </Group>

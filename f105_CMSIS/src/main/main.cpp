@@ -6,7 +6,7 @@
 
 int main(void)
 {   
-    cpp_multiscanner application;
+    static cpp_multiscanner application;
 
     application.run();
 	
