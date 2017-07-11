@@ -8,11 +8,11 @@
 #include "bsp_con.h"
 
 // Константы длины обязательно должны быть степенью двойки
-#define RX_BUFFER_SIZE 256
-#define TX_BUFFER_SIZE 256
+#define RX_BUFFER_SIZE FIFO_SIZE_256
+#define TX_BUFFER_SIZE FIFO_SIZE_256
 
-FIFO_T(char, RX_BUFFER_SIZE) bsp_con_rx_buffer;
-FIFO_T(char, TX_BUFFER_SIZE) bsp_con_tx_buffer;
+static cpp_fifo<char, RX_BUFFER_SIZE> bsp_con_rx_buffer;
+static cpp_fifo<char, TX_BUFFER_SIZE> bsp_con_tx_buffer;
 
 bsp_con_rx_handler_t * bsp_con_rx_handler = NULL;
 
@@ -86,13 +86,13 @@ void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler)
 // Переслать данные
 bool bsp_con_send(const char *buf)
 {
-    bool result = ((FIFO_GET_FULL_COUNT(bsp_con_tx_buffer) + strlen(buf)) <= FIFO_GET_SIZE(bsp_con_tx_buffer));
+    bool result = ((bsp_con_tx_buffer.get_full_count() + strlen(buf)) <= bsp_con_tx_buffer.get_count());
     
     if (result == true)
     {
         for (uint_fast16_t i = 0; i < strlen(buf); i++)
         {
-            FIFO_ADD(bsp_con_tx_buffer, buf[i]);
+            bsp_con_tx_buffer.add(buf[i]);
         }
         
         USART_ITConfig(BSP_CON_UNIT, USART_IT_TXE, ENABLE);
@@ -106,12 +106,12 @@ extern "C" void bsp_con_handler(void)
 {
     if (USART_GetITStatus(BSP_CON_UNIT, USART_IT_TXE) == SET)
     {
-        if (!FIFO_IS_EMPTY(bsp_con_tx_buffer))
+        if (!bsp_con_tx_buffer.is_empty())
         {
-            USART_SendData(BSP_CON_UNIT, FIFO_EXTRACT(bsp_con_tx_buffer));
+            USART_SendData(BSP_CON_UNIT, bsp_con_tx_buffer.extract());
         }
         
-        if (FIFO_IS_EMPTY(bsp_con_tx_buffer))
+        if (bsp_con_tx_buffer.is_empty())
         {
             USART_ITConfig(BSP_CON_UNIT, USART_IT_TXE, DISABLE);
         }
@@ -122,31 +122,31 @@ extern "C" void bsp_con_handler(void)
         uint_fast8_t data = USART_ReceiveData(BSP_CON_UNIT);
         
         if ((data == 0x0A || data == 0x0D)
-            && (!FIFO_IS_EMPTY(bsp_con_rx_buffer))
+            && (!bsp_con_rx_buffer.is_empty())
             )
         {
-            FIFO_ADD(bsp_con_rx_buffer, 0x00);
+            bsp_con_rx_buffer.add(0x00);
             
             if (bsp_con_rx_handler != NULL)
             {
-                bsp_con_rx_handler(&bsp_con_rx_buffer.data[bsp_con_rx_buffer.begin_idx], FIFO_GET_FULL_COUNT(bsp_con_rx_buffer));
+                bsp_con_rx_handler(bsp_con_rx_buffer.get_head(), bsp_con_rx_buffer.get_full_count());
             }
             
-            FIFO_CLEAR(bsp_con_rx_buffer);
+            bsp_con_rx_buffer.clear();
         }
         
-        else if (!FIFO_IS_FULL(bsp_con_rx_buffer))
+        else if (!bsp_con_rx_buffer.is_full())
         {
             if (data == ' ')
             {
-                if (FIFO_READ_END(bsp_con_rx_buffer) != 0x00)
+                if (bsp_con_rx_buffer.read_end() != 0x00)
                 {
-                    FIFO_ADD(bsp_con_rx_buffer, 0x00);
+                    bsp_con_rx_buffer.add(0x00);
                 }
             }
             else
             {
-                FIFO_ADD(bsp_con_rx_buffer, data);
+                bsp_con_rx_buffer.add(data);
             }
         }
     }

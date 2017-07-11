@@ -12,6 +12,8 @@
 
 #define PARAM_ERR ((int32_t)-1)
 
+#define countof_arr(a) (sizeof(a)/sizeof(a[0]))
+
 typedef void(*cmd_func_void_t )(char *buf, uint8_t size);
 typedef bool(*cmd_func_bool_t )(char *buf, uint8_t size);
 
@@ -147,7 +149,7 @@ static void console_cmd_parser(char *buf, const uint8_t size)
     
     console_lowercase(buf, size);
     
-    for (uint8_t i = 0; i < sizeof_arr(cmd_list); i++)
+    for (uint8_t i = 0; i < countof_arr(cmd_list); i++)
     {
         if (console_param_cmp(0, &cmd_list[i], buf, size))
         {
@@ -206,7 +208,7 @@ static void console_cmd_help(char *buf, uint8_t size)
     
     if (console_get_param_count(buf, size) > 0)
     {
-        for (uint8_t i = 0; i < sizeof_arr(console_cmd_help_param_list); i++)
+        for (uint8_t i = 0; i < countof_arr(console_cmd_help_param_list); i++)
         {
             if (console_param_cmp(1, &console_cmd_help_param_list[i], buf, size))
             {
@@ -263,7 +265,7 @@ static void console_cmd_get(char *buf, uint8_t size)
     
     if (console_get_param_count(buf, size) > 0)
     {
-        for (uint8_t i = 0; i < sizeof_arr(param_list); i++)
+        for (uint8_t i = 0; i < countof_arr(param_list); i++)
         {
             if (console_param_cmp(1, &param_list[i], buf, size))
             {
@@ -354,7 +356,7 @@ static bool console_cmd_set_con(char *buf, uint8_t size)
 
     for (uint8_t i = 2; i < lim; i++)
     {
-        for (uint8_t j = 0; j < sizeof_arr(param_list); j++)
+        for (uint8_t j = 0; j < countof_arr(param_list); j++)
         {
             if (console_param_cmp(i, &param_list[j], buf, size))
             {
@@ -393,7 +395,7 @@ static void console_cmd_set(char *buf, uint8_t size)
     
     if (console_get_param_count(buf, size) > 0)
     {
-        for (uint8_t i = 0; i < sizeof_arr(param_list); i++)
+        for (uint8_t i = 0; i < countof_arr(param_list); i++)
         {
             if (console_param_cmp(1, &param_list[i], buf, size))
             {
