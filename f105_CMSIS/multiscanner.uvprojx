@@ -323,7 +323,7 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>1</uC99>
+            <uC99>0</uC99>
             <useXO>0</useXO>
             <v6Lang>3</v6Lang>
             <v6LangP>3</v6LangP>
@@ -334,7 +334,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>DEBUG, HSE_VALUE=16000000</Define>
+              <Define>STM32F10X_CL, DEBUG, HSE_VALUE=16000000</Define>
               <Undefine></Undefine>
               <IncludePath>.\src\main;.\src\config</IncludePath>
             </VariousControls>
@@ -381,24 +381,9 @@
           <GroupName>main</GroupName>
           <Files>
             <File>
-              <FileName>fifo.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\src\main\fifo.h</FilePath>
-            </File>
-            <File>
-              <FileName>cpp_multiscanner.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\cpp_multiscanner.cpp</FilePath>
-            </File>
-            <File>
               <FileName>main.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\main.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>fifo.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\fifo.cpp</FilePath>
             </File>
             <File>
               <FileName>bsp_con.cpp</FileName>
@@ -409,6 +394,16 @@
               <FileName>console.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\console.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>fifo.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\main\fifo.h</FilePath>
+            </File>
+            <File>
+              <FileName>multiscanner.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\multiscanner.cpp</FilePath>
             </File>
           </Files>
         </Group>

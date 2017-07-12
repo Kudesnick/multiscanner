@@ -1,9 +1,9 @@
 /********************************************************************
- * cpp_iface класс интерфейса
+ * iface класс интерфейса
  ********************************************************************/
 
 #include "stdint.h"
-#include "cpp_iface.h"
+#include "iface.h"
 #include "fifo.h"
 
 cpp_iface::cpp_iface(iface_name_t i_name):name = i_name

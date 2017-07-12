@@ -1,15 +1,16 @@
 /********************************************************************
  * cpp_multiscanner класс основного приложения
  ********************************************************************/
- 
-#ifndef _CPP_MULTISCANNER_
-#define _CPP_MULTISCANNER_
 
-class cpp_multiscanner
+#include "multiscanner.h"
+#include "console.h"
+
+cpp_multiscanner::cpp_multiscanner(void)
 {
-    public:
-        cpp_multiscanner(void);
-        void run(void);
-};
+    console_init();
+}
 
-#endif /* _CPP_MULTISCANNER_ */
+void cpp_multiscanner::run(void)
+{
+    while(1);
+}

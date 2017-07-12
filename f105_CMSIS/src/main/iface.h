@@ -2,8 +2,8 @@
  * cpp_iface класс интерфейса
  ********************************************************************/
 
-#ifndef _CPP_IFACE_
-#define _CPP_IFACE_
+#ifndef _IFACE_
+#define _IFACE_
 
 #include "stdint.h"
 #include "fifo.h"
@@ -167,4 +167,4 @@ class cpp_iface_lin : public cpp_iface
 
 #endif /* __cplusplus */
 
-#endif /* _CPP_IFACE_ */
+#endif /* _IFACE_ */

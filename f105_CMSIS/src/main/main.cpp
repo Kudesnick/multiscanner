@@ -2,7 +2,7 @@
  * Основная программа
  ********************************************************************/
 
-#include "cpp_multiscanner.h"
+#include "multiscanner.h"
 
 int main(void)
 {   
