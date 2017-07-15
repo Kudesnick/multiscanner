@@ -405,6 +405,11 @@
               <FileType>8</FileType>
               <FilePath>.\src\main\multiscanner.cpp</FilePath>
             </File>
+            <File>
+              <FileName>bsp_io.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\bsp_io.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

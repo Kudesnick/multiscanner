@@ -6,6 +6,7 @@
 #include "bsp_con_config.h"
 #include "fifo.h"
 #include "bsp_con.h"
+#include "bsp_io.h"
 
 //  онстанты длины об€зательно должны быть степенью двойки
 #define RX_BUFFER_SIZE FIFO_SIZE_256
@@ -31,8 +32,6 @@ bsp_con_config_t *bsp_con_get_setting(void)
 
 // »нициализаци€ модул€ консоли
 // con_rx_handler - внешний парсер прин€той строки
-// buf - буфер данных
-// size - количество прин€тых данных
 void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler)
 {
     USART_InitTypeDef usart_init_struct =
@@ -44,30 +43,12 @@ void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler)
         /*.USART_Mode                = */USART_Mode_Rx | USART_Mode_Tx,
         /*.USART_HardwareFlowControl = */USART_HardwareFlowControl_None,
     };
-    GPIO_InitTypeDef gpio_init_struct =
-    {
-        /*.GPIO_Pin   = */NULL,
-        /*.GPIO_Speed = */GPIO_Speed_50MHz,
-    };
-    
-    RCC_ClocksTypeDef rcc_clocks;
-
-    RCC_GetClocksFreq(&rcc_clocks);
 
     RCC_APB1PeriphClockCmd(BSP_CON_UNIT_CLK, ENABLE);
-    RCC_APB2PeriphClockCmd(RCC_APB2ENR_AFIOEN, ENABLE);
-    RCC_APB2PeriphClockCmd(BSP_CON_TX_PORT_RCC, ENABLE);
-    RCC_APB2PeriphClockCmd(BSP_CON_RX_PORT_RCC, ENABLE);
+    
+    cpp_port tx(BSP_CON_TX_PORT, BSP_CON_TX_PIN, GPIO_Mode_AF_PP);
+    cpp_port rx(BSP_CON_RX_PORT, BSP_CON_RX_PIN, GPIO_Mode_IPU, true);
 
-    gpio_init_struct.GPIO_Mode  = GPIO_Mode_AF_PP;
-    gpio_init_struct.GPIO_Pin = BSP_CON_TX_PIN;
-    GPIO_Init(BSP_CON_TX_PORT, &gpio_init_struct);
-    
-    GPIO_WriteBit(BSP_CON_RX_PORT, BSP_CON_RX_PIN, Bit_SET);
-    gpio_init_struct.GPIO_Mode  = GPIO_Mode_IPU;
-    gpio_init_struct.GPIO_Pin = BSP_CON_RX_PIN;
-    GPIO_Init(BSP_CON_RX_PORT, &gpio_init_struct);
-    
     USART_Init(BSP_CON_UNIT, &usart_init_struct);
     
     NVIC_SetPriority(BSP_CON_IRQn, BSP_CON_IRQ_PRIORITY);
