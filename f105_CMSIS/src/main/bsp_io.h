@@ -10,18 +10,16 @@
 class cpp_port
 {
     private:
-        static const GPIOSpeed_TypeDef GPIO_Speed_default = GPIO_Speed_2MHz;
-        static const bool invert_default = false;
+        static const GPIOSpeed_TypeDef GPIO_Speed_default = GPIO_Speed_50MHz;
     protected:
         GPIO_TypeDef* GPIOx;
-        GPIO_InitTypeDef* GPIO_InitStruct;
+        GPIO_InitTypeDef GPIO_InitStruct;
         bool invert;
     public:
-        cpp_port(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode);
-        cpp_port(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value);
-        cpp_port(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value, bool invert_mode);
+        cpp_port(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value = true, bool invert_mode = false);
         bool get_val(void);
         void set_val(bool value);
+        void set_sped(GPIOSpeed_TypeDef speed = GPIO_Speed_default);
 };
 
 #endif /* _BSP_IO_ */
