@@ -71,12 +71,41 @@ bsp_usart::bsp_usart(USART_TypeDef *unit, void (*clbck)(USART_TypeDef *unit)):
     
 void bsp_usart::send_sett(bsp_usart_setting_t *sett)
 {
+    setting = *sett;
     
+    USART_InitTypeDef usart_init_struct =
+    {
+        /*.USART_BaudRate            = */setting.USART_BaudRate,
+        /*.USART_WordLength          = */setting.USART_WordLength,
+        /*.USART_StopBits            = */setting.USART_StopBits,
+        /*.USART_Parity              = */setting.USART_Parity,
+        /*.USART_Mode                = */
+        /*.USART_HardwareFlowControl = */USART_HardwareFlowControl_None,
+    };
+    
+    if (setting.USART_Half_Duplex == false
+        || setting.USART_Mode != (USART_Mode_Rx | USART_Mode_Tx))
+    {
+        usart_init_struct.USART_Mode = setting.USART_Mode;
+    }
+    else
+    {
+        usart_init_struct.USART_Mode = USART_Mode_Rx;
+    }
+    
+#warning вот здесь выставить прерывания    
+    
+    USART_Init((USART_TypeDef *)unit_ptr, &usart_init_struct);
+    USART_LINBreakDetectLengthConfig((USART_TypeDef *)unit_ptr, setting.USART_LIN_Break_Detection_Length);
+    USART_LINCmd((USART_TypeDef *)unit_ptr, (setting.USART_LIN_Enable == true) ? ENABLE : DISABLE);
+    USART_Cmd((USART_TypeDef *)unit_ptr, (setting.USART_Enable == true) ? ENABLE : DISABLE);
 };
 
 void *bsp_usart::get_sett(void)
 {
-    
+    static bsp_usart_setting_t sett;
+    sett = setting;
+    return (void *)&sett;
 };
 
 bool bsp_usart::send_msg(uint16_t data)

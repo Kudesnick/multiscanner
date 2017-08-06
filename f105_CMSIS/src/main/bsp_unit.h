@@ -14,9 +14,9 @@ class bsp_unit
     private:    
         static bsp_unit *last_pointer; // Указатель на последний элемент в списке
         bsp_unit *prev_pointer; // Предыдущий элемент списка
-        void *unit_ptr; // Указатель на физический модуль ввода/вывода
-        void (*callback)(void); // callback по приему данных
     protected:
+        void (*callback)(void); // callback по приему данных
+        void *unit_ptr; // Указатель на физический модуль ввода/вывода
     public:
         bsp_unit(void *unit, void (*clbck)(void));
         bsp_unit* get_prev_pointer(void);

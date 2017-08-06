@@ -431,11 +431,6 @@
               <FilePath>.\src\config\ifaces_types.h</FilePath>
             </File>
             <File>
-              <FileName>bsp_con_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\src\config\bsp_con_config.h</FilePath>
-            </File>
-            <File>
               <FileName>units_config.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\src\config\units_config.h</FilePath>
