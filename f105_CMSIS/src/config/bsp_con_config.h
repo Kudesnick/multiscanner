@@ -11,6 +11,8 @@
 
 #define BSP_CON_BAUDRATE        9600
 #define BSP_CON_PARITY          USART_Parity_No
+#define BSP_CON_STOP_BITS       USART_StopBits_1
+#define BSP_CON_ECHO            true
 
 #define BSP_CON_TX_PIN          GPIOA_02                
 #define BSP_CON_RX_PIN          GPIOA_03

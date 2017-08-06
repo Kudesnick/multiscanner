@@ -58,7 +58,7 @@
 #define GPIOC_14 GPIOC,GPIO_Pin_14
 #define GPIOC_15 GPIOC,GPIO_Pin_15
 
-class cpp_pin
+class bsp_io
 {
     private:
         static const GPIOSpeed_TypeDef GPIO_Speed_default = GPIO_Speed_50MHz;
@@ -67,7 +67,7 @@ class cpp_pin
         GPIO_InitTypeDef GPIO_InitStruct;
         bool invert;
     public:
-        cpp_pin(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value = true, bool invert_mode = false);
+        bsp_io(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value = true, bool invert_mode = false);
         bool get_val(void);
         void set_val(bool value);
         void set_sped(GPIOSpeed_TypeDef speed = GPIO_Speed_default);

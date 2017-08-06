@@ -323,7 +323,7 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
+            <uC99>1</uC99>
             <useXO>0</useXO>
             <v6Lang>3</v6Lang>
             <v6LangP>3</v6LangP>
@@ -410,16 +410,21 @@
               <FileType>8</FileType>
               <FilePath>.\src\main\bsp_io.cpp</FilePath>
             </File>
+            <File>
+              <FileName>bsp_unit.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\bsp_unit.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_usart.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\bsp_usart.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>config</GroupName>
           <Files>
-            <File>
-              <FileName>ifaces_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\src\config\ifaces_config.h</FilePath>
-            </File>
             <File>
               <FileName>ifaces_types.h</FileName>
               <FileType>5</FileType>
@@ -429,6 +434,11 @@
               <FileName>bsp_con_config.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\src\config\bsp_con_config.h</FilePath>
+            </File>
+            <File>
+              <FileName>units_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\config\units_config.h</FilePath>
             </File>
           </Files>
         </Group>

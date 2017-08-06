@@ -5,7 +5,7 @@
 #include "bsp_io.h"
 #include "misc.h"
 
-cpp_pin::cpp_pin(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value, bool invert_mode):
+bsp_io::bsp_io(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value, bool invert_mode):
     GPIOx(GPIO_unit), invert(invert_mode)
 {
     GPIO_InitStruct.GPIO_Pin = GPIO_Pin;
@@ -30,17 +30,17 @@ cpp_pin::cpp_pin(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GP
     GPIO_Init(GPIOx, &GPIO_InitStruct);
 };
 
-bool cpp_pin::get_val(void)
+bool bsp_io::get_val(void)
 {
     return ((GPIO_ReadOutputDataBit(GPIOx, GPIO_InitStruct.GPIO_Pin) != 0) != invert);
 };
 
-void cpp_pin::set_val(bool value)
+void bsp_io::set_val(bool value)
 {
     GPIO_WriteBit(GPIOx, GPIO_InitStruct.GPIO_Pin, (invert != value) ? Bit_SET : Bit_RESET);
 };
 
-void cpp_pin::set_sped(GPIOSpeed_TypeDef speed)
+void bsp_io::set_sped(GPIOSpeed_TypeDef speed)
 {
     if (GPIO_InitStruct.GPIO_Speed != speed)
     {

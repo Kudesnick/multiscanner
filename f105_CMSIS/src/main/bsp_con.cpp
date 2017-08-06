@@ -8,15 +8,6 @@
 #include "bsp_con.h"
 #include "bsp_io.h"
 
-// Константы длины обязательно должны быть степенью двойки
-#define RX_BUFFER_SIZE FIFO_SIZE_256
-#define TX_BUFFER_SIZE FIFO_SIZE_256
-
-static cpp_fifo<char, RX_BUFFER_SIZE> bsp_con_rx_buffer;
-static cpp_fifo<char, TX_BUFFER_SIZE> bsp_con_tx_buffer;
-
-bsp_con_rx_handler_t * bsp_con_rx_handler = NULL;
-
 static bsp_con_config_t bsp_con_init_struct_default =
 {
     /* .baudrate  = */BSP_CON_BAUDRATE,

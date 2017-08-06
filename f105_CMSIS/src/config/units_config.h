@@ -4,8 +4,8 @@
 
 //-------- <<< Use Configuration Wizard in Context Menu >>> --------------------
 
-#ifndef _IFACES_CONFIG_H_
-#define _IFACES_CONFIG_H_
+#ifndef _UNIT_CONFIG_H_
+#define _UNIT_CONFIG_H_
 
 #ifndef NULL
 	#define NULL 0
@@ -221,7 +221,7 @@
 
 //	<h>Console
 //      <o0>Console physics port num <1=>UART1 <2=>UART2 <3=>UART3 <4=>UART4 <5=>UART5
-//		<e1>strobe port enabled
+//		<e1>standby port enabled
 //			<o2>Port <0=>GPIOA <1=>GPIOB <2=>GPIOC <3=>GPIOD <4=>GPIOE <5=>GPIOF <6=>GPIOG
 //    		<o3>Pin <0=>0 <1=>1 <2=>2 <3=>3 <4=>4 <5=>5 <6=>6 <7=>7 <8=>8 <9=>9 <10=>10 <11=>11 <12=>12 <13=>13 <14=>14 <15=>15
 //			<o4>Active level <0=>0 <1=>1
@@ -256,4 +256,4 @@
 #endif
 //	</h>
 
-#endif /* _IFACES_CONFIG_H_ */
+#endif /* _UNIT_CONFIG_H_ */
