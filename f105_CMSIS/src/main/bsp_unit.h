@@ -9,13 +9,15 @@
 
 #include "bsp_io.h"
 
+typedef void(bsp_unit_callback_t)(void);
+
 class bsp_unit
 {
     private:    
         static bsp_unit *last_pointer; // Указатель на последний элемент в списке
         bsp_unit *prev_pointer; // Предыдущий элемент списка
     protected:
-        void (*callback)(void); // callback по приему данных
+        bsp_unit_callback_t *callback; // callback по приему данных
         void *unit_ptr; // Указатель на физический модуль ввода/вывода
     public:
         bsp_unit(void *unit, void (*clbck)(void));

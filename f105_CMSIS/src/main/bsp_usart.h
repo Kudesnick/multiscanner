@@ -7,6 +7,9 @@
 // Класс порта ввода/вывода UART
 //------------------------------------------------------------------------------
 
+#define USART_LIN_BRK_DATA (uint16_t)0x8000;
+#define USART_IDLE_DATA    (uint16_t)0xFFFF;
+
 typedef struct
 {
     // Хардварные настройки
@@ -18,17 +21,18 @@ typedef struct
     uint16_t USART_LIN_Break_Detection_Length;
     // Софтварные настройки
     bool USART_LIN_Enable;
-    bool USART_Half_Duplex;
     bool USART_Enable;
 } bsp_usart_setting_t;
 
-class bsp_usart : public bsp_unit
+typedef void(bsp_usart_callback_t)(uint16_t data, uint16_t flags);
+
+class bsp_usart: public bsp_unit
 {
     private:
     protected:
         bsp_usart_setting_t setting;
     public:
-        bsp_usart(USART_TypeDef *unit, void (*clbck)(USART_TypeDef *unit));
+        bsp_usart(USART_TypeDef *unit, bsp_usart_callback_t *clbck);
         virtual void send_sett(bsp_usart_setting_t *sett); // Применение новых настроек модуля
         virtual void *get_sett(void); // Получение настроек модуля
         virtual bool send_msg(uint16_t data); // Отправка данных

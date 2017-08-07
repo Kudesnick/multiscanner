@@ -6,7 +6,7 @@
 
 #include "bsp_unit.h"
 
-bsp_unit::bsp_unit(void *unit, void (*clbck)(void)):
+bsp_unit::bsp_unit(void *unit, bsp_unit_callback_t *clbck):
     unit_ptr(unit),
     callback(clbck)
 {

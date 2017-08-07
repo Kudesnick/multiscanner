@@ -1,8 +1,7 @@
 #include "bsp_usart.h"
 
-
-bsp_usart::bsp_usart(USART_TypeDef *unit, void (*clbck)(USART_TypeDef *unit)):
-    bsp_unit((void *)unit, (void(*)(void))clbck)
+bsp_usart::bsp_usart(USART_TypeDef *unit, bsp_usart_callback_t *clbck):
+    bsp_unit((void *)unit, (bsp_unit_callback_t *)clbck)
 {
     switch ((uint32_t)unit)
     {
@@ -79,22 +78,22 @@ void bsp_usart::send_sett(bsp_usart_setting_t *sett)
         /*.USART_WordLength          = */setting.USART_WordLength,
         /*.USART_StopBits            = */setting.USART_StopBits,
         /*.USART_Parity              = */setting.USART_Parity,
-        /*.USART_Mode                = */
+        /*.USART_Mode                = */setting.USART_Mode,
         /*.USART_HardwareFlowControl = */USART_HardwareFlowControl_None,
     };
-    
-    if (setting.USART_Half_Duplex == false
-        || setting.USART_Mode != (USART_Mode_Rx | USART_Mode_Tx))
-    {
-        usart_init_struct.USART_Mode = setting.USART_Mode;
-    }
-    else
-    {
-        usart_init_struct.USART_Mode = USART_Mode_Rx;
-    }
-    
-#warning вот здесь выставить прерывания    
-    
+
+    USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_TXE, DISABLE);
+    USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_TC);
+    USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_TC, DISABLE);
+
+    USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_RXNE);
+    USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_RXNE, ENABLE);
+    USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_IDLE, DISABLE);
+    USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_LBD);
+    USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_LBD, (setting.USART_LIN_Enable) ? ENABLE : DISABLE);
+    USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_PE, ENABLE);
+    USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_ERR, ENABLE);
+
     USART_Init((USART_TypeDef *)unit_ptr, &usart_init_struct);
     USART_LINBreakDetectLengthConfig((USART_TypeDef *)unit_ptr, setting.USART_LIN_Break_Detection_Length);
     USART_LINCmd((USART_TypeDef *)unit_ptr, (setting.USART_LIN_Enable == true) ? ENABLE : DISABLE);
@@ -115,7 +114,52 @@ bool bsp_usart::send_msg(uint16_t data)
 
 void bsp_usart::interrupt_handler(void)
 {
+    uint16_t data = 0;
+    uint16_t flags = 0;
     
+    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_TXE))
+    {
+        flags |= USART_IT_TXE;
+        USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_TXE, DISABLE);
+    };
+    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_TC))
+    {
+        flags |= USART_IT_TXE;
+        USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_TC, DISABLE);
+        USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_TC);
+    };
+
+    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_PE))
+    {
+        flags |= USART_IT_PE;
+    }
+    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_ERR))
+    {
+        flags |= USART_IT_ERR;
+    }
+    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_IDLE))
+    {
+        flags |= USART_IT_IDLE;
+        data = USART_IDLE_DATA;
+    }
+    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_RXNE))
+    {
+        flags |= USART_IT_RXNE;
+        data = USART_ReceiveData((USART_TypeDef *)unit_ptr);
+        USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_RXNE);
+    }
+    USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_LBD);
+    {
+        flags |= USART_IT_RXNE;
+        USART_ReceiveData((USART_TypeDef *)unit_ptr);
+        data = USART_LIN_BRK_DATA;
+        USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_LBD);
+    }
+    
+    if (callback != NULL)
+    {
+        ((bsp_usart_callback_t *)(callback))(data, flags);
+    }
 };
 
 // Прерывания от интерфейсов uart
