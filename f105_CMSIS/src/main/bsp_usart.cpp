@@ -109,7 +109,10 @@ void *bsp_usart::get_sett(void)
 
 bool bsp_usart::send_msg(uint16_t data)
 {
-    
+    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_TXE))
+    {
+        USART_SendData((USART_TypeDef *)unit_ptr, data);
+    }
 };
 
 void bsp_usart::interrupt_handler(void)
@@ -124,7 +127,7 @@ void bsp_usart::interrupt_handler(void)
     };
     if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_TC))
     {
-        flags |= USART_IT_TXE;
+        flags |= USART_IT_TC;
         USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_TC, DISABLE);
         USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_TC);
     };
