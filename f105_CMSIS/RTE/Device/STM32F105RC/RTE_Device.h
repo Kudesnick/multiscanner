@@ -1,8 +1,8 @@
 /* -----------------------------------------------------------------------------
  * Copyright (C) 2016 ARM Limited. All rights reserved.
  *
- * $Date:        29. March 2016
- * $Revision:    V1.1.1
+ * $Date:        29. August 2016
+ * $Revision:    V1.1.2
  *
  * Project:      RTE Device Configuration for STMicroelectronics STM32F1xx
  * -------------------------------------------------------------------------- */
@@ -28,7 +28,7 @@
 //   <o> High-speed Internal Clock <1-999999999>
 #define RTE_HSI                         8000000
 //   <o> High-speed External Clock <1-999999999>
-#define RTE_HSE                         16000000
+#define RTE_HSE                         25000000
 //   <o> System Clock <1-999999999>
 #define RTE_SYSCLK                      72000000
 //   <o> HCLK Clock   <1-999999999>
@@ -38,7 +38,7 @@
 //   <o> APB2 Clock   <1-999999999>
 #define RTE_PCLK2                       72000000
 //   <o> ADC Clock    <1-999999999>
-#define RTE_ADCCLK                      1
+#define RTE_ADCCLK                      36000000
 //       USB Clock
 #define RTE_USBCLK                      48000000
 // </h>
@@ -380,7 +380,7 @@
 //     <o3> Priority <0=>Low <1=>Medium <2=>High <3=>Very high
 //     <i>  Set DMA Channel priority
 //   </e>
-#define RTE_USART2_TX_DMA               1
+#define RTE_USART2_TX_DMA               0
 #define RTE_USART2_TX_DMA_NUMBER        1
 #define RTE_USART2_TX_DMA_CHANNEL       7
 #define RTE_USART2_TX_DMA_PRIORITY      0
@@ -646,11 +646,11 @@
 
 // <e> UART4 (Universal asynchronous receiver transmitter)
 // <i> Configuration settings for Driver_USART4 in component ::CMSIS Driver:USART
-#define RTE_UART4                       1
+#define RTE_UART4                       0
 #define RTE_UART4_AF_REMAP              AFIO_UNAVAILABLE_REMAP
 
 //   <o> UART4_TX Pin <0=>Not Used <1=>PC10
-#define RTE_UART4_TX_ID                 1
+#define RTE_UART4_TX_ID                 0
 #if    (RTE_UART4_TX_ID == 0)
 #define RTE_UART4_TX                    0
 #elif  (RTE_UART4_TX_ID == 1)
@@ -662,7 +662,7 @@
 #endif
 
 //   <o> UART4_RX Pin <0=>Not Used <1=>PC11
-#define RTE_UART4_RX_ID                 1
+#define RTE_UART4_RX_ID                 0
 #if    (RTE_UART4_RX_ID == 0)
 #define RTE_UART4_RX                    0
 #elif  (RTE_UART4_RX_ID == 1)
@@ -695,7 +695,7 @@
 //     <o3> Priority <0=>Low <1=>Medium <2=>High <3=>Very high
 //     <i>  Sets DMA Channel priority
 //   </e>
-#define RTE_UART4_TX_DMA                1
+#define RTE_UART4_TX_DMA                0
 #define RTE_UART4_TX_DMA_NUMBER         2
 #define RTE_UART4_TX_DMA_CHANNEL        5
 #define RTE_UART4_TX_DMA_PRIORITY       0
@@ -705,11 +705,11 @@
 
 // <e> UART5 (Universal asynchronous receiver transmitter)
 // <i> Configuration settings for Driver_USART5 in component ::CMSIS Driver:USART
-#define RTE_UART5                       1
+#define RTE_UART5                       0
 #define RTE_UART5_AF_REMAP              AFIO_UNAVAILABLE_REMAP
 
 //   <o> UART5_TX Pin <0=>Not Used <1=>PC12
-#define RTE_UART5_TX_ID                 1
+#define RTE_UART5_TX_ID                 0
 #if    (RTE_UART5_TX_ID == 0)
 #define RTE_UART5_TX                    0
 #elif  (RTE_UART5_TX_ID == 1)
@@ -721,7 +721,7 @@
 #endif
 
 //   <o> UART5_RX Pin <0=>Not Used <1=>PD2
-#define RTE_UART5_RX_ID                 1
+#define RTE_UART5_RX_ID                 0
 #if    (RTE_UART5_RX_ID == 0)
 #define RTE_UART5_RX                    0
 #elif  (RTE_UART5_RX_ID == 1)
@@ -902,18 +902,24 @@
 #error "Invalid SPI1_SCK Pin Configuration!"
 #endif
 
-//   <o> SPI1_MISO Pin <0=>PA6
+//   <o> SPI1_MISO Pin <0=>Not Used <1=>PA6
 #define RTE_SPI1_MISO_PORT_ID_DEF       0
 #if    (RTE_SPI1_MISO_PORT_ID_DEF == 0)
+#define RTE_SPI1_MISO_DEF               0
+#elif   (RTE_SPI1_MISO_PORT_ID_DEF == 1)
+#define RTE_SPI1_MISO_DEF               1
 #define RTE_SPI1_MISO_PORT_DEF          GPIOA
 #define RTE_SPI1_MISO_BIT_DEF           6
 #else
 #error "Invalid SPI1_MISO Pin Configuration!"
 #endif
 
-//   <o> SPI1_MOSI Pin <0=>PA7
+//   <o> SPI1_MOSI Pin <0=>Not Used <1=>PA7
 #define RTE_SPI1_MOSI_PORT_ID_DEF       0
 #if    (RTE_SPI1_MOSI_PORT_ID_DEF == 0)
+#define RTE_SPI1_MOSI_DEF               0
+#elif  (RTE_SPI1_MOSI_PORT_ID_DEF == 1)
+#define RTE_SPI1_MOSI_DEF               1
 #define RTE_SPI1_MOSI_PORT_DEF          GPIOA
 #define RTE_SPI1_MOSI_BIT_DEF           7
 #else
@@ -933,17 +939,23 @@
 #error "Invalid SPI1_SCK Pin Configuration!"
 #endif
 
-//   <o> SPI1_MISO Pin <0=>PB4
+//   <o> SPI1_MISO Pin <0=>Not Used <1=>PB4
 #define RTE_SPI1_MISO_PORT_ID_FULL      0
 #if    (RTE_SPI1_MISO_PORT_ID_FULL == 0)
+#define RTE_SPI1_MISO_FULL              0
+#elif  (RTE_SPI1_MISO_PORT_ID_FULL == 1)
+#define RTE_SPI1_MISO_FULL              1
 #define RTE_SPI1_MISO_PORT_FULL         GPIOB
 #define RTE_SPI1_MISO_BIT_FULL          4
 #else
 #error "Invalid SPI1_MISO Pin Configuration!"
 #endif
-//   <o> SPI1_MOSI Pin <0=>PB5
+//   <o> SPI1_MOSI Pin <0=>Not Used <1=>PB5
 #define RTE_SPI1_MOSI_PORT_ID_FULL      0
 #if    (RTE_SPI1_MOSI_PORT_ID_FULL == 0)
+#define RTE_SPI1_MOSI_FULL              0
+#elif  (RTE_SPI1_MOSI_PORT_ID_FULL == 1)
+#define RTE_SPI1_MOSI_FULL              1
 #define RTE_SPI1_MOSI_PORT_FULL         GPIOB
 #define RTE_SPI1_MOSI_BIT_FULL          5
 #else
@@ -956,16 +968,20 @@
 #define RTE_SPI1_AF_REMAP               AFIO_SPI1_REMAP
 #define RTE_SPI1_SCK_PORT               RTE_SPI1_SCK_PORT_FULL
 #define RTE_SPI1_SCK_BIT                RTE_SPI1_SCK_BIT_FULL
+#define RTE_SPI1_MISO                   RTE_SPI1_MISO_FULL
 #define RTE_SPI1_MISO_PORT              RTE_SPI1_MISO_PORT_FULL
 #define RTE_SPI1_MISO_BIT               RTE_SPI1_MISO_BIT_FULL
+#define RTE_SPI1_MOSI                   RTE_SPI1_MOSI_FULL
 #define RTE_SPI1_MOSI_PORT              RTE_SPI1_MOSI_PORT_FULL
 #define RTE_SPI1_MOSI_BIT               RTE_SPI1_MOSI_BIT_FULL
 #else 
 #define RTE_SPI1_AF_REMAP               AFIO_SPI1_NO_REMAP
 #define RTE_SPI1_SCK_PORT               RTE_SPI1_SCK_PORT_DEF
 #define RTE_SPI1_SCK_BIT                RTE_SPI1_SCK_BIT_DEF
+#define RTE_SPI1_MISO                   RTE_SPI1_MISO_DEF
 #define RTE_SPI1_MISO_PORT              RTE_SPI1_MISO_PORT_DEF
 #define RTE_SPI1_MISO_BIT               RTE_SPI1_MISO_BIT_DEF
+#define RTE_SPI1_MOSI                   RTE_SPI1_MOSI_DEF
 #define RTE_SPI1_MOSI_PORT              RTE_SPI1_MOSI_PORT_DEF
 #define RTE_SPI1_MOSI_BIT               RTE_SPI1_MOSI_BIT_DEF
 #endif
@@ -1026,9 +1042,12 @@
 #error "Invalid SPI2_SCK Pin Configuration!"
 #endif
 
-//   <o> SPI2_MISO Pin <0=>PB14
+//   <o> SPI2_MISO Pin <0=>Not Used <1=>PB14
 #define RTE_SPI2_MISO_PORT_ID           0
 #if    (RTE_SPI2_MISO_PORT_ID == 0)
+#define RTE_SPI2_MISO                   0
+#elif  (RTE_SPI2_MISO_PORT_ID == 1)
+#define RTE_SPI2_MISO                   1
 #define RTE_SPI2_MISO_PORT              GPIOB
 #define RTE_SPI2_MISO_BIT               14
 #define RTE_SPI2_MISO_REMAP             0
@@ -1036,9 +1055,12 @@
 #error "Invalid SPI2_MISO Pin Configuration!"
 #endif
 
-//   <o> SPI2_MOSI Pin <0=>PB15
+//   <o> SPI2_MOSI Pin <0=>Not Used <1=>PB15
 #define RTE_SPI2_MOSI_PORT_ID           0
 #if    (RTE_SPI2_MOSI_PORT_ID == 0)
+#define RTE_SPI2_MOSI                   0
+#elif  (RTE_SPI2_MOSI_PORT_ID == 1)
+#define RTE_SPI2_MOSI                   1
 #define RTE_SPI2_MOSI_PORT              GPIOB
 #define RTE_SPI2_MOSI_BIT               15
 #define RTE_SPI2_MOSI_REMAP             0
@@ -1101,18 +1123,24 @@
 #error "Invalid SPI3_SCK Pin Configuration!"
 #endif
 
-//   <o> SPI3_MISO Pin <0=>PB4
+//   <o> SPI3_MISO Pin <0=>Not Used <1=>PB4
 #define RTE_SPI3_MISO_PORT_ID_DEF       0
 #if    (RTE_SPI3_MISO_PORT_ID_DEF == 0)
+#define RTE_SPI3_MISO_DEF               0
+#elif  (RTE_SPI3_MISO_PORT_ID_DEF == 1)
+#define RTE_SPI3_MISO_DEF               1
 #define RTE_SPI3_MISO_PORT_DEF          GPIOB
 #define RTE_SPI3_MISO_BIT_DEF           4
 #else
 #error "Invalid SPI3_MISO Pin Configuration!"
 #endif
 
-//   <o> SPI3_MOSI Pin <0=>PB5
+//   <o> SPI3_MOSI <0=>Not Used Pin <1=>PB5
 #define RTE_SPI3_MOSI_PORT_ID_DEF       0
 #if    (RTE_SPI3_MOSI_PORT_ID_DEF == 0)
+#define RTE_SPI3_MOSI_DEF               0
+#elif  (RTE_SPI3_MOSI_PORT_ID_DEF == 1)
+#define RTE_SPI3_MOSI_DEF               1
 #define RTE_SPI3_MOSI_PORT_DEF          GPIOB
 #define RTE_SPI3_MOSI_BIT_DEF           5
 #else
@@ -1133,17 +1161,23 @@
 #error "Invalid SPI3_SCK Pin Configuration!"
 #endif
 
-//   <o> SPI3_MISO Pin <0=>PC11
+//   <o> SPI3_MISO Pin <0=>Not Used <1=>PC11
 #define RTE_SPI3_MISO_PORT_ID_FULL      0
 #if    (RTE_SPI3_MISO_PORT_ID_FULL == 0)
+#define RTE_SPI3_MISO_FULL              0
+#elif  (RTE_SPI3_MISO_PORT_ID_FULL == 1)
+#define RTE_SPI3_MISO_FULL              1
 #define RTE_SPI3_MISO_PORT_FULL         GPIOC
 #define RTE_SPI3_MISO_BIT_FULL          11
 #else
 #error "Invalid SPI3_MISO Pin Configuration!"
 #endif
-//   <o> SPI3_MOSI Pin <0=>PC12
+//   <o> SPI3_MOSI Pin <0=>Not Used <1=>PC12
 #define RTE_SPI3_MOSI_PORT_ID_FULL      0
 #if    (RTE_SPI3_MOSI_PORT_ID_FULL == 0)
+#define RTE_SPI3_MOSI_FULL              0
+#elif  (RTE_SPI3_MOSI_PORT_ID_FULL == 1)
+#define RTE_SPI3_MOSI_FULL              1
 #define RTE_SPI3_MOSI_PORT_FULL         GPIOC
 #define RTE_SPI3_MOSI_BIT_FULL          12
 #else
@@ -1156,16 +1190,20 @@
 #define RTE_SPI3_AF_REMAP               AFIO_SPI3_REMAP
 #define RTE_SPI3_SCK_PORT               RTE_SPI3_SCK_PORT_FULL
 #define RTE_SPI3_SCK_BIT                RTE_SPI3_SCK_BIT_FULL
+#define RTE_SPI3_MISO                   RTE_SPI3_MISO_FULL
 #define RTE_SPI3_MISO_PORT              RTE_SPI3_MISO_PORT_FULL
 #define RTE_SPI3_MISO_BIT               RTE_SPI3_MISO_BIT_FULL
+#define RTE_SPI3_MOSI                   RTE_SPI3_MOSI_FULL
 #define RTE_SPI3_MOSI_PORT              RTE_SPI3_MOSI_PORT_FULL
 #define RTE_SPI3_MOSI_BIT               RTE_SPI3_MOSI_BIT_FULL
 #else 
 #define RTE_SPI3_AF_REMAP               AFIO_SPI3_NO_REMAP
 #define RTE_SPI3_SCK_PORT               RTE_SPI3_SCK_PORT_DEF
 #define RTE_SPI3_SCK_BIT                RTE_SPI3_SCK_BIT_DEF
+#define RTE_SPI3_MISO                   RTE_SPI3_MISO_DEF
 #define RTE_SPI3_MISO_PORT              RTE_SPI3_MISO_PORT_DEF
 #define RTE_SPI3_MISO_BIT               RTE_SPI3_MISO_BIT_DEF
+#define RTE_SPI3_MOSI                   RTE_SPI3_MOSI_DEF
 #define RTE_SPI3_MOSI_PORT              RTE_SPI3_MOSI_PORT_DEF
 #define RTE_SPI3_MOSI_BIT               RTE_SPI3_MOSI_BIT_DEF
 #endif
@@ -1341,10 +1379,10 @@
 
 // <e> CAN1 (Controller Area Network 1) [Driver_CAN1]
 // <i> Configuration settings for Driver_CAN1 in component ::CMSIS Driver:CAN
-#define RTE_CAN1                        1
+#define RTE_CAN1                        0
 
 //   <o> CAN1_RX Pin <0=>PA11 <1=>PB8 <2=>PD0
-#define RTE_CAN1_RX_PORT_ID             1
+#define RTE_CAN1_RX_PORT_ID             0
 #if    (RTE_CAN1_RX_PORT_ID == 0)
 #define RTE_CAN1_RX_PORT                GPIOA
 #define RTE_CAN1_RX_BIT                 11
@@ -1359,7 +1397,7 @@
 #endif
 
 //   <o> CAN1_TX Pin <0=>PA12 <1=>PB9 <2=>PD1
-#define RTE_CAN1_TX_PORT_ID             1
+#define RTE_CAN1_TX_PORT_ID             0
 #if    (RTE_CAN1_TX_PORT_ID == 0)
 #define RTE_CAN1_TX_PORT                GPIOA
 #define RTE_CAN1_TX_BIT                 12
@@ -1378,10 +1416,10 @@
 
 // <e> CAN2 (Controller Area Network 2) [Driver_CAN2]
 // <i> Configuration settings for Driver_CAN2 in component ::CMSIS Driver:CAN
-#define RTE_CAN2                        1
+#define RTE_CAN2                        0
 
 //   <o> CAN2_RX Pin <0=>PB5 <1=>PB12
-#define RTE_CAN2_RX_PORT_ID             1
+#define RTE_CAN2_RX_PORT_ID             0
 #if    (RTE_CAN2_RX_PORT_ID == 0)
 #define RTE_CAN2_RX_PORT                GPIOB
 #define RTE_CAN2_RX_BIT                 5
@@ -1393,7 +1431,7 @@
 #endif
 
 //   <o> CAN2_TX Pin <0=>PB6 <1=>PB13
-#define RTE_CAN2_TX_PORT_ID             1
+#define RTE_CAN2_TX_PORT_ID             0
 #if    (RTE_CAN2_TX_PORT_ID == 0)
 #define RTE_CAN2_TX_PORT                GPIOB
 #define RTE_CAN2_TX_BIT                 6

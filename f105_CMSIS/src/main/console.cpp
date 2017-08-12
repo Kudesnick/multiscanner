@@ -9,6 +9,7 @@
 
 #include "fifo.h"
 #include "bsp_con.h"
+#include "units_config.h"
 
 #define PARAM_ERR ((int32_t)-1)
 
@@ -175,6 +176,8 @@ static void console_cmd_parser(char *buf, const uint8_t size)
 
 void console_init(void)
 {
+    // Настройки берутся из файла конфигурации интерфейса
+    
     bsp_con_init(console_cmd_parser);
 }
 
