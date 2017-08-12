@@ -9,7 +9,7 @@
 
 #include "fifo.h"
 #include "bsp_con.h"
-#include "bsp_con_config.h"
+#include "units_config.h"
 
 #define PARAM_ERR ((int32_t)-1)
 
@@ -177,19 +177,6 @@ static void console_cmd_parser(char *buf, const uint8_t size)
 void console_init(void)
 {
     // Настройки берутся из файла конфигурации интерфейса
-    bsp_con_hw_config_t hardware_sett =
-    {
-        .unit   = USART2,
-        .rx_pin = bsp_io(BSP_CON_RX_PIN, GPIO_Mode_IPU, true),
-        .tx_pin = bsp_io(BSP_CON_TX_PIN, GPIO_Mode_AF_PP),
-    };
-    bsp_con_config_t software_sett =
-    {
-        .baudrate  = BSP_CON_BAUDRATE,
-        .parity    = BSP_CON_PARITY,
-        .stop_bits = BSP_CON_STOP_BITS,
-        .echo      = BSP_CON_ECHO,
-    }
     
     bsp_con_init(console_cmd_parser);
 }

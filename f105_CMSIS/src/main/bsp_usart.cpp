@@ -1,15 +1,17 @@
+#include "RTE_Device.h"
+
 #include "bsp_usart.h"
 
-bsp_usart::bsp_usart(USART_TypeDef *unit, bsp_usart_callback_t *clbck):
-    bsp_unit((void *)unit, (bsp_unit_callback_t *)clbck)
+bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr, bsp_usart_callback_t *_callback):
+    bsp_unit((void *)_unit_ptr, (bsp_unit_callback_t *)_callback)
 {
-    switch ((uint32_t)unit)
+    switch ((uint32_t)unit_ptr)
     {
         case (uint32_t)USART1:
         {
             #if (RTE_USART1 > 0)
-                volatile bsp_io pin = bsp_io(RTE_USART1_RX_PORT_DEF, RTE_USART1_RX_BIT_DEF, GPIO_Mode_IPU, true);
-                                pin = bsp_io(RTE_USART1_TX_PORT_DEF, RTE_USART1_TX_BIT_DEF, GPIO_Mode_AF_PP);
+                pin_rx = new bsp_io(RTE_USART1_RX_PORT_DEF, RTE_USART1_RX_BIT_DEF, GPIO_Mode_IPU, true);
+                pin_tx = new bsp_io(RTE_USART1_TX_PORT_DEF, RTE_USART1_TX_BIT_DEF, GPIO_Mode_AF_PP);
             #endif
             
             RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
@@ -20,8 +22,8 @@ bsp_usart::bsp_usart(USART_TypeDef *unit, bsp_usart_callback_t *clbck):
         case (uint32_t)USART2:
         {
             #if (RTE_USART2 > 0)
-                volatile bsp_io pin = bsp_io(RTE_USART2_RX_PORT_DEF, RTE_USART2_RX_BIT_DEF, GPIO_Mode_IPU, true);
-                                pin = bsp_io(RTE_USART2_TX_PORT_DEF, RTE_USART2_TX_BIT_DEF, GPIO_Mode_AF_PP);
+                pin_rx = new bsp_io(RTE_USART2_RX_PORT_DEF, RTE_USART2_RX_BIT_DEF, GPIO_Mode_IPU, true);
+                pin_tx = new bsp_io(RTE_USART2_TX_PORT_DEF, RTE_USART2_TX_BIT_DEF, GPIO_Mode_AF_PP);
             #endif
             
             RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
@@ -32,8 +34,8 @@ bsp_usart::bsp_usart(USART_TypeDef *unit, bsp_usart_callback_t *clbck):
         case (uint32_t)USART3:
         {
             #if (RTE_USART3 > 0)
-                volatile bsp_io pin = bsp_io(RTE_USART3_RX_PORT_DEF, RTE_USART3_RX_BIT_DEF, GPIO_Mode_IPU, true);
-                                pin = bsp_io(RTE_USART3_TX_PORT_DEF, RTE_USART3_TX_BIT_DEF, GPIO_Mode_AF_PP);
+                pin_rx = new bsp_io(RTE_USART3_RX_PORT_DEF, RTE_USART3_RX_BIT_DEF, GPIO_Mode_IPU, true);
+                pin_tx = new bsp_io(RTE_USART3_TX_PORT_DEF, RTE_USART3_TX_BIT_DEF, GPIO_Mode_AF_PP);
             #endif
             
             RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
@@ -44,8 +46,8 @@ bsp_usart::bsp_usart(USART_TypeDef *unit, bsp_usart_callback_t *clbck):
         case (uint32_t)UART4:
         {
             #if (RTE_UART4 > 0)
-                volatile bsp_io pin = bsp_io(RTE_UART4_RX_PORT_DEF, RTE_UART4_RX_BIT_DEF, GPIO_Mode_IPU, true);
-                                pin = bsp_io(RTE_UART4_TX_PORT_DEF, RTE_UART4_TX_BIT_DEF, GPIO_Mode_AF_PP);
+                pin_rx = new bsp_io(RTE_UART4_RX_PORT_DEF, RTE_UART4_RX_BIT_DEF, GPIO_Mode_IPU, true);
+                pin_tx = new bsp_io(RTE_UART4_TX_PORT_DEF, RTE_UART4_TX_BIT_DEF, GPIO_Mode_AF_PP);
             #endif
             
             RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4, ENABLE);
@@ -56,8 +58,8 @@ bsp_usart::bsp_usart(USART_TypeDef *unit, bsp_usart_callback_t *clbck):
         case (uint32_t)UART5:
         {
             #if (RTE_UART5 > 0)
-                volatile bsp_io pin = bsp_io(RTE_UART5_RX_PORT_DEF, RTE_UART5_RX_BIT_DEF, GPIO_Mode_IPU, true);
-                                pin = bsp_io(RTE_UART5_TX_PORT_DEF, RTE_UART5_TX_BIT_DEF, GPIO_Mode_AF_PP);
+                pin_rx = new bsp_io(RTE_UART5_RX_PORT_DEF, RTE_UART5_RX_BIT_DEF, GPIO_Mode_IPU, true);
+                pin_tx = new bsp_io(RTE_UART5_TX_PORT_DEF, RTE_UART5_TX_BIT_DEF, GPIO_Mode_AF_PP);
             #endif
             
             RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART5, ENABLE);
@@ -68,9 +70,9 @@ bsp_usart::bsp_usart(USART_TypeDef *unit, bsp_usart_callback_t *clbck):
     }
 };
     
-void bsp_usart::send_sett(bsp_usart_setting_t *sett)
+void bsp_usart::send_sett(void *sett)
 {
-    setting = *sett;
+    setting = *(bsp_usart_setting_t*)sett;
     
     USART_InitTypeDef usart_init_struct =
     {
@@ -107,12 +109,18 @@ void *bsp_usart::get_sett(void)
     return (void *)&sett;
 };
 
-bool bsp_usart::send_msg(uint16_t data)
+bool bsp_usart::send_msg(void* msg)
 {
-    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_TXE))
+    bool result = false;
+    
+    if (USART_GetFlagStatus((USART_TypeDef *)unit_ptr, USART_FLAG_TXE))
     {
-        USART_SendData((USART_TypeDef *)unit_ptr, data);
+        USART_SendData((USART_TypeDef *)unit_ptr, *(bsp_usart_msg_t *)msg);
+        USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_TXE, ENABLE);
+        result = true;
     }
+    
+    return result;
 };
 
 void bsp_usart::interrupt_handler(void)
@@ -122,42 +130,44 @@ void bsp_usart::interrupt_handler(void)
     
     if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_TXE))
     {
-        flags |= USART_IT_TXE;
+        flags |= USART_FLAG_TXE;
         USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_TXE, DISABLE);
     };
     if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_TC))
     {
-        flags |= USART_IT_TC;
+        flags |= USART_FLAG_TC;
         USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_TC, DISABLE);
         USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_TC);
     };
 
     if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_PE))
     {
-        flags |= USART_IT_PE;
+        flags |= USART_FLAG_PE;
     }
-    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_ERR))
-    {
-        flags |= USART_IT_ERR;
-    }
+#warning Тут надо расшифровать флаги ошибок (кошерно)
+//    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_ERR))
+//    {
+//        flags |= USART_FLAG_ERR;
+//    }
     if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_IDLE))
     {
-        flags |= USART_IT_IDLE;
+        flags |= USART_FLAG_IDLE;
         data = USART_IDLE_DATA;
     }
     if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_RXNE))
     {
-        flags |= USART_IT_RXNE;
+        flags |= USART_FLAG_RXNE;
         data = USART_ReceiveData((USART_TypeDef *)unit_ptr);
         USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_RXNE);
     }
-    USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_LBD);
-    {
-        flags |= USART_IT_RXNE;
-        USART_ReceiveData((USART_TypeDef *)unit_ptr);
-        data = USART_LIN_BRK_DATA;
-        USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_LBD);
-    }
+#warning почему-то срабатывает в консоле, хотя LIN выключен и прерывание тоже
+//    USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_LBD);
+//    {
+//        flags |= USART_IT_RXNE;
+//        USART_ReceiveData((USART_TypeDef *)unit_ptr);
+//        data = USART_LIN_BRK_DATA;
+//        USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_LBD);
+//    }
     
     if (callback != NULL)
     {

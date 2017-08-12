@@ -13,3 +13,4 @@ output/
 *.map
 f105_CMSIS/out/
 f105_CMSIS/DebugConfig/
+*.scvd
