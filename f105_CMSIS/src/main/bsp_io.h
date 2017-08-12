@@ -58,6 +58,8 @@
 #define GPIOC_14 GPIOC,GPIO_Pin_14
 #define GPIOC_15 GPIOC,GPIO_Pin_15
 
+#define GPIO_Pin(n) (1<<n)
+
 class bsp_io
 {
     private:
