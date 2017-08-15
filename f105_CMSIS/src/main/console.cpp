@@ -27,9 +27,9 @@ typedef const struct
 } console_cmd_t;
 
 // —троки кодов ошибок
-static const char str_err_bad_cmd[]    = "Error! This command is invalid.\r\n";
-static const char str_err_null_cmd[]   = "Error! This command is not realised.\r\n";
-static const char str_err_syntax_cmd[] = "Error! This command syntax is invalid. Print help.\r\n";
+static const char str_err_bad_cmd[]    = "\x1b[31mError! This command is invalid.\x1b[0m\r\n";
+static const char str_err_null_cmd[]   = "\x1b[31mError! This command is not realised.\x1b[0m\r\n";
+static const char str_err_syntax_cmd[] = "\x1b[31mError! This command syntax is invalid. Print help.\x1b[0m\r\n";
 
 // перевод числа в строку
 static char * console_uint_to_str(uint32_t num)

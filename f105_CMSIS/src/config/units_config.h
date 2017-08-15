@@ -20,9 +20,8 @@ typedef enum
 // Поддерживаемые типы протоколов
 typedef enum
 {
-    PROTOCOL_TYPE_CONSOLE,
 //  PROTOCOL_TYPE_UART,
-//  PROTOCOL_TYPE_UART_STRING,
+    PROTOCOL_TYPE_UART_STRING,
 //  PROTOCOL_TYPE_LIN,
 //  PROTOKOL_TYPE_CAN,
 //  PROTOCOL_TYPE_CAN_TP,
