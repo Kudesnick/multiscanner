@@ -11,6 +11,12 @@
 
 typedef enum
 {
+    UNIT_TYPE_UART,
+    UNIT_TYPE_CAN
+} unit_type_t;
+
+typedef enum
+{
     IFACE_TYPE_CAN,
     IFACE_TYPE_UART,
     IFACE_TYPE_LIN,

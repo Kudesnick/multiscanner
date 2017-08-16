@@ -9,25 +9,6 @@
 #ifndef _UNIT_CONFIG_H_
 #define _UNIT_CONFIG_H_
 
-// Поддерживаемые классы хардварных интерфейсов
-typedef enum
-{
-    UNIT_CLASS_TYPE_UART,
-//  UNIT_CLASS_TYPE_CAN,
-    UNIT_CLASS_TYPE_COUNT
-}unit_class_type_t;
-
-// Поддерживаемые типы протоколов
-typedef enum
-{
-//  PROTOCOL_TYPE_UART,
-    PROTOCOL_TYPE_UART_STRING,
-//  PROTOCOL_TYPE_LIN,
-//  PROTOKOL_TYPE_CAN,
-//  PROTOCOL_TYPE_CAN_TP,
-    PROTOCOL_TYPE_COUNT
-}protocol_type_t;
-
 #ifndef NULL
 	#define NULL 0
 #endif
@@ -72,7 +53,7 @@ typedef enum
 //			<o5>Active level <0=>0 <1=>1
 //		</e>
 //	</e>
-#define CAN1_ENABLED 1
+#define CAN1_ENABLED 0
 #define CAN1_Driver_NUM 1
 #define CAN1_STB_AVAILABLE 1
 #define CAN1_STB_PORT GPIO_PORT(1)
@@ -94,7 +75,7 @@ typedef enum
 //    		<o4>Pin <0=>0 <1=>1 <2=>2 <3=>3 <4=>4 <5=>5 <6=>6 <7=>7 <8=>8 <9=>9 <10=>10 <11=>11 <12=>12 <13=>13 <14=>14 <15=>15
 //			<o5>Active level <0=>0 <1=>1
 //		</e>
-#define CAN2_ENABLED 1
+#define CAN2_ENABLED 0
 #define CAN2_Driver_NUM 2
 #define CAN2_STB_AVAILABLE 1
 #define CAN2_STB_PORT GPIO_PORT(1)
@@ -248,7 +229,9 @@ typedef enum
 //      <o5>Baudrate bit/s <1-2000000>
 //      <o6>Parity <0=>none <1=>even <2=>odd
 //      <o7>Byte length <8=>8 <9=>9
-//      <o8>Stop bits <0=>1 <1=>2 <2=>1.5 <3=>0.5 
+//      <o8>Stop bits <0=>1 <1=>2
+//      <o9>Tx buffer size (bytes) <8=>8 <16=>16 <32=>32 <64=>64 <128=>128 <256=>256 <512=>512 <1024=>1024 <2048=>2048 <4096=>4096 <8192=>8192 <16384=>16384
+//      <o10>Rx buffer size (bytes) <8=>8 <16=>16 <32=>32 <64=>64 <128=>128 <256=>256 <512=>512 <1024=>1024 <2048=>2048 <4096=>4096 <8192=>8192 <16384=>16384
 #define CON_PORT_NUM 2
 #define CON_STB_AVAILABLE 0
 #define CON_STB_PORT GPIO_PORT(1)
@@ -259,6 +242,9 @@ typedef enum
 #define CON_PARITY PARITY_TYPE(0)
 #define CON_BYTE_LENGTH 8
 #define CON_STOP_BITS 0
+
+#define CON_TX_BUFFER_SIZE 32
+#define CON_RX_BUFFER_SIZE 32
 
 #define CON_STB_OFF (CON_STB_ON ^ 1)
 #define CON_STB_PIN  CON_STB_PORT,CON_STB_PIN_NUM
@@ -273,6 +259,8 @@ typedef enum
 #elif (CON_PORT_NUM == 5)
     #define CON_UNIT UART5
 #endif
+
+
 //	</h>
 
 #endif /* _UNIT_CONFIG_H_ */

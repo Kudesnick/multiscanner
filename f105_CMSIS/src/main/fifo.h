@@ -26,7 +26,7 @@ typedef uint16_t fifo_ptr_t;
 
 template <typename data_t, const fifo_ptr_t count> class cpp_fifo
 {
-	protected:
+	private:
 		data_t fifo[count];
 		fifo_ptr_t head, end;
 	public:
@@ -35,11 +35,12 @@ template <typename data_t, const fifo_ptr_t count> class cpp_fifo
 		fifo_ptr_t get_full_count(void);
 		bool is_full(void);
 		bool is_empty(void);
-		void add(data_t data);
-		data_t extract(void);
+		virtual void add(data_t data);
+		virtual data_t extract(void);
 		data_t read_head(void);
 		data_t read_end(void);
 		void clear(void);
+#warning изничтожить
         data_t *get_head(void);
 };
 
