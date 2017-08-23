@@ -6,7 +6,10 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "fifo_con.h"
+
 typedef void(bsp_con_rx_handler_t)(char *buf, const uint8_t size);
+
 typedef struct
 {
     uint32_t baudrate;

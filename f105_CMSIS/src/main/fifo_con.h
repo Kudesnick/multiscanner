@@ -30,7 +30,7 @@ class fifo_con_tx_buffer: public cpp_fifo<char, TX_BUFFER_SIZE>
 {
 	public:
 		fifo_con_tx_buffer(void);
-		bool send_str(char* str);
+		bool send_str(const char * str);
 };
 
 class fifo_con

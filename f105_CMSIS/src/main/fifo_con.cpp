@@ -68,10 +68,10 @@ void fifo_con_rx_buffer::add(char data)
 #warning решить вопрос атомарности
                     word_counter++;
                 }
-                if (!is_full())
-                {
-                    cpp_fifo::add(data);
-                }
+            }
+            if (!is_full())
+            {
+                cpp_fifo::add(data);
             }
         }
     }
@@ -94,29 +94,32 @@ char fifo_con_rx_buffer::extract(void)
 
 // Класс передающего буфера
 //------------------------------------------------------------------------------
-fifo_con_tx_buffer::fifo_con_tx_buffer(void):
+fifo_con_tx_buffer::fifo_con_tx_buffer(void)
 {
 	cpp_fifo();
 };
 
-bool fifo_con_tx_buffer::send_str(char* str);
+bool fifo_con_tx_buffer::send_str(const char * str)
 {
     bool result = false;
 
-    if ((get_full_count() + strlen(buf)) <= get_count())
+    if ((get_full_count() + strlen(str)) <= get_count())
     {
-        for (uint_fast16_t i = 0; i < strlen(buf); i++)
+        for (uint_fast16_t i = 0; i < strlen(str); i++)
         {
-            add(buf[i]);
+            add(str[i]);
         }
         result = true;
     }
+    
+    return result;
 };
 
 // Класс приемопередающего буфера
 //------------------------------------------------------------------------------
-fifo_con::fifo_con(void)
+fifo_con::fifo_con(void):
+    rx(),
+    tx()
 {
-    rx();
-    tx();
+
 };

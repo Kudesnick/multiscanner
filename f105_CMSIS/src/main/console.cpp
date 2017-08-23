@@ -8,6 +8,7 @@
 #include "misc.h"
 
 #include "fifo.h"
+#include "fifo_con.h"
 #include "bsp_con.h"
 #include "units_config.h"
 
@@ -25,6 +26,8 @@ typedef const struct
     const char *name;
     const void *func;
 } console_cmd_t;
+
+fifo_con * console_buf;
 
 // Строки кодов ошибок
 static const char str_err_bad_cmd[]    = "\x1b[31mError! This command is invalid.\x1b[0m\r\n";
@@ -176,9 +179,8 @@ static void console_cmd_parser(char *buf, const uint8_t size)
 
 void console_init(void)
 {
-    // Настройки берутся из файла конфигурации интерфейса
-    
-    bsp_con_init(console_cmd_parser);
+    console_buf = new fifo_con();
+    bsp_con_init(console_buf);
 }
 
 // =========================================================================
