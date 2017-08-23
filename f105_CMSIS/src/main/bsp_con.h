@@ -15,7 +15,7 @@ typedef struct
         bool echo;
 } bsp_con_config_t;
 
-void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler);
+void bsp_con_init(fifo_con * buf);
 bool bsp_con_send(const char *buf);
 bsp_con_config_t *bsp_con_get_setting(void);
 

@@ -420,6 +420,11 @@
               <FileType>8</FileType>
               <FilePath>.\src\main\bsp_usart.cpp</FilePath>
             </File>
+            <File>
+              <FileName>fifo_con.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\fifo_con.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

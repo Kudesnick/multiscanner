@@ -92,3 +92,31 @@ char fifo_con_rx_buffer::extract(void)
     return result;
 };
 
+// Класс передающего буфера
+//------------------------------------------------------------------------------
+fifo_con_tx_buffer::fifo_con_tx_buffer(void):
+{
+	cpp_fifo();
+};
+
+bool fifo_con_tx_buffer::send_str(char* str);
+{
+    bool result = false;
+
+    if ((get_full_count() + strlen(buf)) <= get_count())
+    {
+        for (uint_fast16_t i = 0; i < strlen(buf); i++)
+        {
+            add(buf[i]);
+        }
+        result = true;
+    }
+};
+
+// Класс приемопередающего буфера
+//------------------------------------------------------------------------------
+fifo_con::fifo_con(void)
+{
+    rx();
+    tx();
+};
