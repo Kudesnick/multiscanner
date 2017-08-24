@@ -72,7 +72,16 @@ template <typename data_t, const fifo_ptr_t count> bool cpp_fifo<data_t, count>:
 
 template <typename data_t, const fifo_ptr_t count> void cpp_fifo<data_t, count>::add(data_t data)
 {
-    fifo[end++ & (count - 1)] = data;
+    register fifo_ptr_t tmp;
+    
+    do
+    {
+        tmp = __LDREXW(&end);
+        tmp++;
+    }
+    while(__STREXW(tmp, &end));
+    
+    fifo[--tmp & (count - 1)] = data;
 }
 
 template <typename data_t, const fifo_ptr_t count> data_t cpp_fifo<data_t, count>::extract(void)
