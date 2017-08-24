@@ -164,8 +164,7 @@ static void console_cmd_parser(char *buf, const uint8_t size)
             }
             else
             {
-#warning Αλÿÿÿ!!!
-//                bsp_con_send(str_err_null_cmd);
+                console_unit->send(str_err_null_cmd);
             }
             
             bad_cmd = false;
@@ -175,8 +174,7 @@ static void console_cmd_parser(char *buf, const uint8_t size)
     
     if (bad_cmd)
     {
-#warning Αλÿÿÿ!!!
-//        bsp_con_send(str_err_bad_cmd);
+        console_unit->send(str_err_bad_cmd);
     }
 }
 
@@ -222,16 +220,14 @@ static void console_cmd_help(char *buf, uint8_t size)
             {
                 bad_cmd = false;
 
-#warning Αλÿÿÿ!!!
-//                bsp_con_send((char *)console_cmd_help_param_list[i].func);
+                console_unit->send((char *)console_cmd_help_param_list[i].func);
             }
         }
     }
     
     if (bad_cmd)
     {
-#warning Αλÿÿÿ!!!
-//        bsp_con_send(str_help);
+        console_unit->send(str_help);
     }
 }
 
@@ -241,22 +237,21 @@ static void console_cmd_help(char *buf, uint8_t size)
 
 static void console_cmd_get_con(uint8_t *buf, uint8_t size)
 {
-#warning Αλÿÿÿ!!!
-//    bsp_con_send("Interface name: console\r\n");
-//    
-//    bsp_con_send("    Baudrate: ");
-//    bsp_con_send(console_uint_to_str(bsp_con_get_setting()->baudrate));
-//    
-//    bsp_con_send("\r\n    Parity: ");
-//    bsp_con_send((bsp_con_get_setting()->parity == USART_Parity_Even) ? "even" : 
-//                 (bsp_con_get_setting()->parity == USART_Parity_Odd) ? "odd" : "no");
-//    
-//    bsp_con_send("\r\n    Stop bits: ");
-//    bsp_con_send((bsp_con_get_setting()->stop_bits == USART_StopBits_2) ? "2" :
-//                 (bsp_con_get_setting()->stop_bits == USART_StopBits_0_5) ? "0.5" :
-//                 (bsp_con_get_setting()->stop_bits == USART_StopBits_1_5) ? "1.5" : "1");
-//
-//    bsp_con_send("\r\n");
+    console_unit->send("Interface name: console\r\n");
+    
+    console_unit->send("    Baudrate: ");
+    console_unit->send(console_uint_to_str(console_unit->get_setting()->baudrate));
+    
+    console_unit->send("\r\n    Parity: ");
+    console_unit->send((console_unit->get_setting()->parity == USART_Parity_Even) ? "even" : 
+                 (console_unit->get_setting()->parity == USART_Parity_Odd) ? "odd" : "no");
+    
+    console_unit->send("\r\n    Stop bits: ");
+    console_unit->send((console_unit->get_setting()->stop_bits == USART_StopBits_2) ? "2" :
+                 (console_unit->get_setting()->stop_bits == USART_StopBits_0_5) ? "0.5" :
+                 (console_unit->get_setting()->stop_bits == USART_StopBits_1_5) ? "1.5" : "1");
+
+    console_unit->send("\r\n");
 }
 
 static void console_cmd_get(char *buf, uint8_t size)
@@ -294,8 +289,7 @@ static void console_cmd_get(char *buf, uint8_t size)
     
     if (bad_cmd)
     {
-#warning Αλÿÿÿ!!!
-//        bsp_con_send(str_err_syntax_cmd);
+        console_unit->send(str_err_syntax_cmd);
     }
 }
 
@@ -423,7 +417,6 @@ static void console_cmd_set(char *buf, uint8_t size)
     
     if (bad_cmd)
     {
-#warning Αλÿÿÿ!!!
-//        bsp_con_send(str_err_syntax_cmd);
+        console_unit->send(str_err_syntax_cmd);
     }
 }
