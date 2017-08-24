@@ -8,9 +8,8 @@
 
 bsp_unit *bsp_unit::last_pointer = 0;
 
-bsp_unit::bsp_unit(void *_unit_ptr, bsp_unit_callback_t *_callback, uint16_t _class_type, uint16_t _object_name):
+bsp_unit::bsp_unit(void *_unit_ptr, uint16_t _class_type, uint16_t _object_name):
     unit_ptr(_unit_ptr),
-    callback(_callback),
     class_type(_class_type),
     object_name(_object_name)
 {

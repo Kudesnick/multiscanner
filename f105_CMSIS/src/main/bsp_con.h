@@ -21,8 +21,8 @@ class bsp_con : private bsp_usart
     private:
         fifo_con * bufer;
         static bsp_con_config_t default_sett;
-        void bsp_usart_callback(uint16_t data, uint16_t flags);
         bsp_con_config_t setting;
+        virtual void callback(void * msg, uint32_t flags); // В теле метода преобразовать (void *)->(uint16_t)
     protected:
     public:
         bsp_con(USART_TypeDef *_unit_ptr, fifo_con * buf, bsp_con_config_t * _setting = &default_sett);

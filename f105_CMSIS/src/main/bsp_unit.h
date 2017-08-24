@@ -9,8 +9,6 @@
 
 #include "bsp_io.h"
 
-typedef void(bsp_unit_callback_t)(void);
-
 class bsp_unit
 {
     private:    
@@ -18,11 +16,11 @@ class bsp_unit
         bsp_unit *prev_pointer;        // Предыдущий элемент списка
     protected:
         void *unit_ptr;                // Указатель на физический модуль ввода/вывода
-        bsp_unit_callback_t *callback; // callback по приему данных
         uint16_t class_type;           // Тип модуля (класса)
         uint16_t object_name;          // Имя объекта
+        virtual void callback(void *msg, uint32_t flags) = NULL; // Вызывается из прерывания. По сути - высокоуровневый обработчик.
     public:
-        bsp_unit(void *_unit_ptr, bsp_unit_callback_t *_callback, uint16_t _class_type = NULL, uint16_t _object_name = NULL);
+        bsp_unit(void *_unit_ptr, uint16_t _class_type = NULL, uint16_t _object_name = NULL);
         bsp_unit* get_prev_pointer(void);            // Получить указатель на предыдущий элемент списка
         static bsp_unit* get_last_pointer(void);     // Получить указатель на последний элемент в списке
         static bsp_unit *object_search(void *unit);  // Поиск объекта по имени модуля (нужно для вызова из прерываний)

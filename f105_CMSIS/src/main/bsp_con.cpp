@@ -19,27 +19,28 @@ bsp_con_config_t bsp_con::default_sett =
 };
 
 // ѕрерывание по приему/передаче
-void bsp_con::bsp_usart_callback(uint16_t data, uint16_t flags)
+void bsp_con::callback(void * msg, uint32_t flags)
 {
     if (flags & USART_FLAG_TXE)
     {
         if (!bufer->tx.is_empty())
         {
-            static uint16_t msg;
-            msg = bufer->tx.extract();
-            send_msg((void *) &msg);
+            static uint16_t s_msg;
+            s_msg = bufer->tx.extract();
+            send_msg((void *) &s_msg);
         }
     }
     
     if (flags & USART_FLAG_RXNE)
     {
-        bufer->rx.add(data);
+        uint32_t data = (uint32_t)msg;
+        
+        bufer->rx.add((char)data);
     }
 }
 
 bsp_con::bsp_con(USART_TypeDef *_unit_ptr, fifo_con * buf, bsp_con_config_t * _setting):
-#warning Ѕл€€€!!!
-    bsp_usart(_unit_ptr, this->bsp_usart_callback),
+    bsp_usart(_unit_ptr),
     bufer(buf)
 {
     set_setting(_setting);

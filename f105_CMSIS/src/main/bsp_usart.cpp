@@ -2,8 +2,8 @@
 
 #include "bsp_usart.h"
 
-bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr, bsp_usart_callback_t *_callback):
-    bsp_unit((void *)_unit_ptr, (bsp_unit_callback_t *)_callback),
+bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr):
+    bsp_unit((void *)_unit_ptr),
     pin_rx(),
     pin_tx()
 {
@@ -171,10 +171,7 @@ void bsp_usart::interrupt_handler(void)
 //        USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_LBD);
 //    }
     
-    if (callback != NULL)
-    {
-        ((bsp_usart_callback_t *)(callback))(data, flags);
-    }
+    callback((void *)data, flags);
 };
 
 // Прерывания от интерфейсов uart
