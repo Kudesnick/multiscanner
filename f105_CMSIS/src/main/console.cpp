@@ -28,6 +28,7 @@ typedef const struct
 } console_cmd_t;
 
 fifo_con * console_buf;
+bsp_con * console_unit;
 
 // —троки кодов ошибок
 static const char str_err_bad_cmd[]    = "\x1b[31mError! This command is invalid.\x1b[0m\r\n";
@@ -163,7 +164,8 @@ static void console_cmd_parser(char *buf, const uint8_t size)
             }
             else
             {
-                bsp_con_send(str_err_null_cmd);
+#warning Ѕл€€€!!!
+//                bsp_con_send(str_err_null_cmd);
             }
             
             bad_cmd = false;
@@ -173,14 +175,15 @@ static void console_cmd_parser(char *buf, const uint8_t size)
     
     if (bad_cmd)
     {
-        bsp_con_send(str_err_bad_cmd);
+#warning Ѕл€€€!!!
+//        bsp_con_send(str_err_bad_cmd);
     }
 }
 
 void console_init(void)
 {
     console_buf = new fifo_con();
-    bsp_con_init(console_buf);
+    console_unit = new bsp_con(CON_UNIT, console_buf);
 }
 
 // =========================================================================
@@ -219,14 +222,16 @@ static void console_cmd_help(char *buf, uint8_t size)
             {
                 bad_cmd = false;
 
-                bsp_con_send((char *)console_cmd_help_param_list[i].func);
+#warning Ѕл€€€!!!
+//                bsp_con_send((char *)console_cmd_help_param_list[i].func);
             }
         }
     }
     
     if (bad_cmd)
     {
-        bsp_con_send(str_help);
+#warning Ѕл€€€!!!
+//        bsp_con_send(str_help);
     }
 }
 
@@ -236,21 +241,22 @@ static void console_cmd_help(char *buf, uint8_t size)
 
 static void console_cmd_get_con(uint8_t *buf, uint8_t size)
 {
-    bsp_con_send("Interface name: console\r\n");
-    
-    bsp_con_send("    Baudrate: ");
-    bsp_con_send(console_uint_to_str(bsp_con_get_setting()->baudrate));
-    
-    bsp_con_send("\r\n    Parity: ");
-    bsp_con_send((bsp_con_get_setting()->parity == USART_Parity_Even) ? "even" : 
-                 (bsp_con_get_setting()->parity == USART_Parity_Odd) ? "odd" : "no");
-    
-    bsp_con_send("\r\n    Stop bits: ");
-    bsp_con_send((bsp_con_get_setting()->stop_bits == USART_StopBits_2) ? "2" :
-                 (bsp_con_get_setting()->stop_bits == USART_StopBits_0_5) ? "0.5" :
-                 (bsp_con_get_setting()->stop_bits == USART_StopBits_1_5) ? "1.5" : "1");
-
-    bsp_con_send("\r\n");
+#warning Ѕл€€€!!!
+//    bsp_con_send("Interface name: console\r\n");
+//    
+//    bsp_con_send("    Baudrate: ");
+//    bsp_con_send(console_uint_to_str(bsp_con_get_setting()->baudrate));
+//    
+//    bsp_con_send("\r\n    Parity: ");
+//    bsp_con_send((bsp_con_get_setting()->parity == USART_Parity_Even) ? "even" : 
+//                 (bsp_con_get_setting()->parity == USART_Parity_Odd) ? "odd" : "no");
+//    
+//    bsp_con_send("\r\n    Stop bits: ");
+//    bsp_con_send((bsp_con_get_setting()->stop_bits == USART_StopBits_2) ? "2" :
+//                 (bsp_con_get_setting()->stop_bits == USART_StopBits_0_5) ? "0.5" :
+//                 (bsp_con_get_setting()->stop_bits == USART_StopBits_1_5) ? "1.5" : "1");
+//
+//    bsp_con_send("\r\n");
 }
 
 static void console_cmd_get(char *buf, uint8_t size)
@@ -288,7 +294,8 @@ static void console_cmd_get(char *buf, uint8_t size)
     
     if (bad_cmd)
     {
-        bsp_con_send(str_err_syntax_cmd);
+#warning Ѕл€€€!!!
+//        bsp_con_send(str_err_syntax_cmd);
     }
 }
 
@@ -367,7 +374,8 @@ static bool console_cmd_set_con(char *buf, uint8_t size)
             {
                 if (param_list[i].func != NULL)
                 {
-                    if (((cmd_param_int32_t)param_list[j].func)(buf, size, &i, (void *)bsp_con_get_setting()) == PARAM_ERR)
+#warning Ѕл€€€!!!
+//                    if (((cmd_param_int32_t)param_list[j].func)(buf, size, &i, (void *)bsp_con_get_setting()) == PARAM_ERR)
                     {
                         return false;
                     }
@@ -415,6 +423,7 @@ static void console_cmd_set(char *buf, uint8_t size)
     
     if (bad_cmd)
     {
-        bsp_con_send(str_err_syntax_cmd);
+#warning Ѕл€€€!!!
+//        bsp_con_send(str_err_syntax_cmd);
     }
 }

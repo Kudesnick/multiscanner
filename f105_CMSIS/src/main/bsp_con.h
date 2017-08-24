@@ -1,14 +1,12 @@
 #ifndef _BSP_CON_N_
 #define _BSP_CON_N_
 
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
 #include "fifo_con.h"
-
-typedef void(bsp_con_rx_handler_t)(char *buf, const uint8_t size);
+#include "bsp_usart.h"
 
 typedef struct
 {
@@ -18,8 +16,19 @@ typedef struct
         bool echo;
 } bsp_con_config_t;
 
-void bsp_con_init(fifo_con * buf);
-bool bsp_con_send(const char *buf);
-bsp_con_config_t *bsp_con_get_setting(void);
+class bsp_con : private bsp_usart
+{
+    private:
+        fifo_con * bufer;
+        static bsp_con_config_t default_sett;
+        void bsp_usart_callback(uint16_t data, uint16_t flags);
+        bsp_con_config_t setting;
+    protected:
+    public:
+        bsp_con(USART_TypeDef *_unit_ptr, fifo_con * buf, bsp_con_config_t * _setting = &default_sett);
+        bool send(const char *buf);
+        bsp_con_config_t *get_setting(void);
+        void set_setting(bsp_con_config_t * sett);
+};
 
 #endif  /* _BSP_CON_N_ */ 
