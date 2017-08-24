@@ -33,9 +33,8 @@ typedef void(bsp_usart_callback_t)(uint16_t data, uint16_t flags);
 class bsp_usart: public bsp_unit
 {
     private:
-#warning Впоследствие придумать, как сделать без указателей
-        bsp_io *pin_rx;
-        bsp_io *pin_tx;
+        bsp_io pin_rx;
+        bsp_io pin_tx;
     protected:
         bsp_usart_setting_t setting;
     public:

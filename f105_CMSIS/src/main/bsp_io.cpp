@@ -2,12 +2,21 @@
 // Порт ввода-вывода
 //------------------------------------------------------------------------------
 
+#include <string.h>
+
 #include "bsp_io.h"
 #include "misc.h"
 
-bsp_io::bsp_io(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value, bool invert_mode):
-    GPIOx(GPIO_unit), invert(invert_mode)
+bsp_io::bsp_io(void):
+    GPIOx(NULL)
 {
+};
+
+void bsp_io::init(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value, bool invert_mode)
+{
+    GPIOx = GPIO_unit;
+    invert = invert_mode;
+    
     GPIO_InitStruct.GPIO_Pin = GPIO_Pin;
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode;
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_default;
@@ -28,21 +37,31 @@ bsp_io::bsp_io(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO
     set_val(value);
 
     GPIO_Init(GPIOx, &GPIO_InitStruct);
+}
+
+bsp_io::bsp_io(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value, bool invert_mode)
+{
+    init(GPIO_unit, GPIO_Pin, GPIO_Mode, value, invert_mode);
 };
 
 bool bsp_io::get_val(void)
 {
-    return ((GPIO_ReadOutputDataBit(GPIOx, GPIO_InitStruct.GPIO_Pin) != 0) != invert);
+    return ((GPIOx != NULL) ? (GPIO_ReadOutputDataBit(GPIOx, GPIO_InitStruct.GPIO_Pin) != 0) != invert : false);
 };
 
 void bsp_io::set_val(bool value)
 {
-    GPIO_WriteBit(GPIOx, GPIO_InitStruct.GPIO_Pin, (invert != value) ? Bit_SET : Bit_RESET);
+    if (GPIOx != NULL)
+    {
+        GPIO_WriteBit(GPIOx, GPIO_InitStruct.GPIO_Pin, (invert != value) ? Bit_SET : Bit_RESET);
+    }
 };
 
 void bsp_io::set_sped(GPIOSpeed_TypeDef speed)
 {
-    if (GPIO_InitStruct.GPIO_Speed != speed)
+    if (GPIOx != NULL
+        && GPIO_InitStruct.GPIO_Speed != speed
+        )
     {
         GPIO_InitStruct.GPIO_Speed = speed;
         GPIO_Init(GPIOx, &GPIO_InitStruct);
