@@ -2,9 +2,10 @@
 // ѕромежуточный буфер дл€ консоли
 //------------------------------------------------------------------------------
 
-#include "stdint.h"
-#include "string.h"
+#include <stdint.h>
+#include <string.h>
 
+#include "atom.h"
 #include "fifo_con.h"
 
 //  ласс приемного буфера
@@ -17,18 +18,20 @@ fifo_con_rx_buffer::fifo_con_rx_buffer(void):
     cpp_fifo();
 };
 
-uint16_t fifo_con_rx_buffer::get_word_count(void)
+uint32_t fifo_con_rx_buffer::get_word_count(void)
 {
     return word_counter;
 };
 
-uint16_t fifo_con_rx_buffer::get_str_count(void)
+uint32_t fifo_con_rx_buffer::get_str_count(void)
 {
     return string_counter;
 };
 
 void fifo_con_rx_buffer::add(char data)
 {
+    bool add_result = true;
+    
     switch (data)
     {
         case  ' ':
@@ -47,12 +50,11 @@ void fifo_con_rx_buffer::add(char data)
             data = '\0';
             if (last_char != '\0')
             {
-                if (!is_full())
+                if ((add_result = !is_full()) == true)
                 {
                     cpp_fifo::add('\0');
-#warning решить вопрос атомарности
-                    string_counter++;
-                    word_counter++;
+                    atom_inc(string_counter);
+                    atom_inc(word_counter);
                 }
             }
             break;
@@ -62,20 +64,26 @@ void fifo_con_rx_buffer::add(char data)
         {
             if (last_char == ' ')
             {
-                if (!is_full())
+                if ((add_result = !is_full()) == true)
                 {
                     cpp_fifo::add(' ');
-#warning решить вопрос атомарности
-                    word_counter++;
+                    atom_inc(word_counter);
                 }
             }
-            if (!is_full())
+            if ((add_result = !is_full()) == true)
             {
                 cpp_fifo::add(data);
             }
+            break;
         }
     }
+    
     last_char = data;
+    
+    if (!add_result)
+    {
+#warning предусмотреть действие, св€занное с переполнением буфера
+    }
 };
 
 char fifo_con_rx_buffer::extract(void)
@@ -84,9 +92,8 @@ char fifo_con_rx_buffer::extract(void)
     
     switch(result)
     {
-#warning решить вопрос атомарности
-        case '\0': if (string_counter > 0) string_counter--;
-        case ' ': if (word_counter > 0) word_counter--;
+        case '\0': atom_dec_to_zero(string_counter);
+        case ' ' : atom_dec_to_zero(word_counter);
     }
     
     return result;

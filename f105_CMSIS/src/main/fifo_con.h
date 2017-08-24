@@ -15,13 +15,13 @@
 class fifo_con_rx_buffer: public cpp_fifo<char, RX_BUFFER_SIZE>
 {
 	private:
-		uint16_t word_counter;
-		uint16_t string_counter;
+		uint32_t word_counter;
+		uint32_t string_counter;
 		char last_char;
 	public:
 		fifo_con_rx_buffer(void);
-		uint16_t get_word_count(void);
-		uint16_t get_str_count(void);
+		uint32_t get_word_count(void);
+		uint32_t get_str_count(void);
 		virtual void add(char data);
         virtual char extract(void);
 };

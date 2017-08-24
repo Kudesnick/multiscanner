@@ -425,6 +425,11 @@
               <FileType>8</FileType>
               <FilePath>.\src\main\fifo_con.cpp</FilePath>
             </File>
+            <File>
+              <FileName>atom.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\atom.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

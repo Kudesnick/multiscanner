@@ -5,7 +5,7 @@
 #ifndef _FIFO_H_
 #define _FIFO_H_
 
-#include "stdint.h"
+#include <stdint.h>
 
 typedef uint16_t fifo_ptr_t;
 
@@ -45,7 +45,8 @@ template <typename data_t, const fifo_ptr_t count> class cpp_fifo
 };
 
 template <typename data_t, const fifo_ptr_t count> cpp_fifo<data_t, count>::cpp_fifo(void):
-    head(end)
+    head(0),
+    end(0)
 {
 }
 	
