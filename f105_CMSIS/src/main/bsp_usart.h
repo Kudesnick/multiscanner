@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "bsp_io.h"
 #include "bsp_unit.h"
 
 //------------------------------------------------------------------------------
