@@ -53,9 +53,30 @@ void parser_lowercase(char *buf)
     }
 }
 
-bool parser_find(char * str, void * param)
+int16_t parser_find(char * str, const fsm_steps_t * cmd_list, uint16_t cmd_list_len)
 {
-
+    int16_t result = -1;
+    
+    if (str[0] != '\0')
+    {
+        char * next_str;
+        if ((next_str = strchr(str, ' ')) == NULL) next_str = strchr(str, '\0');
+        uint8_t len = (next_str - str) / sizeof(char);
+        
+        for (uint8_t i = 0; i < cmd_list_len)
+        {
+            if (strlen(cmd_list[i].name) == len
+                && strncmp(str, strlen(cmd_list[i].name, len) == 0)
+            {
+                result = i;
+                str = next_str[0];
+                if (str[0] == ' ') str += sizeof(char);
+                break;
+            }
+        }
+    }
+    
+    return result;
 }
 
 void parser_parse(char * str, void * param)
@@ -74,5 +95,16 @@ void parser_parse(char * str, void * param)
         {"urt2",             NULL, NULL}, // Отправить сообщение по uart2 
     };
     
-    while (parser_find(str, NULL));
+    if ((int16_t i = parser_find(str, cmd_list, countof_arr(cmd_list))) < 0)
+    {
+        send_str(parser_str_err_bad_cmd);
+    }
+    else if (cmd_list[i].func == NULL)
+    {
+        send_str(parser_str_err_null_cmd);
+    }
+    else
+    {
+        cmd_list[i].func(str, cmd_list[i].param);
+    }
 }
