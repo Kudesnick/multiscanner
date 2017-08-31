@@ -8,6 +8,7 @@
 #include "misc.h"
 
 #include "fifo.h"
+#include "fifo_con.h"
 #include "bsp_con.h"
 #include "units_config.h"
 
@@ -26,10 +27,13 @@ typedef const struct
     const void *func;
 } console_cmd_t;
 
+fifo_con * console_buf;
+bsp_con * console_unit;
+
 // Строки кодов ошибок
-static const char str_err_bad_cmd[]    = "Error! This command is invalid.\r\n";
-static const char str_err_null_cmd[]   = "Error! This command is not realised.\r\n";
-static const char str_err_syntax_cmd[] = "Error! This command syntax is invalid. Print help.\r\n";
+static const char str_err_bad_cmd[]    = "\x1b[31mError! This command is invalid.\x1b[0m\r\n";
+static const char str_err_null_cmd[]   = "\x1b[31mError! This command is not realised.\x1b[0m\r\n";
+static const char str_err_syntax_cmd[] = "\x1b[31mError! This command syntax is invalid. Print help.\x1b[0m\r\n";
 
 // перевод числа в строку
 static char * console_uint_to_str(uint32_t num)
@@ -160,7 +164,7 @@ static void console_cmd_parser(char *buf, const uint8_t size)
             }
             else
             {
-                bsp_con_send(str_err_null_cmd);
+                console_unit->send(str_err_null_cmd);
             }
             
             bad_cmd = false;
@@ -170,15 +174,14 @@ static void console_cmd_parser(char *buf, const uint8_t size)
     
     if (bad_cmd)
     {
-        bsp_con_send(str_err_bad_cmd);
+        console_unit->send(str_err_bad_cmd);
     }
 }
 
 void console_init(void)
 {
-    // Настройки берутся из файла конфигурации интерфейса
-    
-    bsp_con_init(console_cmd_parser);
+    console_buf = new fifo_con();
+    console_unit = new bsp_con(CON_UNIT, console_buf);
 }
 
 // =========================================================================
@@ -217,14 +220,14 @@ static void console_cmd_help(char *buf, uint8_t size)
             {
                 bad_cmd = false;
 
-                bsp_con_send((char *)console_cmd_help_param_list[i].func);
+                console_unit->send((char *)console_cmd_help_param_list[i].func);
             }
         }
     }
     
     if (bad_cmd)
     {
-        bsp_con_send(str_help);
+        console_unit->send(str_help);
     }
 }
 
@@ -234,21 +237,21 @@ static void console_cmd_help(char *buf, uint8_t size)
 
 static void console_cmd_get_con(uint8_t *buf, uint8_t size)
 {
-    bsp_con_send("Interface name: console\r\n");
+    console_unit->send("Interface name: console\r\n");
     
-    bsp_con_send("    Baudrate: ");
-    bsp_con_send(console_uint_to_str(bsp_con_get_setting()->baudrate));
+    console_unit->send("    Baudrate: ");
+    console_unit->send(console_uint_to_str(console_unit->get_setting()->baudrate));
     
-    bsp_con_send("\r\n    Parity: ");
-    bsp_con_send((bsp_con_get_setting()->parity == USART_Parity_Even) ? "even" : 
-                 (bsp_con_get_setting()->parity == USART_Parity_Odd) ? "odd" : "no");
+    console_unit->send("\r\n    Parity: ");
+    console_unit->send((console_unit->get_setting()->parity == USART_Parity_Even) ? "even" : 
+                 (console_unit->get_setting()->parity == USART_Parity_Odd) ? "odd" : "no");
     
-    bsp_con_send("\r\n    Stop bits: ");
-    bsp_con_send((bsp_con_get_setting()->stop_bits == USART_StopBits_2) ? "2" :
-                 (bsp_con_get_setting()->stop_bits == USART_StopBits_0_5) ? "0.5" :
-                 (bsp_con_get_setting()->stop_bits == USART_StopBits_1_5) ? "1.5" : "1");
+    console_unit->send("\r\n    Stop bits: ");
+    console_unit->send((console_unit->get_setting()->stop_bits == USART_StopBits_2) ? "2" :
+                 (console_unit->get_setting()->stop_bits == USART_StopBits_0_5) ? "0.5" :
+                 (console_unit->get_setting()->stop_bits == USART_StopBits_1_5) ? "1.5" : "1");
 
-    bsp_con_send("\r\n");
+    console_unit->send("\r\n");
 }
 
 static void console_cmd_get(char *buf, uint8_t size)
@@ -286,7 +289,7 @@ static void console_cmd_get(char *buf, uint8_t size)
     
     if (bad_cmd)
     {
-        bsp_con_send(str_err_syntax_cmd);
+        console_unit->send(str_err_syntax_cmd);
     }
 }
 
@@ -365,7 +368,8 @@ static bool console_cmd_set_con(char *buf, uint8_t size)
             {
                 if (param_list[i].func != NULL)
                 {
-                    if (((cmd_param_int32_t)param_list[j].func)(buf, size, &i, (void *)bsp_con_get_setting()) == PARAM_ERR)
+#warning Бляяя!!!
+//                    if (((cmd_param_int32_t)param_list[j].func)(buf, size, &i, (void *)bsp_con_get_setting()) == PARAM_ERR)
                     {
                         return false;
                     }
@@ -413,6 +417,6 @@ static void console_cmd_set(char *buf, uint8_t size)
     
     if (bad_cmd)
     {
-        bsp_con_send(str_err_syntax_cmd);
+        console_unit->send(str_err_syntax_cmd);
     }
 }

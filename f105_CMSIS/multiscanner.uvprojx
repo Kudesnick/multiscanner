@@ -391,11 +391,6 @@
               <FilePath>.\src\main\bsp_con.cpp</FilePath>
             </File>
             <File>
-              <FileName>console.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\console.cpp</FilePath>
-            </File>
-            <File>
               <FileName>fifo.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\src\main\fifo.h</FilePath>
@@ -419,6 +414,36 @@
               <FileName>bsp_usart.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\bsp_usart.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>fifo_con.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\fifo_con.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>atom.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\atom.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>list.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\main\list.h</FilePath>
+            </File>
+            <File>
+              <FileName>thread.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\thread.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>thread_con.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\thread_con.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>parser.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\parser.cpp</FilePath>
             </File>
           </Files>
         </Group>

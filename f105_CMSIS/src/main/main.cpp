@@ -8,7 +8,7 @@ int main(void)
 {   
     static cpp_multiscanner application;
 
-    application.run();
+    application.routine();
 	
 	return 0;
 }

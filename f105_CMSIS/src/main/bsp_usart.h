@@ -1,8 +1,10 @@
 #ifndef _BSP_USART_H_
 #define _BSP_USART_H_
 
-#include "stdint.h"
+#include <stdint.h>
+#include <string.h>
 
+#include "bsp_io.h"
 #include "bsp_unit.h"
 
 //------------------------------------------------------------------------------
@@ -28,18 +30,15 @@ typedef struct
 
 typedef uint16_t bsp_usart_msg_t;
 
-typedef void(bsp_usart_callback_t)(uint16_t data, uint16_t flags);
-
 class bsp_usart: public bsp_unit
 {
     private:
-#warning ¬последствие придумать, как сделать без указателей
-        bsp_io *pin_rx;
-        bsp_io *pin_tx;
+        bsp_io pin_rx;
+        bsp_io pin_tx;
     protected:
         bsp_usart_setting_t setting;
     public:
-        bsp_usart(USART_TypeDef *_unit_ptr, bsp_usart_callback_t *_callback);
+        bsp_usart(USART_TypeDef *_unit_ptr);
         void send_sett(bsp_usart_setting_t *sett);
         virtual void send_sett(void *sett); // ѕрименение новых настроек модул€
         virtual void *get_sett(void); // ѕолучение настроек модул€

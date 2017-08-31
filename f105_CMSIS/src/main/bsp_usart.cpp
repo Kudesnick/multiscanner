@@ -2,16 +2,18 @@
 
 #include "bsp_usart.h"
 
-bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr, bsp_usart_callback_t *_callback):
-    bsp_unit((void *)_unit_ptr, (bsp_unit_callback_t *)_callback)
+bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr):
+    bsp_unit((void *)_unit_ptr),
+    pin_rx(),
+    pin_tx()
 {
     switch ((uint32_t)unit_ptr)
     {
         case (uint32_t)USART1:
         {
             #if (RTE_USART1 > 0)
-                pin_rx = new bsp_io(RTE_USART1_RX_PORT_DEF, GPIO_Pin(RTE_USART1_RX_BIT_DEF), GPIO_Mode_IPU, true);
-                pin_tx = new bsp_io(RTE_USART1_TX_PORT_DEF, GPIO_Pin(RTE_USART1_TX_BIT_DEF), GPIO_Mode_AF_PP);
+                pin_rx.init(RTE_USART1_RX_PORT_DEF, GPIO_Pin(RTE_USART1_RX_BIT_DEF), GPIO_Mode_IPU, true);
+                pin_rx.init(RTE_USART1_TX_PORT_DEF, GPIO_Pin(RTE_USART1_TX_BIT_DEF), GPIO_Mode_AF_PP);
             #endif
             
             RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
@@ -22,8 +24,8 @@ bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr, bsp_usart_callback_t *_callback):
         case (uint32_t)USART2:
         {
             #if (RTE_USART2 > 0)
-                pin_rx = new bsp_io(RTE_USART2_RX_PORT_DEF, GPIO_Pin(RTE_USART2_RX_BIT_DEF), GPIO_Mode_IPU, true);
-                pin_tx = new bsp_io(RTE_USART2_TX_PORT_DEF, GPIO_Pin(RTE_USART2_TX_BIT_DEF), GPIO_Mode_AF_PP, false);
+                pin_rx.init(RTE_USART2_RX_PORT_DEF, GPIO_Pin(RTE_USART2_RX_BIT_DEF), GPIO_Mode_IPU, true);
+                pin_rx.init(RTE_USART2_TX_PORT_DEF, GPIO_Pin(RTE_USART2_TX_BIT_DEF), GPIO_Mode_AF_PP, false);
             #endif
             
             RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
@@ -34,8 +36,8 @@ bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr, bsp_usart_callback_t *_callback):
         case (uint32_t)USART3:
         {
             #if (RTE_USART3 > 0)
-                pin_rx = new bsp_io(RTE_USART3_RX_PORT_DEF, GPIO_Pin(RTE_USART3_RX_BIT_DEF), GPIO_Mode_IPU, true);
-                pin_tx = new bsp_io(RTE_USART3_TX_PORT_DEF, GPIO_Pin(RTE_USART3_TX_BIT_DEF), GPIO_Mode_AF_PP);
+                pin_rx.init(RTE_USART3_RX_PORT_DEF, GPIO_Pin(RTE_USART3_RX_BIT_DEF), GPIO_Mode_IPU, true);
+                pin_rx.init(RTE_USART3_TX_PORT_DEF, GPIO_Pin(RTE_USART3_TX_BIT_DEF), GPIO_Mode_AF_PP);
             #endif
             
             RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
@@ -46,8 +48,8 @@ bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr, bsp_usart_callback_t *_callback):
         case (uint32_t)UART4:
         {
             #if (RTE_UART4 > 0)
-                pin_rx = new bsp_io(RTE_UART4_RX_PORT_DEF, GPIO_Pin(RTE_UART4_RX_BIT_DEF), GPIO_Mode_IPU, true);
-                pin_tx = new bsp_io(RTE_UART4_TX_PORT_DEF, GPIO_Pin(RTE_UART4_TX_BIT_DEF), GPIO_Mode_AF_PP);
+                pin_rx.init(RTE_UART4_RX_PORT_DEF, GPIO_Pin(RTE_UART4_RX_BIT_DEF), GPIO_Mode_IPU, true);
+                pin_rx.init(RTE_UART4_TX_PORT_DEF, GPIO_Pin(RTE_UART4_TX_BIT_DEF), GPIO_Mode_AF_PP);
             #endif
             
             RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4, ENABLE);
@@ -58,8 +60,8 @@ bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr, bsp_usart_callback_t *_callback):
         case (uint32_t)UART5:
         {
             #if (RTE_UART5 > 0)
-                pin_rx = new bsp_io(RTE_UART5_RX_PORT_DEF, GPIO_Pin(RTE_UART5_RX_BIT_DEF), GPIO_Mode_IPU, true);
-                pin_tx = new bsp_io(RTE_UART5_TX_PORT_DEF, GPIO_Pin(RTE_UART5_TX_BIT_DEF), GPIO_Mode_AF_PP);
+                pin_rx.init(RTE_UART5_RX_PORT_DEF, GPIO_Pin(RTE_UART5_RX_BIT_DEF), GPIO_Mode_IPU, true);
+                pin_rx.init(RTE_UART5_TX_PORT_DEF, GPIO_Pin(RTE_UART5_TX_BIT_DEF), GPIO_Mode_AF_PP);
             #endif
             
             RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART5, ENABLE);
@@ -69,7 +71,7 @@ bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr, bsp_usart_callback_t *_callback):
         }
     }
 };
-    
+
 void bsp_usart::send_sett(void *sett)
 {
     setting = *(bsp_usart_setting_t*)sett;
@@ -169,10 +171,7 @@ void bsp_usart::interrupt_handler(void)
 //        USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_LBD);
 //    }
     
-    if (callback != NULL)
-    {
-        ((bsp_usart_callback_t *)(callback))(data, flags);
-    }
+    callback((void *)data, flags);
 };
 
 // Прерывания от интерфейсов uart

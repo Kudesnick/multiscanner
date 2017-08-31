@@ -5,7 +5,9 @@
 #ifndef _FIFO_H_
 #define _FIFO_H_
 
-#include "stdint.h"
+#include <stdint.h>
+
+#include "misc.h"
 
 typedef uint16_t fifo_ptr_t;
 
@@ -26,7 +28,7 @@ typedef uint16_t fifo_ptr_t;
 
 template <typename data_t, const fifo_ptr_t count> class cpp_fifo
 {
-	protected:
+	private:
 		data_t fifo[count];
 		fifo_ptr_t head, end;
 	public:
@@ -35,16 +37,18 @@ template <typename data_t, const fifo_ptr_t count> class cpp_fifo
 		fifo_ptr_t get_full_count(void);
 		bool is_full(void);
 		bool is_empty(void);
-		void add(data_t data);
-		data_t extract(void);
+		virtual void add(data_t data);
+		virtual data_t extract(void);
 		data_t read_head(void);
 		data_t read_end(void);
 		void clear(void);
+#warning изничтожить
         data_t *get_head(void);
 };
 
 template <typename data_t, const fifo_ptr_t count> cpp_fifo<data_t, count>::cpp_fifo(void):
-    head(end)
+    head(0),
+    end(0)
 {
 }
 	
@@ -70,7 +74,16 @@ template <typename data_t, const fifo_ptr_t count> bool cpp_fifo<data_t, count>:
 
 template <typename data_t, const fifo_ptr_t count> void cpp_fifo<data_t, count>::add(data_t data)
 {
-    fifo[end++ & (count - 1)] = data;
+    register fifo_ptr_t tmp;
+    
+    do
+    {
+        tmp = __LDREXW(&end);
+        tmp++;
+    }
+    while(__STREXW(tmp, &end));
+    
+    fifo[--tmp & (count - 1)] = data;
 }
 
 template <typename data_t, const fifo_ptr_t count> data_t cpp_fifo<data_t, count>::extract(void)

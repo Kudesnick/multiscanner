@@ -6,18 +6,11 @@
 #include "fifo.h"
 #include "bsp_io.h"
 #include "bsp_usart.h"
-#include "bsp_con.h"
+#include "fifo_con.h"
 #include "units_config.h"
+#include "bsp_con.h"
 
-#define RX_BUFFER_SIZE FIFO_SIZE_256
-#define TX_BUFFER_SIZE FIFO_SIZE_256
-
-static cpp_fifo<char, RX_BUFFER_SIZE> bsp_con_rx_buffer;
-static cpp_fifo<char, TX_BUFFER_SIZE> bsp_con_tx_buffer;
-
-bsp_con_rx_handler_t * bsp_con_rx_handler = NULL;
-
-static bsp_con_config_t bsp_con_init_struct_default =
+bsp_con_config_t bsp_con::default_sett =
 {
     /* .baudrate  = */CON_BAUD,
     /* .parity    = */CON_PARITY,
@@ -25,100 +18,76 @@ static bsp_con_config_t bsp_con_init_struct_default =
     /* .echo      = */false,
 };
 
-static bsp_unit *bsp_con;
-
-bsp_con_config_t *bsp_con_get_setting(void)
-{
-    return &bsp_con_init_struct_default;
-}
-
-// Переслать данные
-bool bsp_con_send(const char *buf)
-{
-    bool result = ((bsp_con_tx_buffer.get_full_count() + strlen(buf)) <= bsp_con_tx_buffer.get_count());
-    
-    if (result == true)
-    {
-        for (uint_fast16_t i = 0; i < strlen(buf); i++)
-        {
-            bsp_con_tx_buffer.add(buf[i]);
-        }
-
-#warning вот здесь продумать ситуацию, когда буфер изначально не пуст и передача уже идет
-        static uint16_t msg;
-        msg = bsp_con_tx_buffer.extract();
-        bsp_con->send_msg((void *) &msg);
-    }
-    
-    return result;
-}
-
 // Прерывание по приему/передаче
-void bsp_con_handler(uint16_t data, uint16_t flags)
+void bsp_con::callback(void * msg, uint32_t flags)
 {
     if (flags & USART_FLAG_TXE)
     {
-        if (!bsp_con_tx_buffer.is_empty())
+        if (!bufer->tx.is_empty())
         {
-            static uint16_t msg;
-            msg = bsp_con_tx_buffer.extract();
-            bsp_con->send_msg((void *) &msg);
+            static uint16_t s_msg;
+            s_msg = bufer->tx.extract();
+            send_msg((void *) &s_msg);
         }
     }
     
     if (flags & USART_FLAG_RXNE)
     {
-        if ((data == 0x0A || data == 0x0D)
-            && (!bsp_con_rx_buffer.is_empty())
-            )
-        {
-            bsp_con_rx_buffer.add(0x00);
-            
-            if (bsp_con_rx_handler != NULL)
-            {
-                bsp_con_rx_handler(bsp_con_rx_buffer.get_head(), bsp_con_rx_buffer.get_full_count());
-            }
-            
-            bsp_con_rx_buffer.clear();
-        }
+        uint32_t data = (uint32_t)msg;
         
-        else if (!bsp_con_rx_buffer.is_full())
-        {
-            if ((char)data == ' ')
-            {
-                if (bsp_con_rx_buffer.read_end() != 0x00)
-                {
-                    bsp_con_rx_buffer.add(0x00);
-                }
-            }
-            else
-            {
-                bsp_con_rx_buffer.add((char)data);
-            }
-        }
+        bufer->rx.add((char)data);
     }
 }
 
-// Инициализация модуля консоли
-// con_rx_handler - внешний парсер принятой строки
-void bsp_con_init(bsp_con_rx_handler_t * con_rx_handler)
+bsp_con::bsp_con(USART_TypeDef *_unit_ptr, fifo_con * buf, bsp_con_config_t * _setting):
+    bsp_usart(_unit_ptr),
+    bufer(buf)
 {
-    bsp_usart_setting_t sett = 
+    set_setting(_setting);
+}
+
+// Переслать данные
+bool bsp_con::send(const char *buf)
+{
+    bool result = bufer->tx.send_str(buf);
+    
+    if (result == true)
+    {
+#warning вот здесь продумать ситуацию, когда буфер изначально не пуст и передача уже идет
+        static uint16_t msg;
+        msg = bufer->tx.extract();
+        send_msg((void *) &msg);
+    }
+    
+    return result;
+}
+
+bsp_con_config_t * bsp_con::get_setting(void)
+{
+    static bsp_con_config_t _sett;
+    
+    _sett = setting;
+    
+    return &_sett;
+}
+
+void bsp_con::set_setting(bsp_con_config_t * sett)
+{
+    setting = *sett;
+    
+    bsp_usart_setting_t tmp_sett = 
     {
         // Хардварные настройки
-        /*.USART_BaudRate                   = */ bsp_con_init_struct_default.baudrate,
+        /*.USART_BaudRate                   = */ setting.baudrate,
         /*.USART_WordLength                 = */ USART_WordLength_8b,
-        /*.USART_StopBits                   = */ bsp_con_init_struct_default.stop_bits,
-        /*.USART_Parity                     = */ bsp_con_init_struct_default.parity,
+        /*.USART_StopBits                   = */ setting.stop_bits,
+        /*.USART_Parity                     = */ setting.parity,
         /*.USART_Mode                       = */ USART_Mode_Rx | USART_Mode_Tx,
         /*.USART_LIN_Break_Detection_Length = */ USART_LINBreakDetectLength_10b,
         // Софтварные настройки
         /*.USART_LIN_Enable = */ false,
         /*.USART_Enable     = */ true,
     };
-
-    bsp_con = new bsp_usart(CON_UNIT, bsp_con_handler);
-    bsp_con->send_sett((void *)&sett);
     
-    bsp_con_rx_handler = con_rx_handler;
+    send_sett((void *)&tmp_sett);
 }

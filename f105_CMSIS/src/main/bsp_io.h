@@ -69,6 +69,8 @@ class bsp_io
         GPIO_InitTypeDef GPIO_InitStruct;
         bool invert;
     public:
+        bsp_io(void);
+        void init(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value = true, bool invert_mode = false);
         bsp_io(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value = true, bool invert_mode = false);
         bool get_val(void);
         void set_val(bool value);
