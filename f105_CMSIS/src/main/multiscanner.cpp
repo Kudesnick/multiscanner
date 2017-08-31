@@ -5,12 +5,15 @@
 #include "multiscanner.h"
 #include "console.h"
 
-cpp_multiscanner::cpp_multiscanner(void)
+cpp_multiscanner::cpp_multiscanner(void):
+    console()
 {
-    console_init();
-}
+};
 
-void cpp_multiscanner::run(void)
+void cpp_multiscanner::routine(void)
 {
-    while(1);
-}
+    while(1)
+    {
+        console.routine();
+    }
+};

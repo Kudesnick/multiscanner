@@ -9,8 +9,10 @@
 
 typedef enum
 {
+    LIST_TYPE_DEFAULT,
     LIST_TYPE_UNIT,
     LIST_TYPE_THREAD,
+    LIST_TYPE_PARSER
 }list_type_t;
 
 template <const uint16_t list_type> class cpp_list

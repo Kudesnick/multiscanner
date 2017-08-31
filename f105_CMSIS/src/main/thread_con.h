@@ -2,7 +2,7 @@
 #define _THREAD_CON_H_
 
 //------------------------------------------------------------------------------
-// РљР»Р°СЃСЃ РєРѕРЅСЃРѕР»Рё
+// Класс консоли
 //------------------------------------------------------------------------------
 
 #include <stdint.h>
@@ -17,12 +17,16 @@ class thread_con : public thread
     private:
         fifo_con buf;
         bsp_con unit;
+        bool (* parse)(char * str);
     protected:
     public:
-        thread_con(void);
+        thread_con(bool (* _parse)(char * str) = NULL);
+        void set_parser(bool (* _parse)(char * str));
+        void send_str(const char * str);
         virtual void routine(void);
 };
 
-void console_init(void);
+// Функция - точка входа для парсера.
+bool console_send_string(const char * str);
 
 #endif /* _THREAD_CON_H_ */

@@ -10,6 +10,12 @@
 
 #include "list.h"
 
+typedef enum
+{
+    THREAD_TYPE_DEFAULT,
+    THREAD_TYPE_CONSOLE
+} thread_type_t;
+
 class thread : public cpp_list<LIST_TYPE_THREAD>
 {
     private:

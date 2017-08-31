@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+#include "misc.h"
+
 typedef uint16_t fifo_ptr_t;
 
 #define FIFO_SIZE_2     2
