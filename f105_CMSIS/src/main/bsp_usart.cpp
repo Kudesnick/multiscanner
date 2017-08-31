@@ -1,4 +1,4 @@
-#include "RTE_Device.h"
+п»ї#include "RTE_Device.h"
 
 #include "bsp_usart.h"
 
@@ -146,7 +146,7 @@ void bsp_usart::interrupt_handler(void)
     {
         flags |= USART_FLAG_PE;
     }
-#warning Тут надо расшифровать флаги ошибок (кошерно)
+#warning РўСѓС‚ РЅР°РґРѕ СЂР°СЃС€РёС„СЂРѕРІР°С‚СЊ С„Р»Р°РіРё РѕС€РёР±РѕРє (РєРѕС€РµСЂРЅРѕ)
 //    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_ERR))
 //    {
 //        flags |= USART_FLAG_ERR;
@@ -162,7 +162,7 @@ void bsp_usart::interrupt_handler(void)
         data = USART_ReceiveData((USART_TypeDef *)unit_ptr);
         USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_RXNE);
     }
-#warning почему-то срабатывает в консоле, хотя LIN выключен и прерывание тоже
+#warning РїРѕС‡РµРјСѓ-С‚Рѕ СЃСЂР°Р±Р°С‚С‹РІР°РµС‚ РІ РєРѕРЅСЃРѕР»Рµ, С…РѕС‚СЏ LIN РІС‹РєР»СЋС‡РµРЅ Рё РїСЂРµСЂС‹РІР°РЅРёРµ С‚РѕР¶Рµ
 //    USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_LBD);
 //    {
 //        flags |= USART_IT_RXNE;
@@ -174,7 +174,7 @@ void bsp_usart::interrupt_handler(void)
     callback((void *)data, flags);
 };
 
-// Прерывания от интерфейсов uart
+// РџСЂРµСЂС‹РІР°РЅРёСЏ РѕС‚ РёРЅС‚РµСЂС„РµР№СЃРѕРІ uart
 //------------------------------------------------------------------------------
 extern "C" void USART1_IRQHandler(void)
 {

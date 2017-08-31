@@ -1,12 +1,34 @@
 //------------------------------------------------------------------------------
-// Общие команды и типы для парсера строк
+// РћР±С‰РёРµ РєРѕРјР°РЅРґС‹ Рё С‚РёРїС‹ РґР»СЏ РїР°СЂСЃРµСЂР° СЃС‚СЂРѕРє
 //------------------------------------------------------------------------------
 
 #include <stdint.h>
 #include <string.h>
 
+#include "bsp_con.h"
 #include "thread_con.h"
 #include "parser.h"
+
+bool parser_color(bsp_con_config_t * console_sett)
+{
+    static bool color = true;
+    
+    if (console_sett != NULL)
+    {
+        color = console_sett->color;
+    }
+    
+    return color;
+}
+
+void send_err(const char * str)
+{
+    console_send_string(TAG_RED);
+    console_send_string(parser_str_err_err);
+    console_send_string(str);
+    console_send_string(TAG_DEF);
+    console_send_string("\r\n");
+}
 
 char * parser_uint_to_str(uint32_t num)
 {
@@ -88,31 +110,33 @@ static bool console_cmd_help(char * str, const void * param)
     return(true);
 }
 
-void parser_parse(char * str)
+void parser_parse(char * str, bsp_con_config_t * console_sett)
 {
     const parse_fsm_steps_t cmd_list[] =
     {
         {   "?", console_cmd_help, NULL},
-        {"help", console_cmd_help, NULL}, // Получить справку о программе
-        { "get",             NULL, NULL}, // Получить параметры настройки интерфейса
-        { "set",             NULL, NULL}, // Настроить интерфейс
-        {"can1",             NULL, NULL}, // Отправить сообщение по can1
-        {"can2",             NULL, NULL}, // Отправить сообщение по can2
-        {"lin1",             NULL, NULL}, // Отправить сообщение по lin1
-        {"lin2",             NULL, NULL}, // Отправить сообщение по lin2
-        {"urt1",             NULL, NULL}, // Отправить сообщение по uart1
-        {"urt2",             NULL, NULL}, // Отправить сообщение по uart2 
+        {"help", console_cmd_help, NULL}, // РџРѕР»СѓС‡РёС‚СЊ СЃРїСЂР°РІРєСѓ Рѕ РїСЂРѕРіСЂР°РјРјРµ
+        { "get",             NULL, NULL}, // РџРѕР»СѓС‡РёС‚СЊ РїР°СЂР°РјРµС‚СЂС‹ РЅР°СЃС‚СЂРѕР№РєРё РёРЅС‚РµСЂС„РµР№СЃР°
+        { "set",             NULL, NULL}, // РќР°СЃС‚СЂРѕРёС‚СЊ РёРЅС‚РµСЂС„РµР№СЃ
+        {"can1",             NULL, NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ can1
+        {"can2",             NULL, NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ can2
+        {"lin1",             NULL, NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ lin1
+        {"lin2",             NULL, NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ lin2
+        {"urt1",             NULL, NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ uart1
+        {"urt2",             NULL, NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ uart2
     };
+    
+    parser_color(console_sett);
     
     int16_t i;
     
     if ((i = parser_find(str, cmd_list, countof_arr(cmd_list))) < 0)
     {
-        console_send_string(parser_str_err_bad_cmd);
+        send_err(parser_str_err_bad_cmd);
     }
     else if (cmd_list[i].func == NULL)
     {
-        console_send_string(parser_str_err_null_cmd);
+        send_err(parser_str_err_null_cmd);
     }
     else
     {

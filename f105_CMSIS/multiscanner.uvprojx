@@ -381,14 +381,9 @@
           <GroupName>main</GroupName>
           <Files>
             <File>
-              <FileName>main.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\main.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_con.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\bsp_con.cpp</FilePath>
+              <FileName>list.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\main\list.h</FilePath>
             </File>
             <File>
               <FileName>fifo.h</FileName>
@@ -396,9 +391,9 @@
               <FilePath>.\src\main\fifo.h</FilePath>
             </File>
             <File>
-              <FileName>multiscanner.cpp</FileName>
+              <FileName>atom.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\src\main\multiscanner.cpp</FilePath>
+              <FilePath>.\src\main\atom.cpp</FilePath>
             </File>
             <File>
               <FileName>bsp_io.cpp</FileName>
@@ -416,19 +411,14 @@
               <FilePath>.\src\main\bsp_usart.cpp</FilePath>
             </File>
             <File>
+              <FileName>bsp_con.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\bsp_con.cpp</FilePath>
+            </File>
+            <File>
               <FileName>fifo_con.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\fifo_con.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>atom.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\atom.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>list.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\src\main\list.h</FilePath>
             </File>
             <File>
               <FileName>thread.cpp</FileName>
@@ -439,6 +429,16 @@
               <FileName>thread_con.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\thread_con.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>multiscanner.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\multiscanner.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>main.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\main.cpp</FilePath>
             </File>
             <File>
               <FileName>parser.cpp</FileName>

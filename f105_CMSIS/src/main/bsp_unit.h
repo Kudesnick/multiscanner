@@ -1,8 +1,8 @@
-#ifndef _BSP_UNIT_H_
+п»ї#ifndef _BSP_UNIT_H_
 #define _BSP_UNIT_H_
 
 //------------------------------------------------------------------------------
-// Абстрактный класс модуля ввода/вывода
+// РђР±СЃС‚СЂР°РєС‚РЅС‹Р№ РєР»Р°СЃСЃ РјРѕРґСѓР»СЏ РІРІРѕРґР°/РІС‹РІРѕРґР°
 //------------------------------------------------------------------------------
 
 #include <string.h>
@@ -13,15 +13,15 @@ class bsp_unit : public cpp_list<LIST_TYPE_UNIT>
 {
     private:    
     protected:
-        void *unit_ptr;                // Указатель на физический модуль ввода/вывода
-        virtual void callback(void *msg, uint32_t flags) = NULL; // Вызывается из прерывания. По сути - высокоуровневый обработчик.
+        void *unit_ptr;                // РЈРєР°Р·Р°С‚РµР»СЊ РЅР° С„РёР·РёС‡РµСЃРєРёР№ РјРѕРґСѓР»СЊ РІРІРѕРґР°/РІС‹РІРѕРґР°
+        virtual void callback(void *msg, uint32_t flags) = NULL; // Р’С‹Р·С‹РІР°РµС‚СЃСЏ РёР· РїСЂРµСЂС‹РІР°РЅРёСЏ. РџРѕ СЃСѓС‚Рё - РІС‹СЃРѕРєРѕСѓСЂРѕРІРЅРµРІС‹Р№ РѕР±СЂР°Р±РѕС‚С‡РёРє.
     public:
         bsp_unit(void *_unit_ptr, uint16_t _class_type = NULL, uint16_t _object_name = NULL);
-        static bsp_unit *object_search(void *unit);  // Поиск объекта по имени модуля (нужно для вызова из прерываний)
-        virtual void send_sett(void *sett) = NULL;   // Применение новых настроек модуля
-        virtual void *get_sett(void) = NULL;         // Получение настроек модуля
-        virtual bool send_msg(void *msg) = NULL;     // Отправка данных
-        virtual void interrupt_handler(void) = NULL; // Обработчик прерывания, основные манипуляции с флагами. Из него вызывается callback
+        static bsp_unit *object_search(void *unit);  // РџРѕРёСЃРє РѕР±СЉРµРєС‚Р° РїРѕ РёРјРµРЅРё РјРѕРґСѓР»СЏ (РЅСѓР¶РЅРѕ РґР»СЏ РІС‹Р·РѕРІР° РёР· РїСЂРµСЂС‹РІР°РЅРёР№)
+        virtual void send_sett(void *sett) = NULL;   // РџСЂРёРјРµРЅРµРЅРёРµ РЅРѕРІС‹С… РЅР°СЃС‚СЂРѕРµРє РјРѕРґСѓР»СЏ
+        virtual void *get_sett(void) = NULL;         // РџРѕР»СѓС‡РµРЅРёРµ РЅР°СЃС‚СЂРѕРµРє РјРѕРґСѓР»СЏ
+        virtual bool send_msg(void *msg) = NULL;     // РћС‚РїСЂР°РІРєР° РґР°РЅРЅС‹С…
+        virtual void interrupt_handler(void) = NULL; // РћР±СЂР°Р±РѕС‚С‡РёРє РїСЂРµСЂС‹РІР°РЅРёСЏ, РѕСЃРЅРѕРІРЅС‹Рµ РјР°РЅРёРїСѓР»СЏС†РёРё СЃ С„Р»Р°РіР°РјРё. РР· РЅРµРіРѕ РІС‹Р·С‹РІР°РµС‚СЃСЏ callback
 };
 
 #endif /* _BSP_UNIT_H_ */

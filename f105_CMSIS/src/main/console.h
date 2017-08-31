@@ -1,4 +1,4 @@
-#ifndef _CONSOLE_H_
+﻿#ifndef _CONSOLE_H_
 #define _CONSOLE_H_
 
 void console_init(void);

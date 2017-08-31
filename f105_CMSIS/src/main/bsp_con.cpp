@@ -16,9 +16,10 @@ bsp_con_config_t bsp_con::default_sett =
     /* .parity    = */CON_PARITY,
     /* .stop_bits = */USART_StopBits_1,
     /* .echo      = */false,
+    /* .color     = */true,
 };
 
-// Прерывание по приему/передаче
+// РџСЂРµСЂС‹РІР°РЅРёРµ РїРѕ РїСЂРёРµРјСѓ/РїРµСЂРµРґР°С‡Рµ
 void bsp_con::callback(void * msg, uint32_t flags)
 {
     if (flags & USART_FLAG_TXE)
@@ -46,14 +47,14 @@ bsp_con::bsp_con(USART_TypeDef *_unit_ptr, fifo_con * buf, bsp_con_config_t * _s
     set_setting(_setting);
 }
 
-// Переслать данные
+// РџРµСЂРµСЃР»Р°С‚СЊ РґР°РЅРЅС‹Рµ
 bool bsp_con::send(const char *buf)
 {
     bool result = bufer->tx.send_str(buf);
     
     if (result == true)
     {
-#warning вот здесь продумать ситуацию, когда буфер изначально не пуст и передача уже идет
+#warning РІРѕС‚ Р·РґРµСЃСЊ РїСЂРѕРґСѓРјР°С‚СЊ СЃРёС‚СѓР°С†РёСЋ, РєРѕРіРґР° Р±СѓС„РµСЂ РёР·РЅР°С‡Р°Р»СЊРЅРѕ РЅРµ РїСѓСЃС‚ Рё РїРµСЂРµРґР°С‡Р° СѓР¶Рµ РёРґРµС‚
         static uint16_t msg;
         msg = bufer->tx.extract();
         send_msg((void *) &msg);
@@ -77,14 +78,14 @@ void bsp_con::set_setting(bsp_con_config_t * sett)
     
     bsp_usart_setting_t tmp_sett = 
     {
-        // Хардварные настройки
+        // РҐР°СЂРґРІР°СЂРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё
         /*.USART_BaudRate                   = */ setting.baudrate,
         /*.USART_WordLength                 = */ USART_WordLength_8b,
         /*.USART_StopBits                   = */ setting.stop_bits,
         /*.USART_Parity                     = */ setting.parity,
         /*.USART_Mode                       = */ USART_Mode_Rx | USART_Mode_Tx,
         /*.USART_LIN_Break_Detection_Length = */ USART_LINBreakDetectLength_10b,
-        // Софтварные настройки
+        // РЎРѕС„С‚РІР°СЂРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё
         /*.USART_LIN_Enable = */ false,
         /*.USART_Enable     = */ true,
     };

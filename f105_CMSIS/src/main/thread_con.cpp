@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Класс консоли
+// РљР»Р°СЃСЃ РєРѕРЅСЃРѕР»Рё
 //------------------------------------------------------------------------------
 
 #include <stdint.h>
@@ -11,7 +11,7 @@
 #include "thread_con.h"
 #include "units_config.h"
 
-thread_con::thread_con(void (* _parse)(char * str)):
+thread_con::thread_con(void (* _parse)(char * str, bsp_con_config_t * console_sett)):
     thread(THREAD_TYPE_CONSOLE),
     buf(),
     unit(CON_UNIT, &buf),
@@ -19,7 +19,7 @@ thread_con::thread_con(void (* _parse)(char * str)):
 {
 };
 
-void thread_con::set_parser(void (* _parse)(char * str))
+void thread_con::set_parser(void (* _parse)(char * str, bsp_con_config_t * console_sett))
 {
     parse = _parse;
 };
@@ -32,7 +32,7 @@ bool thread_con::send_str(const char * str)
 void thread_con::routine(void)
 {
     if (buf.rx.get_str_count() > 0)
-    { // В буфере полноценная команда
+    { // Р’ Р±СѓС„РµСЂРµ РїРѕР»РЅРѕС†РµРЅРЅР°СЏ РєРѕРјР°РЅРґР°
         
         static char str_buf[RX_BUFFER_SIZE];
 
@@ -44,7 +44,7 @@ void thread_con::routine(void)
             {
                 if (parse != NULL)
                 {
-                    parse(str_buf);
+                    parse(str_buf, unit.get_setting());
                 }
                 break;
             }

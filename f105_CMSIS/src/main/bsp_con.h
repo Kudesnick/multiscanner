@@ -10,10 +10,11 @@
 
 typedef struct
 {
-    uint32_t baudrate;
-    uint16_t parity;
-    uint16_t stop_bits;
-        bool echo;
+    uint32_t baudrate;  // Бодрейт
+    uint16_t parity;    // Паритет
+    uint16_t stop_bits; // Количество стоповых битов
+        bool echo;      // Эхо отправки сообщений
+        bool color;     // Выделение цветом в консоле
 } bsp_con_config_t;
 
 class bsp_con : private bsp_usart
