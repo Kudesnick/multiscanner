@@ -84,9 +84,11 @@ static bool console_cmd_help(char * str, const void * param)
 {
     console_send_string("test echo msg.");
     console_send_string(str);
+    
+    return(true);
 }
 
-void parser_parse(char * str, void * param)
+void parser_parse(char * str)
 {
     const parse_fsm_steps_t cmd_list[] =
     {

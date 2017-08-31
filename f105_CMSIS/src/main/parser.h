@@ -28,6 +28,6 @@ char *   parser_uint_to_str(uint32_t num);       // перевод числа в строку
 uint32_t parser_str_to_uint(char * str);         // перевод строки в число
 void     parser_lowercase(char *buf);            // ѕриведение к нижнему регистру
 int16_t  parser_find(char * str, const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len); // ѕоиск команд в таблице
-void     parser_parse(char * str, void * param); // —обственно, парсим строку
+void     parser_parse(char * str);               // —обственно, парсим строку
 
 #endif /* _PARSER_H_ */

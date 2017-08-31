@@ -3,17 +3,19 @@
  ********************************************************************/
 
 #include "multiscanner.h"
-#include "console.h"
-
-cpp_multiscanner::cpp_multiscanner(void):
-    console()
-{
-};
+#include "thread_con.h"
 
 void cpp_multiscanner::routine(void)
 {
     while(1)
     {
-        console.routine();
+        static thread * thread_ptr = NULL;
+        thread_ptr = (thread *)thread::get_last_pointer();
+        
+        while (thread_ptr != NULL)
+        {
+            thread_ptr->routine();
+            thread_ptr = (thread *)thread_ptr->get_prev_pointer();
+        }
     }
 };

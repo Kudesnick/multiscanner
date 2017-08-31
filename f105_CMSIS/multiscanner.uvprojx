@@ -391,11 +391,6 @@
               <FilePath>.\src\main\bsp_con.cpp</FilePath>
             </File>
             <File>
-              <FileName>console.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\console.cpp</FilePath>
-            </File>
-            <File>
               <FileName>fifo.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\src\main\fifo.h</FilePath>

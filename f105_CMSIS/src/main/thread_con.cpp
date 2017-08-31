@@ -11,7 +11,7 @@
 #include "thread_con.h"
 #include "units_config.h"
 
-thread_con::thread_con(bool (* _parse)(char * str)):
+thread_con::thread_con(void (* _parse)(char * str)):
     thread(THREAD_TYPE_CONSOLE),
     buf(),
     unit(CON_UNIT, &buf),
@@ -19,9 +19,14 @@ thread_con::thread_con(bool (* _parse)(char * str)):
 {
 };
 
-void thread_con::send_str(const char * str)
+void thread_con::set_parser(void (* _parse)(char * str))
 {
-    buf.tx.send_str(str);
+    parse = _parse;
+};
+
+bool thread_con::send_str(const char * str)
+{
+    return unit.send(str);
 };
 
 void thread_con::routine(void)
@@ -57,8 +62,13 @@ bool console_send_string(const char * str)
     {
         if (ptr->get_class_type() == THREAD_TYPE_CONSOLE)
         {
-            ptr->send_str(str);
+            if(ptr->send_str(str) == true)
+            {
+                result = true;
+            }
         }
         ptr = (thread_con *)ptr->get_prev_pointer();
     }
+    
+    return result;
 }

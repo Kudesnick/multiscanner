@@ -109,7 +109,7 @@ fifo_con_tx_buffer::fifo_con_tx_buffer(void)
 bool fifo_con_tx_buffer::send_str(const char * str)
 {
     bool result = false;
-
+    
     if ((get_full_count() + strlen(str)) <= get_count())
     {
         for (uint_fast16_t i = 0; i < strlen(str); i++)

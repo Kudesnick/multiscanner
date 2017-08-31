@@ -17,12 +17,12 @@ class thread_con : public thread
     private:
         fifo_con buf;
         bsp_con unit;
-        bool (* parse)(char * str);
+        void (* parse)(char * str);
     protected:
     public:
-        thread_con(bool (* _parse)(char * str) = NULL);
-        void set_parser(bool (* _parse)(char * str));
-        void send_str(const char * str);
+        thread_con(void (* _parse)(char * str) = NULL);
+        void set_parser(void (* _parse)(char * str));
+        bool send_str(const char * str);
         virtual void routine(void);
 };
 
