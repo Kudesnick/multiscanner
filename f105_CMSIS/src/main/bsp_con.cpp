@@ -19,7 +19,7 @@ bsp_con_config_t bsp_con::default_sett =
     /* .color     = */true,
 };
 
-// РџСЂРµСЂС‹РІР°РЅРёРµ РїРѕ РїСЂРёРµРјСѓ/РїРµСЂРµРґР°С‡Рµ
+// Прерывание по приему/передаче
 void bsp_con::callback(void * msg, uint32_t flags)
 {
     if (flags & USART_FLAG_TXE)
@@ -47,19 +47,25 @@ bsp_con::bsp_con(USART_TypeDef *_unit_ptr, fifo_con * buf, bsp_con_config_t * _s
     set_setting(_setting);
 }
 
-// РџРµСЂРµСЃР»Р°С‚СЊ РґР°РЅРЅС‹Рµ
+// Переслать данные
 bool bsp_con::send(const char *buf)
 {
-    bool result = bufer->tx.send_str(buf);
+    __disable_irq();
+#warning Гарантирует, что мы не затрем данные, но, возможно, что мы пропустим начало передачи.
+        bool tx_complete = bufer->tx.is_empty();
+    __enable_irq();
     
-    if (result == true)
+    bool result = bufer->tx.send_str(buf, setting.color);
+    
+    if (result == true
+        && tx_complete == true
+        )
     {
-#warning РІРѕС‚ Р·РґРµСЃСЊ РїСЂРѕРґСѓРјР°С‚СЊ СЃРёС‚СѓР°С†РёСЋ, РєРѕРіРґР° Р±СѓС„РµСЂ РёР·РЅР°С‡Р°Р»СЊРЅРѕ РЅРµ РїСѓСЃС‚ Рё РїРµСЂРµРґР°С‡Р° СѓР¶Рµ РёРґРµС‚
         static uint16_t msg;
         msg = bufer->tx.extract();
         send_msg((void *) &msg);
     }
-    
+
     return result;
 }
 
@@ -78,14 +84,14 @@ void bsp_con::set_setting(bsp_con_config_t * sett)
     
     bsp_usart_setting_t tmp_sett = 
     {
-        // РҐР°СЂРґРІР°СЂРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё
+        // Хардварные настройки
         /*.USART_BaudRate                   = */ setting.baudrate,
         /*.USART_WordLength                 = */ USART_WordLength_8b,
         /*.USART_StopBits                   = */ setting.stop_bits,
         /*.USART_Parity                     = */ setting.parity,
         /*.USART_Mode                       = */ USART_Mode_Rx | USART_Mode_Tx,
         /*.USART_LIN_Break_Detection_Length = */ USART_LINBreakDetectLength_10b,
-        // РЎРѕС„С‚РІР°СЂРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё
+        // Софтварные настройки
         /*.USART_LIN_Enable = */ false,
         /*.USART_Enable     = */ true,
     };

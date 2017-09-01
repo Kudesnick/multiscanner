@@ -1,5 +1,5 @@
-п»ї/********************************************************************
- * Console Р’С‹СЃРѕРєРѕСѓСЂРѕРІРЅРµРІС‹Рµ С„СѓРЅРєС†РёРё РєРѕРЅСЃРѕР»Рё
+/********************************************************************
+ * Console Высокоуровневые функции консоли
  ********************************************************************/
 #include <stdint.h>
 #include <stdbool.h>
@@ -30,12 +30,12 @@ typedef const struct
 fifo_con * console_buf;
 bsp_con * console_unit;
 
-// РЎС‚СЂРѕРєРё РєРѕРґРѕРІ РѕС€РёР±РѕРє
+// Строки кодов ошибок
 static const char str_err_bad_cmd[]    = "\x1b[31mError! This command is invalid.\x1b[0m\r\n";
 static const char str_err_null_cmd[]   = "\x1b[31mError! This command is not realised.\x1b[0m\r\n";
 static const char str_err_syntax_cmd[] = "\x1b[31mError! This command syntax is invalid. Print help.\x1b[0m\r\n";
 
-// РїРµСЂРµРІРѕРґ С‡РёСЃР»Р° РІ СЃС‚СЂРѕРєСѓ
+// перевод числа в строку
 static char * console_uint_to_str(uint32_t num)
 {
     static char str[] = "4294967295";// 0xFFFFFFFF
@@ -52,7 +52,7 @@ static char * console_uint_to_str(uint32_t num)
     return &str[i];
 }
 
-// РїРµСЂРµРІРѕРґ СЃС‚СЂРѕРєРё РІ С‡РёСЃР»Рѕ
+// перевод строки в число
 static uint32_t console_str_to_uint(char * str)
 {
     uint32_t result = 0;
@@ -72,7 +72,7 @@ static uint32_t console_str_to_uint(char * str)
     return result;
 }
 
-// РџСЂРёРІРµРґРµРЅРёРµ Рє РЅРёР¶РЅРµРјСѓ СЂРµРіРёСЃС‚СЂСѓ
+// Приведение к нижнему регистру
 static void console_lowercase(char *buf, uint8_t size)
 {
     for (uint_fast16_t i = 0; i < size; i++)
@@ -84,7 +84,7 @@ static void console_lowercase(char *buf, uint8_t size)
     }
 }
 
-// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ Р»РµРєСЃРµРј
+// Возвращает количество лексем
 static uint8_t console_get_param_count(char *buf, uint8_t size)
 {
     uint8_t result = 0;
@@ -101,10 +101,10 @@ static uint8_t console_get_param_count(char *buf, uint8_t size)
     return result;
 }
 
-// Р’РѕР·РІСЂР°С‰Р°РµС‚ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° Р»РµРєСЃРµРјСѓ РїРѕРґ РЅРѕРјРµСЂРѕРј num
+// Возвращает указатель на лексему под номером num
 static char *console_get_param(uint8_t num, char *buf, uint8_t size)
 {
-    uint8_t count = 0; // С‚РµРєСѓС‰РёР№ РЅРѕРјРµСЂ Р»РµРєСЃРµРјС‹
+    uint8_t count = 0; // текущий номер лексемы
     char *result = NULL;
 
     for (uint_fast16_t i = 0; i < size && result == NULL; i++)
@@ -119,7 +119,7 @@ static char *console_get_param(uint8_t num, char *buf, uint8_t size)
     return result;
 }
 
-// РЎРѕРѕС‚РІРµС‚СЃС‚РІРёРµ РїР°СЂР°РјРµС‚СЂР° С€Р°Р±Р»РѕРЅСѓ
+// Соответствие параметра шаблону
 static bool console_param_cmp(uint8_t num, console_cmd_t *cmd, char *buf, uint8_t size)
 {
     char *cmd_str = console_get_param(num, buf, size);
@@ -129,7 +129,7 @@ static bool console_param_cmp(uint8_t num, console_cmd_t *cmd, char *buf, uint8_
 }
 
 
-// РџР°СЂСЃРёРЅРі РєРѕРјР°РЅРґ РєРѕРЅСЃРѕР»Рё
+// Парсинг команд консоли
 static void console_cmd_help(char *buf, uint8_t size);
 static void console_cmd_get(char *buf, uint8_t size);
 static void console_cmd_set(char *buf, uint8_t size);
@@ -139,15 +139,15 @@ static void console_cmd_parser(char *buf, const uint8_t size)
     console_cmd_t cmd_list[] =
     {
         {   "?", (const void *)console_cmd_help},
-        {"help", (const void *)console_cmd_help}, // РџРѕР»СѓС‡РёС‚СЊ СЃРїСЂР°РІРєСѓ Рѕ РїСЂРѕРіСЂР°РјРјРµ
-        { "get", (const void *)console_cmd_get},  // РџРѕР»СѓС‡РёС‚СЊ РїР°СЂР°РјРµС‚СЂС‹ РЅР°СЃС‚СЂРѕР№РєРё РёРЅС‚РµСЂС„РµР№СЃР°
-        { "set", (const void *)console_cmd_set}, // РќР°СЃС‚СЂРѕРёС‚СЊ РёРЅС‚РµСЂС„РµР№СЃ
-        {"can1", NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ can1
-        {"can2", NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ can2
-        {"lin1", NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ lin1
-        {"lin2", NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ lin2
-        {"urt1", NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ uart1
-        {"urt2", NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ uart2 
+        {"help", (const void *)console_cmd_help}, // Получить справку о программе
+        { "get", (const void *)console_cmd_get},  // Получить параметры настройки интерфейса
+        { "set", (const void *)console_cmd_set}, // Настроить интерфейс
+        {"can1", NULL}, // Отправить сообщение по can1
+        {"can2", NULL}, // Отправить сообщение по can2
+        {"lin1", NULL}, // Отправить сообщение по lin1
+        {"lin2", NULL}, // Отправить сообщение по lin2
+        {"urt1", NULL}, // Отправить сообщение по uart1
+        {"urt2", NULL}, // Отправить сообщение по uart2 
     };
 
     bool bad_cmd = true;
@@ -185,12 +185,12 @@ void console_init(void)
 }
 
 // =========================================================================
-// Р РµР°Р»РёР·Р°С†РёСЏ РєРѕРјР°РЅРґС‹ help
+// Реализация команды help
 // =========================================================================
 
 const char str_help[]      = "Print help [get|set|can1|can2|lin1|lin2|urt1|urt2] for get help on command.\r\n";
 const char str_help_get[]  = "Get interface settings. Syntax:\r\n get [con|can1|can2|lin1|lin2|urt1|urt2]\r\n";
-#warning СЂРµР°Р»РёР·РѕРІР°С‚СЊ СЃРїСЂР°РІРєСѓ РґР»СЏ РёРЅРґРёРІРёРґСѓР°Р»СЊРЅС‹С… РїР°СЂР°РјРµС‚СЂРѕРІ РЅР°СЃС‚СЂРѕР№РєРё РёРЅС‚РµСЂС„РµР№СЃРѕРІ
+#warning реализовать справку для индивидуальных параметров настройки интерфейсов
 const char str_help_set[]  = "Set interface settings. Syntax:\r\n set [con|can1|can2|lin1|lin2|urt1|urt2]\r\n Print help set <iface> for get param list on command.\r\n";
 const char str_help_can[]  = "Send CAN msg. Syntax:\r\n can[1|2] 0x<id hex num> <data length> <data hex format without whitespace> -n(nask) -r(retransmit) <time> <count (0 - infinity)>.\r\n";
 const char str_help_lin[]  = "Send LIN msg. Syntax:\r\n lin[1|2] 0x<id hex num> <data hex format without whitespace> -s(standard checksum) -r(retransmit) <time (ms)> <count (0 - infinity)>.\r\n";
@@ -232,7 +232,7 @@ static void console_cmd_help(char *buf, uint8_t size)
 }
 
 // =========================================================================
-// Р РµР°Р»РёР·Р°С†РёСЏ РєРѕРјР°РЅРґС‹ get
+// Реализация команды get
 // =========================================================================
 
 static void console_cmd_get_con(uint8_t *buf, uint8_t size)
@@ -294,7 +294,7 @@ static void console_cmd_get(char *buf, uint8_t size)
 }
 
 // =========================================================================
-// Р РµР°Р»РёР·Р°С†РёСЏ РєРѕРјР°РЅРґС‹ set
+// Реализация команды set
 // =========================================================================
 
 int32_t console_cmd_set_con_baud(char *buf, uint8_t size, uint8_t *param, void * sett)
@@ -368,7 +368,7 @@ static bool console_cmd_set_con(char *buf, uint8_t size)
             {
                 if (param_list[i].func != NULL)
                 {
-#warning Р‘Р»СЏСЏСЏ!!!
+#warning Бляяя!!!
 //                    if (((cmd_param_int32_t)param_list[j].func)(buf, size, &i, (void *)bsp_con_get_setting()) == PARAM_ERR)
                     {
                         return false;

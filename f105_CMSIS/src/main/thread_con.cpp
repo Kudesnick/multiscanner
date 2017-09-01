@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// РљР»Р°СЃСЃ РєРѕРЅСЃРѕР»Рё
+// Класс консоли
 //------------------------------------------------------------------------------
 
 #include <stdint.h>
@@ -11,7 +11,7 @@
 #include "thread_con.h"
 #include "units_config.h"
 
-thread_con::thread_con(void (* _parse)(char * str, bsp_con_config_t * console_sett)):
+thread_con::thread_con(void (* _parse)(char * str)):
     thread(THREAD_TYPE_CONSOLE),
     buf(),
     unit(CON_UNIT, &buf),
@@ -19,7 +19,7 @@ thread_con::thread_con(void (* _parse)(char * str, bsp_con_config_t * console_se
 {
 };
 
-void thread_con::set_parser(void (* _parse)(char * str, bsp_con_config_t * console_sett))
+void thread_con::set_parser(void (* _parse)(char * str))
 {
     parse = _parse;
 };
@@ -32,19 +32,19 @@ bool thread_con::send_str(const char * str)
 void thread_con::routine(void)
 {
     if (buf.rx.get_str_count() > 0)
-    { // Р’ Р±СѓС„РµСЂРµ РїРѕР»РЅРѕС†РµРЅРЅР°СЏ РєРѕРјР°РЅРґР°
-        
+    { // В буфере полноценная команда
+
         static char str_buf[RX_BUFFER_SIZE];
 
         for(uint16_t i = 0; i < sizeof(str_buf)/sizeof(str_buf[0]); i++)
         {
             str_buf[i] = buf.rx.extract();
-            
+
             if (str_buf[i] == '\0')
             {
                 if (parse != NULL)
                 {
-                    parse(str_buf, unit.get_setting());
+                    parse(str_buf);
                 }
                 break;
             }
@@ -55,9 +55,9 @@ void thread_con::routine(void)
 bool console_send_string(const char * str)
 {
     bool result = false;
-    
+
     thread_con * ptr = (thread_con *)thread_con::get_last_pointer();
-        
+
     while (ptr != NULL)
     {
         if (ptr->get_class_type() == THREAD_TYPE_CONSOLE)
@@ -69,6 +69,6 @@ bool console_send_string(const char * str)
         }
         ptr = (thread_con *)ptr->get_prev_pointer();
     }
-    
+
     return result;
 }

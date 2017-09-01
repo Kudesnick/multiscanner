@@ -333,7 +333,7 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--no_multibyte_chars</MiscControls>
               <Define>STM32F10X_CL, DEBUG, HSE_VALUE=16000000</Define>
               <Undefine></Undefine>
               <IncludePath>.\src\main;.\src\config</IncludePath>
@@ -444,6 +444,11 @@
               <FileName>parser.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\parser.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>parser_help.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\parser_help.cpp</FilePath>
             </File>
           </Files>
         </Group>

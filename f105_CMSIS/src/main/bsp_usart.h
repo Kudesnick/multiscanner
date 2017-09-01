@@ -1,4 +1,4 @@
-п»ї#ifndef _BSP_USART_H_
+#ifndef _BSP_USART_H_
 #define _BSP_USART_H_
 
 #include <stdint.h>
@@ -8,7 +8,7 @@
 #include "bsp_unit.h"
 
 //------------------------------------------------------------------------------
-// РљР»Р°СЃСЃ РїРѕСЂС‚Р° РІРІРѕРґР°/РІС‹РІРѕРґР° UART
+// Класс порта ввода/вывода UART
 //------------------------------------------------------------------------------
 
 #define USART_LIN_BRK_DATA (uint16_t)0x8000;
@@ -16,14 +16,14 @@
 
 typedef struct
 {
-    // РҐР°СЂРґРІР°СЂРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё
+    // Хардварные настройки
     uint32_t USART_BaudRate;
     uint16_t USART_WordLength;
     uint16_t USART_StopBits;
     uint16_t USART_Parity;
     uint16_t USART_Mode;
     uint16_t USART_LIN_Break_Detection_Length;
-    // РЎРѕС„С‚РІР°СЂРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё
+    // Софтварные настройки
     bool USART_LIN_Enable;
     bool USART_Enable;
 } bsp_usart_setting_t;
@@ -40,10 +40,10 @@ class bsp_usart: public bsp_unit
     public:
         bsp_usart(USART_TypeDef *_unit_ptr);
         void send_sett(bsp_usart_setting_t *sett);
-        virtual void send_sett(void *sett); // РџСЂРёРјРµРЅРµРЅРёРµ РЅРѕРІС‹С… РЅР°СЃС‚СЂРѕРµРє РјРѕРґСѓР»СЏ
-        virtual void *get_sett(void); // РџРѕР»СѓС‡РµРЅРёРµ РЅР°СЃС‚СЂРѕРµРє РјРѕРґСѓР»СЏ
-        virtual bool send_msg(void *msg); // РћС‚РїСЂР°РІРєР° РґР°РЅРЅС‹С…
-        virtual void interrupt_handler(void); // РћР±СЂР°Р±РѕС‚С‡РёРє РїСЂРµСЂС‹РІР°РЅРёСЏ, РѕСЃРЅРѕРІРЅС‹Рµ РјР°РЅРёРїСѓР»СЏС†РёРё СЃ С„Р»Р°РіР°РјРё. РР· РЅРµРіРѕ РІС‹Р·С‹РІР°РµС‚СЃСЏ callback
+        virtual void send_sett(void *sett); // Применение новых настроек модуля
+        virtual void *get_sett(void); // Получение настроек модуля
+        virtual bool send_msg(void *msg); // Отправка данных
+        virtual void interrupt_handler(void); // Обработчик прерывания, основные манипуляции с флагами. Из него вызывается callback
 };
 
 #endif /* _BSP_USART_H_ */

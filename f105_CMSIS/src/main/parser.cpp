@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// РћР±С‰РёРµ РєРѕРјР°РЅРґС‹ Рё С‚РёРїС‹ РґР»СЏ РїР°СЂСЃРµСЂР° СЃС‚СЂРѕРє
+// Общие команды и типы для парсера строк
 //------------------------------------------------------------------------------
 
 #include <stdint.h>
@@ -8,27 +8,7 @@
 #include "bsp_con.h"
 #include "thread_con.h"
 #include "parser.h"
-
-bool parser_color(bsp_con_config_t * console_sett)
-{
-    static bool color = true;
-    
-    if (console_sett != NULL)
-    {
-        color = console_sett->color;
-    }
-    
-    return color;
-}
-
-void send_err(const char * str)
-{
-    console_send_string(TAG_RED);
-    console_send_string(parser_str_err_err);
-    console_send_string(str);
-    console_send_string(TAG_DEF);
-    console_send_string("\r\n");
-}
+#include "parser_help.h"
 
 char * parser_uint_to_str(uint32_t num)
 {
@@ -76,24 +56,24 @@ void parser_lowercase(char *buf)
     }
 }
 
-int16_t parser_find(char * str, const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len)
+int16_t parser_find(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len)
 {
     int16_t result = -1;
     
-    if (str[0] != '\0')
+    if (*str[0] != '\0')
     {
         char * next_str;
-        if ((next_str = strchr(str, ' ')) == NULL) next_str = strchr(str, '\0');
-        uint8_t len = (next_str - str) / sizeof(char);
+        if ((next_str = strchr(*str, ' ')) == NULL) next_str = strchr(*str, '\0');
+        uint8_t len = (next_str - *str) / sizeof(char);
         
         for (uint8_t i = 0; i < cmd_list_len; i++)
         {
             if (strlen(cmd_list[i].name) == len
-                && strncmp(str, cmd_list[i].name, len) == 0)
+                && strncmp(*str, cmd_list[i].name, len) == 0)
             {
                 result = i;
-                str = next_str;
-                if (str[0] == ' ') str += sizeof(char);
+                *str = next_str;
+                if (*str[0] == ' ') *str += sizeof(char);
                 break;
             }
         }
@@ -102,41 +82,33 @@ int16_t parser_find(char * str, const parse_fsm_steps_t * cmd_list, uint16_t cmd
     return result;
 }
 
-static bool console_cmd_help(char * str, const void * param)
-{
-    console_send_string("test echo msg.");
-    console_send_string(str);
-    
-    return(true);
-}
-
-void parser_parse(char * str, bsp_con_config_t * console_sett)
+void parser_parse(char * str)
 {
     const parse_fsm_steps_t cmd_list[] =
     {
-        {   "?", console_cmd_help, NULL},
-        {"help", console_cmd_help, NULL}, // РџРѕР»СѓС‡РёС‚СЊ СЃРїСЂР°РІРєСѓ Рѕ РїСЂРѕРіСЂР°РјРјРµ
-        { "get",             NULL, NULL}, // РџРѕР»СѓС‡РёС‚СЊ РїР°СЂР°РјРµС‚СЂС‹ РЅР°СЃС‚СЂРѕР№РєРё РёРЅС‚РµСЂС„РµР№СЃР°
-        { "set",             NULL, NULL}, // РќР°СЃС‚СЂРѕРёС‚СЊ РёРЅС‚РµСЂС„РµР№СЃ
-        {"can1",             NULL, NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ can1
-        {"can2",             NULL, NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ can2
-        {"lin1",             NULL, NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ lin1
-        {"lin2",             NULL, NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ lin2
-        {"urt1",             NULL, NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ uart1
-        {"urt2",             NULL, NULL}, // РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ uart2
+        {    "?", parser_help, NULL},
+        { "help", parser_help, NULL}, // Получить справку о программе
+        {"about", parser_info, NULL},
+        { "info", parser_info, NULL}, // Сводная информация об устройстве (версия, поддерживаемые интерфейсы и пр.)
+        {  "get",        NULL, NULL}, // Получить параметры настройки интерфейса
+        {  "set",        NULL, NULL}, // Настроить интерфейс
+        { "can1",        NULL, NULL}, // Отправить сообщение по can1
+        { "can2",        NULL, NULL}, // Отправить сообщение по can2
+        { "lin1",        NULL, NULL}, // Отправить сообщение по lin1
+        { "lin2",        NULL, NULL}, // Отправить сообщение по lin2
+        { "urt1",        NULL, NULL}, // Отправить сообщение по uart1
+        { "urt2",        NULL, NULL}, // Отправить сообщение по uart2
     };
-    
-    parser_color(console_sett);
-    
+
     int16_t i;
-    
-    if ((i = parser_find(str, cmd_list, countof_arr(cmd_list))) < 0)
+
+    if ((i = parser_find(&str, cmd_list, countof_arr(cmd_list))) < 0)
     {
-        send_err(parser_str_err_bad_cmd);
+        console_send_string(parser_str_err_bad_cmd);
     }
     else if (cmd_list[i].func == NULL)
     {
-        send_err(parser_str_err_null_cmd);
+        console_send_string(parser_str_err_null_cmd);
     }
     else
     {

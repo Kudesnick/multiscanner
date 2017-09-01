@@ -1,5 +1,5 @@
-п»ї//------------------------------------------------------------------------------
-// РџСЂРѕРјРµР¶СѓС‚РѕС‡РЅС‹Р№ Р±СѓС„РµСЂ РґР»СЏ РєРѕРЅСЃРѕР»Рё
+//------------------------------------------------------------------------------
+// Промежуточный буфер для консоли
 //------------------------------------------------------------------------------
 
 #include <stdint.h>
@@ -8,7 +8,7 @@
 #include "atom.h"
 #include "fifo_con.h"
 
-// РљР»Р°СЃСЃ РїСЂРёРµРјРЅРѕРіРѕ Р±СѓС„РµСЂР°
+// Класс приемного буфера
 //------------------------------------------------------------------------------
 fifo_con_rx_buffer::fifo_con_rx_buffer(void):
     word_counter(0),
@@ -82,7 +82,7 @@ void fifo_con_rx_buffer::add(char data)
     
     if (!add_result)
     {
-#warning РїСЂРµРґСѓСЃРјРѕС‚СЂРµС‚СЊ РґРµР№СЃС‚РІРёРµ, СЃРІСЏР·Р°РЅРЅРѕРµ СЃ РїРµСЂРµРїРѕР»РЅРµРЅРёРµРј Р±СѓС„РµСЂР°
+#warning предусмотреть действие, связанное с переполнением буфера
     }
 };
 
@@ -99,14 +99,14 @@ char fifo_con_rx_buffer::extract(void)
     return result;
 };
 
-// РљР»Р°СЃСЃ РїРµСЂРµРґР°СЋС‰РµРіРѕ Р±СѓС„РµСЂР°
+// Класс передающего буфера
 //------------------------------------------------------------------------------
 fifo_con_tx_buffer::fifo_con_tx_buffer(void)
 {
 	cpp_fifo();
 };
 
-bool fifo_con_tx_buffer::send_str(const char * str)
+bool fifo_con_tx_buffer::send_str(const char * str, const bool escape_not_del)
 {
     bool result = false;
     
@@ -114,7 +114,25 @@ bool fifo_con_tx_buffer::send_str(const char * str)
     {
         for (uint_fast16_t i = 0; i < strlen(str); i++)
         {
-            add(str[i]);
+            // Механизм вырезания escape-последовательностей для раскрашивания консоли
+            if (escape_not_del)
+            {
+                add(str[i]);
+            }    
+            else
+            {
+                static bool esc_detect = false;
+
+                if (str[i] == '\x1b') esc_detect = true;
+                if (esc_detect)
+                {
+                    if (str[i] == 'm') esc_detect = false; 
+                }
+                else
+                {
+                    add(str[i]);
+                }
+            }
         }
         result = true;
     }
@@ -122,7 +140,7 @@ bool fifo_con_tx_buffer::send_str(const char * str)
     return result;
 };
 
-// РљР»Р°СЃСЃ РїСЂРёРµРјРѕРїРµСЂРµРґР°СЋС‰РµРіРѕ Р±СѓС„РµСЂР°
+// Класс приемопередающего буфера
 //------------------------------------------------------------------------------
 fifo_con::fifo_con(void):
     rx(),

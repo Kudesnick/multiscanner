@@ -10,11 +10,11 @@
 
 typedef struct
 {
-    uint32_t baudrate;  // Ð‘Ð¾Ð´Ñ€ÐµÐ¹Ñ‚
-    uint16_t parity;    // ÐŸÐ°Ñ€Ð¸Ñ‚ÐµÑ‚
-    uint16_t stop_bits; // ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑÑ‚Ð¾Ð¿Ð¾Ð²Ñ‹Ñ… Ð±Ð¸Ñ‚Ð¾Ð²
-        bool echo;      // Ð­Ñ…Ð¾ Ð¾Ñ‚Ð¿Ñ€Ð°Ð²ÐºÐ¸ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ð¹
-        bool color;     // Ð’Ñ‹Ð´ÐµÐ»ÐµÐ½Ð¸Ðµ Ñ†Ð²ÐµÑ‚Ð¾Ð¼ Ð² ÐºÐ¾Ð½ÑÐ¾Ð»Ðµ
+    uint32_t baudrate;  // Áîäðåéò
+    uint16_t parity;    // Ïàðèòåò
+    uint16_t stop_bits; // Êîëè÷åñòâî ñòîïîâûõ áèòîâ
+        bool echo;      // Ýõî îòïðàâêè ñîîáùåíèé
+        bool color;     // Âûäåëåíèå öâåòîì â êîíñîëå
 } bsp_con_config_t;
 
 class bsp_con : private bsp_usart
@@ -23,7 +23,7 @@ class bsp_con : private bsp_usart
         fifo_con * bufer;
         static bsp_con_config_t default_sett;
         bsp_con_config_t setting;
-        virtual void callback(void * msg, uint32_t flags); // Ð’ Ñ‚ÐµÐ»Ðµ Ð¼ÐµÑ‚Ð¾Ð´Ð° Ð¿Ñ€ÐµÐ¾Ð±Ñ€Ð°Ð·Ð¾Ð²Ð°Ñ‚ÑŒ (void *)->(uint16_t)
+        virtual void callback(void * msg, uint32_t flags); // Â òåëå ìåòîäà ïðåîáðàçîâàòü (void *)->(uint16_t)
     protected:
     public:
         bsp_con(USART_TypeDef *_unit_ptr, fifo_con * buf, bsp_con_config_t * _setting = &default_sett);
