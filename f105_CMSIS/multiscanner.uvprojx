@@ -386,6 +386,11 @@
               <FilePath>.\src\main\list.h</FilePath>
             </File>
             <File>
+              <FileName>iface.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\main\iface.h</FilePath>
+            </File>
+            <File>
               <FileName>atom.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\atom.cpp</FilePath>
@@ -449,6 +454,11 @@
               <FileName>parser_help.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\parser_help.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>parser_get.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\parser_get.cpp</FilePath>
             </File>
           </Files>
         </Group>

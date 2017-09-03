@@ -38,7 +38,7 @@ class bsp_usart: public bsp_unit
     protected:
         bsp_usart_setting_t setting;
     public:
-        bsp_usart(USART_TypeDef *_unit_ptr);
+        bsp_usart(USART_TypeDef *_unit_ptr, uint16_t _class_type = NULL, uint16_t _object_name = NULL);
         void send_sett(bsp_usart_setting_t *sett);
         virtual void send_sett(void *sett); // Применение новых настроек модуля
         virtual void *get_sett(void); // Получение настроек модуля

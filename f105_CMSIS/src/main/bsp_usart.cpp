@@ -2,8 +2,8 @@
 
 #include "bsp_usart.h"
 
-bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr):
-    bsp_unit((void *)_unit_ptr),
+bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr, uint16_t _class_type, uint16_t _object_name):
+    bsp_unit((void *)_unit_ptr, _class_type, _object_name),
     pin_rx(),
     pin_tx()
 {
@@ -178,7 +178,13 @@ void bsp_usart::interrupt_handler(void)
 //------------------------------------------------------------------------------
 extern "C" void USART1_IRQHandler(void)
 {
-    bsp_usart *unit = (bsp_usart*)bsp_unit::object_search(USART1);
+    static bsp_usart *unit = NULL;
+    
+    if (unit == NULL)
+    {
+        unit = (bsp_usart*)bsp_unit::object_search(USART1);
+    }
+    
     if (unit != NULL)
     {
         unit->interrupt_handler();
@@ -191,7 +197,13 @@ extern "C" void USART1_IRQHandler(void)
 
 extern "C" void USART2_IRQHandler(void)
 {
-    bsp_usart *unit = (bsp_usart*)bsp_unit::object_search(USART2);
+    static bsp_usart *unit = NULL;
+    
+    if (unit == NULL)
+    {
+        unit = (bsp_usart*)bsp_unit::object_search(USART2);
+    }
+    
     if (unit != NULL)
     {
         unit->interrupt_handler();
@@ -204,7 +216,13 @@ extern "C" void USART2_IRQHandler(void)
 
 extern "C" void USART3_IRQHandler(void)
 {
-    bsp_usart *unit = (bsp_usart*)bsp_unit::object_search(USART3);
+    static bsp_usart *unit = NULL;
+    
+    if (unit == NULL)
+    {
+        unit = (bsp_usart*)bsp_unit::object_search(USART3);
+    }
+    
     if (unit != NULL)
     {
         unit->interrupt_handler();
@@ -217,7 +235,13 @@ extern "C" void USART3_IRQHandler(void)
 
 extern "C" void UART4_IRQHandler(void)
 {
-    bsp_usart *unit = (bsp_usart*)bsp_unit::object_search(UART4);
+    static bsp_usart *unit = NULL;
+    
+    if (unit == NULL)
+    {
+        unit = (bsp_usart*)bsp_unit::object_search(UART4);
+    }
+    
     if (unit != NULL)
     {
         unit->interrupt_handler();
@@ -230,7 +254,13 @@ extern "C" void UART4_IRQHandler(void)
 
 extern "C" void UART5_IRQHandler(void)
 {
-    bsp_usart *unit = (bsp_usart*)bsp_unit::object_search(UART5);
+    static bsp_usart *unit = NULL;
+    
+    if (unit == NULL)
+    {
+        unit = (bsp_usart*)bsp_unit::object_search(UART5);
+    }
+    
     if (unit != NULL)
     {
         unit->interrupt_handler();
