@@ -27,7 +27,7 @@ struct parse_fsm_steps_t
 {
     const char * const name;                            // Сигнатура команды
     bool(* const func)(char * str, const void * param); // Функция обработчик
-    const void * param;                                 // Дополнительный параметр
+    const void * const param;                                 // Дополнительный параметр
 };
 
 // Строки кодов ошибок
