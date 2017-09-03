@@ -9,6 +9,7 @@
 #include "thread_con.h"
 #include "parser.h"
 #include "parser_help.h"
+#include "parser_get.h"
 
 char * parser_uint_to_str(uint32_t num)
 {
@@ -136,7 +137,7 @@ void parser_parse(char * str)
         { "help", parser_help,     NULL}, // Получить справку о программе
         {"about",        NULL, str_info},
         { "info",        NULL, str_info}, // Сводная информация об устройстве (версия, поддерживаемые интерфейсы и пр.)
-        {  "get",        NULL,     NULL}, // Получить параметры настройки интерфейса
+        {  "get",  parser_get,     NULL}, // Получить параметры настройки интерфейса
         {  "set",        NULL,     NULL}, // Настроить интерфейс
         { "can1",        NULL,     NULL}, // Отправить сообщение по can1
         { "can2",        NULL,     NULL}, // Отправить сообщение по can2
