@@ -460,6 +460,16 @@
               <FileType>8</FileType>
               <FilePath>.\src\main\parser_get.cpp</FilePath>
             </File>
+            <File>
+              <FileName>parser_set.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\parser_set.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>parser_set_con.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\parser_set_con.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -32,7 +32,7 @@ struct parse_fsm_steps_t
 
 // —троки кодов ошибок
 const char parser_str_err_bad_cmd[]    = TAG_RED "Error!" TAG_DEF " This command is invalid.\r\n";
-const char parser_str_err_null_cmd[]   = TAG_RED "Error!" TAG_DEF " This command is " TAG_RED_B "not realised" TAG_RED_B ".\r\n";
+const char parser_str_err_null_cmd[]   = TAG_RED "Error!" TAG_DEF " This command is " TAG_RED_B "not realised" TAG_DEF ".\r\n";
 const char parser_str_err_syntax_cmd[] = TAG_RED "Error!" TAG_DEF " This command syntax is invalid. Print" TAG_LT "help" TAG_GT ".\r\n";
 
 char *   parser_uint_to_str(uint32_t num); // перевод числа в строку

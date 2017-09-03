@@ -1,13 +1,13 @@
-#ifndef _PARSER_GET_H_
-#define _PARSER_GET_H_
+#ifndef _PARSER_SET_H_
+#define _PARSER_SET_H_
 
 //------------------------------------------------------------------------------
-// Общие команды и типы для парсера строк
+// Задание настроек интерфейсов
 //------------------------------------------------------------------------------
 
 #include <stdint.h>
 #include <string.h>
 
-bool parser_get(char * str, const void * param); // Получить настройки интерфейса
+bool parser_set(char * str, const void * param); // Получить настройки интерфейса
 
-#endif /* _PARSER_GET_H_ */
+#endif /* _PARSER_SET_H_ */
