@@ -10,10 +10,11 @@
 
 typedef struct
 {
-    uint32_t baudrate;
-    uint16_t parity;
-    uint16_t stop_bits;
-        bool echo;
+    uint32_t baudrate;  // Бодрейт
+    uint16_t parity;    // Паритет
+    uint16_t stop_bits; // Количество стоповых битов
+        bool echo;      // Эхо отправки сообщений
+        bool color;     // Выделение цветом в консоле
 } bsp_con_config_t;
 
 class bsp_con : private bsp_usart
@@ -22,7 +23,7 @@ class bsp_con : private bsp_usart
         fifo_con * bufer;
         static bsp_con_config_t default_sett;
         bsp_con_config_t setting;
-        virtual void callback(void * msg, uint32_t flags); // Р’ С‚РµР»Рµ РјРµС‚РѕРґР° РїСЂРµРѕР±СЂР°Р·РѕРІР°С‚СЊ (void *)->(uint16_t)
+        virtual void callback(void * msg, uint32_t flags); // В теле метода преобразовать (void *)->(uint16_t)
     protected:
     public:
         bsp_con(USART_TypeDef *_unit_ptr, fifo_con * buf, bsp_con_config_t * _setting = &default_sett);

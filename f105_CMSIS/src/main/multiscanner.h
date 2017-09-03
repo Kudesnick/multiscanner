@@ -16,7 +16,8 @@ class cpp_multiscanner
         // Конструктор реализован здесь, чтобы при добавлении тредов не править два файла
         cpp_multiscanner(void):
             console(parser_parse)
-        {};
+        {
+        };
         void routine(void);
 };
 

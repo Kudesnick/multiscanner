@@ -106,7 +106,7 @@ fifo_con_tx_buffer::fifo_con_tx_buffer(void)
 	cpp_fifo();
 };
 
-bool fifo_con_tx_buffer::send_str(const char * str)
+bool fifo_con_tx_buffer::send_str(const char * str, const bool escape_not_del)
 {
     bool result = false;
     
@@ -114,7 +114,25 @@ bool fifo_con_tx_buffer::send_str(const char * str)
     {
         for (uint_fast16_t i = 0; i < strlen(str); i++)
         {
-            add(str[i]);
+            // Механизм вырезания escape-последовательностей для раскрашивания консоли
+            if (escape_not_del)
+            {
+                add(str[i]);
+            }    
+            else
+            {
+                static bool esc_detect = false;
+
+                if (str[i] == '\x1b') esc_detect = true;
+                if (esc_detect)
+                {
+                    if (str[i] == 'm') esc_detect = false; 
+                }
+                else
+                {
+                    add(str[i]);
+                }
+            }
         }
         result = true;
     }

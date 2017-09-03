@@ -16,6 +16,7 @@ bsp_con_config_t bsp_con::default_sett =
     /* .parity    = */CON_PARITY,
     /* .stop_bits = */USART_StopBits_1,
     /* .echo      = */false,
+    /* .color     = */true,
 };
 
 // ѕрерывание по приему/передаче
@@ -49,16 +50,22 @@ bsp_con::bsp_con(USART_TypeDef *_unit_ptr, fifo_con * buf, bsp_con_config_t * _s
 // ѕереслать данные
 bool bsp_con::send(const char *buf)
 {
-    bool result = bufer->tx.send_str(buf);
+    __disable_irq();
+#warning √арантирует, что мы не затрем данные, но, возможно, что мы пропустим начало передачи.
+        bool tx_complete = bufer->tx.is_empty();
+    __enable_irq();
     
-    if (result == true)
+    bool result = bufer->tx.send_str(buf, setting.color);
+    
+    if (result == true
+        && tx_complete == true
+        )
     {
-#warning вот здесь продумать ситуацию, когда буфер изначально не пуст и передача уже идет
         static uint16_t msg;
         msg = bufer->tx.extract();
         send_msg((void *) &msg);
     }
-    
+
     return result;
 }
 

@@ -10,7 +10,7 @@
 #include "fifo.h"
 
 #define RX_BUFFER_SIZE FIFO_SIZE_256
-#define TX_BUFFER_SIZE FIFO_SIZE_256
+#define TX_BUFFER_SIZE FIFO_SIZE_1024
 
 class fifo_con_rx_buffer: public cpp_fifo<char, RX_BUFFER_SIZE>
 {
@@ -30,7 +30,7 @@ class fifo_con_tx_buffer: public cpp_fifo<char, TX_BUFFER_SIZE>
 {
 	public:
 		fifo_con_tx_buffer(void);
-		bool send_str(const char * str);
+		bool send_str(const char * str, const bool escape_not_del);
 };
 
 class fifo_con

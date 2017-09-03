@@ -333,7 +333,7 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--no_multibyte_chars</MiscControls>
               <Define>STM32F10X_CL, DEBUG, HSE_VALUE=16000000</Define>
               <Undefine></Undefine>
               <IncludePath>.\src\main;.\src\config</IncludePath>
@@ -381,24 +381,14 @@
           <GroupName>main</GroupName>
           <Files>
             <File>
-              <FileName>main.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\main.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_con.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\bsp_con.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>fifo.h</FileName>
+              <FileName>list.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\src\main\fifo.h</FilePath>
+              <FilePath>.\src\main\list.h</FilePath>
             </File>
             <File>
-              <FileName>multiscanner.cpp</FileName>
+              <FileName>atom.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\src\main\multiscanner.cpp</FilePath>
+              <FilePath>.\src\main\atom.cpp</FilePath>
             </File>
             <File>
               <FileName>bsp_io.cpp</FileName>
@@ -416,19 +406,19 @@
               <FilePath>.\src\main\bsp_usart.cpp</FilePath>
             </File>
             <File>
+              <FileName>bsp_con.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\bsp_con.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>fifo.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\main\fifo.h</FilePath>
+            </File>
+            <File>
               <FileName>fifo_con.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\fifo_con.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>atom.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\atom.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>list.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\src\main\list.h</FilePath>
             </File>
             <File>
               <FileName>thread.cpp</FileName>
@@ -441,9 +431,24 @@
               <FilePath>.\src\main\thread_con.cpp</FilePath>
             </File>
             <File>
+              <FileName>multiscanner.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\multiscanner.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>main.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\main.cpp</FilePath>
+            </File>
+            <File>
               <FileName>parser.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\parser.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>parser_help.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\parser_help.cpp</FilePath>
             </File>
           </Files>
         </Group>

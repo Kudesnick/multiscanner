@@ -171,7 +171,7 @@ void bsp_usart::interrupt_handler(void)
 //        USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_LBD);
 //    }
     
-    callback((void *)data, flags);
+    callback((void *)(uint32_t)data, flags);
 };
 
 // Прерывания от интерфейсов uart

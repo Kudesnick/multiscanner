@@ -42,8 +42,6 @@ template <typename data_t, const fifo_ptr_t count> class cpp_fifo
 		data_t read_head(void);
 		data_t read_end(void);
 		void clear(void);
-#warning изничтожить
-        data_t *get_head(void);
 };
 
 template <typename data_t, const fifo_ptr_t count> cpp_fifo<data_t, count>::cpp_fifo(void):
@@ -104,11 +102,6 @@ template <typename data_t, const fifo_ptr_t count> data_t cpp_fifo<data_t, count
 template <typename data_t, const fifo_ptr_t count> void cpp_fifo<data_t, count>::clear(void)
 {
     head = end;
-}
-
-template <typename data_t, const fifo_ptr_t count> data_t *cpp_fifo<data_t, count>::get_head(void)
-{
-    return &fifo[head & (count - 1)];
 }
 
 #endif /* _FIFO_H_ */
