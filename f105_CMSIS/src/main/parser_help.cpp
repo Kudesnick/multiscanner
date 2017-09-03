@@ -8,36 +8,7 @@
 #include "thread_con.h"
 #include "parser.h"
 #include "parser_help.h"
-
-static bool parser_help_get(char * str, const void * param)
-{
-    const parse_fsm_steps_t cmd_list[] =
-    {
-        { "con", NULL, NULL},
-        {"can1", NULL, NULL},
-        {"can2", NULL, NULL},
-        {"lin1", NULL, NULL},
-        {"lin2", NULL, NULL},
-        {"urt1", NULL, NULL},
-        {"urt2", NULL, NULL},
-    };
-
-    if (str[0] != '\0')
-    {
-        parser_recursion(&str, cmd_list, countof_arr(cmd_list));
-    }
-    else
-    {
-        console_send_string("Get the interface settings.\r\n"
-                            "\tEnter" TAG_LT "help get <");
-                                parser_all_param_to_str(cmd_list, countof_arr(cmd_list));
-                                console_send_string(">" TAG_GT "\r\n"
-                            "\tto get help on getting the interface settings.\r\n");
-    }
-
-    return false;
-};
-    
+   
 static bool parser_help_set(char * str, const void * param)
 {
     const parse_fsm_steps_t cmd_list[] =
@@ -69,6 +40,10 @@ static bool parser_help_set(char * str, const void * param)
 
 bool parser_help(char * str, const void * param) // Получить справку о программе
 {
+    const char str_get[] = "Get the interface settings.\r\n"
+                            "\tEnter" TAG_LT "get <con|can1|can2|lin1|lin2|uart1|uart2>" TAG_GT "\r\n"
+                            "\tto get the interface settings.\r\n";
+    
     const char str_can[] = "Send CAN message. Syntax:\r\n"
                                 "\t" TAG_BLUE  "<can1|can2> " TAG_GREEN "<id>" TAG_BLUE " <-s|-e> " TAG_GREEN "<len> <data>" TAG_BLUE " [-n|-a] " TAG_GREEN "[-t time] [-c count]" TAG_DEF "\r\n\r\n"
                                 "\t" TAG_BLUE  "can1, can2"  TAG_DEF " - physical interface name\r\n"
@@ -103,7 +78,7 @@ bool parser_help(char * str, const void * param) // Получить справку о программе
 
     const parse_fsm_steps_t cmd_list[] =
     {
-        { "get", parser_help_get, NULL},     // Получить параметры настройки интерфейса
+        { "get",            NULL, str_get},     // Получить параметры настройки интерфейса
         { "set", parser_help_set, NULL},     // Настроить интерфейс
         {"can1",            NULL, str_can},  // Отправить сообщение по can1
         {"can2",            NULL, str_can},  // Отправить сообщение по can2
