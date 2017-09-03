@@ -123,14 +123,14 @@ void parser_recursion(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t 
 
 void parser_parse(char * str)
 {
-    const char str_info[] = "Multiscanner " TAG_GREEN "v0.0.0a" TAG_DEF "\r\n"
+    static const char str_info[] = "Multiscanner " TAG_GREEN "v0.0.0a" TAG_DEF "\r\n"
                             "\tbuild date: " TAG_GREEN __DATE__ " [" __TIME__ "]" TAG_DEF "\r\n"
                             "\tAuthor: " TAG_GREEN "Stulov Tikhon" TAG_DEF " (" TAG_BLUE_U "kudesnick@inbox.ru" TAG_DEF ")\r\n"
                             "\t\r\n"
                             "\tConnect to PC interfaces support: " TAG_RED_B "UNDER CONSTRUCTION" TAG_DEF "\r\n"
                             "\tExternal interfaces support: " TAG_RED_B "UNDER CONSTRUCTION" TAG_DEF "\r\n";
 
-    const parse_fsm_steps_t cmd_list[] =
+    static const parse_fsm_steps_t cmd_list[] =
     {
         {    "?", parser_help,     NULL},
         { "help", parser_help,     NULL}, // Получить справку о программе
