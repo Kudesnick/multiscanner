@@ -8,6 +8,6 @@
 #include <stdint.h>
 #include <string.h>
 
-bool parser_get(char * str, const void * param); // Получить настройки интерфейса
+bool parser_get(char ** str, const void * param); // Получить настройки интерфейса
 
 #endif /* _PARSER_GET_H_ */

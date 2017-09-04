@@ -28,20 +28,36 @@ char * parser_uint_to_str(uint32_t num)
     return &str[i];
 }
 
-uint32_t parser_str_to_uint(char * str)
+uint32_t parser_str_to_uint(char ** str)
 {
     uint32_t result = 0;
     
-    for (uint8_t i = 0; strchr(" \0", str[i]) == NULL; i++)
+    if (*str[0] != '\0')
     {
-        result *= 10;
-        if (str[i] < '0' || str[i] > '9')
+        for (uint8_t i = 0; strchr(" \0", *str[0]) == NULL; i++)
         {
-            str = NULL;
-            result = NULL;
-            break;
+            result *= 10;
+            if (*str[0] < '0' || *str[0] > '9')
+            {
+                *str = NULL;
+                result = NULL;
+                break;
+            }
+            result += *str[0] - '0';
+            
+            *str += sizeof(char);
         }
-        result += str[i] - '0';
+        
+        if (*str != NULL
+            && *str[0] == ' '
+            )
+        {
+            *str += sizeof(char);
+        }
+    }
+    else
+    {
+        *str = NULL;
     }
     
     return result;
@@ -104,7 +120,7 @@ void parser_recursion(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t 
     }
     else if (cmd_list[i].func != NULL)
     {
-        cmd_list[i].func(*str, cmd_list[i].param);
+        cmd_list[i].func(str, cmd_list[i].param);
     }
     else if (cmd_list[i].param != NULL)
     {

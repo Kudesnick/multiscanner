@@ -11,8 +11,40 @@
 #include "parser_set.h"
 #include "parser_set_con.h"
 
-static bsp_con * ptr = NULL;
 static bsp_con_config_t * sett = NULL;
+
+static bool parser_yn_decode(char ** str, bool *res)
+{
+    bool result = true;
+    
+    switch (*str[0])
+    {
+        case 'y':
+        {
+            *res = true;
+            *str += sizeof(char);
+            break;
+        }
+        case 'n':
+        {
+            *res = false;
+            *str += sizeof(char);
+            break;
+        }
+        default:
+            result = false;
+            break;
+    }
+    
+    if (result == true
+        && *str[0] == ' '
+        )
+    {
+        *str += sizeof(char);
+    }
+    
+    return result;
+}
 
 static bool parser_iteration(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len)
 {
@@ -31,7 +63,7 @@ static bool parser_iteration(char ** str, const parse_fsm_steps_t * cmd_list, ui
         }
         else if (cmd_list[i].func != NULL)
         {
-            result = cmd_list[i].func(*str, cmd_list[i].param);
+            result = cmd_list[i].func(str, cmd_list[i].param);
         }
         else
         {
@@ -43,38 +75,111 @@ static bool parser_iteration(char ** str, const parse_fsm_steps_t * cmd_list, ui
     return result;
 }
 
-static bool parser_set_baud(char * str, const void * param)
+static bool parser_set_baud(char ** str, const void * param)
 {
-    console_send_string("Test complete\r\n");
+    bool result = false;
+    
+    char * tmp_str = *str;
+    uint32_t baud = parser_str_to_uint(&tmp_str);
+    
+    if (tmp_str != NULL)
+    {
+        *str = tmp_str;
+        sett->baudrate = baud;
+        result = true;
+    }
 
-    return true;
+    return result;
 }
 
-bool parser_set_con(char * str, const void * param)
+static bool parser_set_parity(char ** str, const void * param)
+{
+    bool result = false;
+    
+    uint16_t parity = (uint32_t)param;
+    
+    if (parity == USART_Parity_No   ||
+        parity == USART_Parity_Even ||
+        parity == USART_Parity_Odd
+        )
+    {
+        sett->parity = parity;
+        result = true;
+    }
+    
+    return result;
+}
+
+static bool parser_set_stop_bits(char ** str, const void * param)
+{
+    bool result = false;
+    
+    uint16_t stop_bits = (uint32_t)param;
+    
+    if (stop_bits == USART_StopBits_1   ||
+        stop_bits == USART_StopBits_0_5 ||
+        stop_bits == USART_StopBits_2   ||
+        stop_bits == USART_StopBits_1_5
+        )
+    {
+        sett->stop_bits = stop_bits;
+        result = true;
+    }
+    
+    return result;
+}
+
+static bool parser_set_echo(char ** str, const void * param)
+{
+    bool yn;
+    bool result = parser_yn_decode(str, &yn);
+    
+    if (result)
+    {
+        sett->echo = yn;
+    }
+    
+    return result;
+}
+
+static bool parser_set_color(char ** str, const void * param)
+{
+    bool yn;
+    bool result = parser_yn_decode(str, &yn);
+    
+    if (result)
+    {
+        sett->color = yn;
+    }
+    
+    return result;
+}
+
+bool parser_set_con(char ** str, const void * param)
 {
     static const parse_fsm_steps_t cmd_list[] =
     {
-        {          "-b", parser_set_baud, NULL},
-        {       "-baud", parser_set_baud, NULL},
-        {   "-baudrate", parser_set_baud, NULL},
-        {         "-pn",            NULL, NULL},
-        {          "-n",            NULL, NULL},
-        {  "-parity-no",            NULL, NULL},
-        {         "-no",            NULL, NULL},
-        {         "-pe",            NULL, NULL},
-        {          "-e",            NULL, NULL},
-        {"-parity-even",            NULL, NULL},
-        {       "-even",            NULL, NULL},
-        {         "-po",            NULL, NULL},
-        {          "-o",            NULL, NULL},
-        { "-parity-odd",            NULL, NULL},
-        {        "-odd",            NULL, NULL},
-        {         "-s1",            NULL, NULL},
-        {      "-stop1",            NULL, NULL},
-        {         "-s2",            NULL, NULL},
-        {      "-stop2",            NULL, NULL},
-        {       "-echo",            NULL, NULL},
-        {      "-color",            NULL, NULL},
+        {          "-b", parser_set_baud     , NULL},
+        {       "-baud", parser_set_baud     , NULL},
+        {   "-baudrate", parser_set_baud     , NULL},
+        {         "-pn", parser_set_parity   , (uint32_t *)USART_Parity_No},
+        {          "-n", parser_set_parity   , (uint32_t *)USART_Parity_No},
+        {  "-parity-no", parser_set_parity   , (uint32_t *)USART_Parity_No},
+        {         "-no", parser_set_parity   , (uint32_t *)USART_Parity_No},
+        {         "-pe", parser_set_parity   , (uint32_t *)USART_Parity_Even},
+        {          "-e", parser_set_parity   , (uint32_t *)USART_Parity_Even},
+        {"-parity-even", parser_set_parity   , (uint32_t *)USART_Parity_Even},
+        {       "-even", parser_set_parity   , (uint32_t *)USART_Parity_Even},
+        {         "-po", parser_set_parity   , (uint32_t *)USART_Parity_Odd},
+        {          "-o", parser_set_parity   , (uint32_t *)USART_Parity_Odd},
+        { "-parity-odd", parser_set_parity   , (uint32_t *)USART_Parity_Odd},
+        {        "-odd", parser_set_parity   , (uint32_t *)USART_Parity_Odd},
+        {         "-s1", parser_set_stop_bits, (uint32_t *)USART_StopBits_1},
+        {      "-stop1", parser_set_stop_bits, (uint32_t *)USART_StopBits_1},
+        {         "-s2", parser_set_stop_bits, (uint32_t *)USART_StopBits_2},
+        {      "-stop2", parser_set_stop_bits, (uint32_t *)USART_StopBits_2},
+        {       "-echo", parser_set_echo     , NULL},
+        {      "-color", parser_set_color    , NULL},
     };
     
     bsp_con * ptr = (bsp_con *)bsp_unit::get_object(IFACE_TYPE_CON, (iface_name_t)(uint32_t)param);
@@ -83,7 +188,7 @@ bool parser_set_con(char * str, const void * param)
     {
         bsp_con_config_t * sett = ptr->get_setting();
         
-        if (parser_iteration(&str, cmd_list, countof_arr(cmd_list)) == true)
+        if (parser_iteration(str, cmd_list, countof_arr(cmd_list)) == true)
         {
             console_send_string("New console setting.\r\n");
         }

@@ -77,7 +77,7 @@ static void parser_get_yes_decode(bool enable)
     }
 };
 
-static bool parser_get_con(char * str, const void * param)
+static bool parser_get_con(char ** str, const void * param)
 {
     bsp_con * ptr = (bsp_con *)bsp_unit::get_object(IFACE_TYPE_CON, (iface_name_t)(uint32_t)param);
     
@@ -107,7 +107,7 @@ static bool parser_get_con(char * str, const void * param)
     return false;
 }
 
-bool parser_get(char * str, const void * param)
+bool parser_get(char ** str, const void * param)
 {
     static const parse_fsm_steps_t cmd_list[] =
     {
@@ -120,7 +120,7 @@ bool parser_get(char * str, const void * param)
         {"urt2", NULL, NULL},
     };
 
-    parser_recursion(&str, cmd_list, countof_arr(cmd_list));
+    parser_recursion(str, cmd_list, countof_arr(cmd_list));
 
     return false;
 }
