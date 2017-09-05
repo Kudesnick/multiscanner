@@ -190,9 +190,10 @@ bool parser_set_con(char ** str, const void * param)
         
         if (parser_iteration(str, cmd_list, countof_arr(cmd_list)) == true)
         {
-            uint64_t real_baud = ptr->round_baud(sett.baudrate);
- 
-            if (real_baud * 100 / sett.baudrate > 3)
+            uint32_t real_baud = ptr->round_baud(sett.baudrate);
+            uint32_t delta = (real_baud >= sett.baudrate) ? real_baud - sett.baudrate : sett.baudrate - real_baud;
+
+            if ((uint64_t)delta * 100 / sett.baudrate > 3)
             {
                 console_send_string(TAG_RED "Operation aborted!" TAG_DEF " Real baudrate will be " TAG_BLUE);
                     console_send_string(parser_uint_to_str(real_baud));

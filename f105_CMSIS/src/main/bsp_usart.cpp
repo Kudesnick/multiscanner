@@ -182,7 +182,7 @@ uint32_t bsp_usart::round_baud(uint32_t baud)
     RCC_GetClocksFreq(&RCC_ClocksStatus);
     uint32_t freq = (unit_ptr == USART1) ? RCC_ClocksStatus.PCLK2_Frequency : RCC_ClocksStatus.PCLK1_Frequency;
     freq <<= 1; // Умножаем на два, потому что включаем USART_OverSampling8Cmd((USART_TypeDef *)unit_ptr, ENABLE);
-    uint16_t brr = freq / setting.USART_BaudRate;
+    uint16_t brr = freq / baud;
     return freq / brr;
 };
 

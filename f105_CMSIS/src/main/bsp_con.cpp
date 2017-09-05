@@ -102,5 +102,5 @@ void bsp_con::set_setting(bsp_con_config_t * sett)
 
 uint32_t bsp_con::round_baud(uint32_t baud)
 {
-    return bsp_con::round_baud(baud);
+    return bsp_usart::round_baud(baud);
 }
