@@ -38,12 +38,13 @@ class bsp_usart: public bsp_unit
     protected:
         bsp_usart_setting_t setting;
     public:
-        bsp_usart(USART_TypeDef *_unit_ptr);
+        bsp_usart(USART_TypeDef *_unit_ptr, uint16_t _class_type = NULL, uint16_t _object_name = NULL);
         void send_sett(bsp_usart_setting_t *sett);
         virtual void send_sett(void *sett); // Применение новых настроек модуля
         virtual void *get_sett(void); // Получение настроек модуля
         virtual bool send_msg(void *msg); // Отправка данных
         virtual void interrupt_handler(void); // Обработчик прерывания, основные манипуляции с флагами. Из него вызывается callback
+        uint32_t round_baud(uint32_t baud); // Вычисление истинного бодрейта после применения настроек
 };
 
 #endif /* _BSP_USART_H_ */

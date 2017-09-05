@@ -26,17 +26,17 @@
 struct parse_fsm_steps_t
 {
     const char * const name;                            // Сигнатура команды
-    bool(* const func)(char * str, const void * param); // Функция обработчик
+    bool(* const func)(char ** str, const void * param); // Функция обработчик
     const void * const param;                                 // Дополнительный параметр
 };
 
 // Строки кодов ошибок
 const char parser_str_err_bad_cmd[]    = TAG_RED "Error!" TAG_DEF " This command is invalid.\r\n";
-const char parser_str_err_null_cmd[]   = TAG_RED "Error!" TAG_DEF " This command is " TAG_RED_B "not realised" TAG_RED_B ".\r\n";
+const char parser_str_err_null_cmd[]   = TAG_RED "Error!" TAG_DEF " This command is " TAG_RED_B "not realised" TAG_DEF ".\r\n";
 const char parser_str_err_syntax_cmd[] = TAG_RED "Error!" TAG_DEF " This command syntax is invalid. Print" TAG_LT "help" TAG_GT ".\r\n";
 
 char *   parser_uint_to_str(uint32_t num); // перевод числа в строку
-uint32_t parser_str_to_uint(char * str);   // перевод строки в число
+uint32_t parser_str_to_uint(char ** str);   // перевод строки в число
 void     parser_lowercase(char *buf);      // Приведение к нижнему регистру
 void     parser_all_param_to_str(const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len, const char delim = '|'); // Послать все параметры на консоль
 int16_t  parser_find(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len);                        // Поиск команд в таблице

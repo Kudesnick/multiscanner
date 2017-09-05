@@ -2,8 +2,8 @@
 
 #include "bsp_usart.h"
 
-bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr):
-    bsp_unit((void *)_unit_ptr),
+bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr, uint16_t _class_type, uint16_t _object_name):
+    bsp_unit((void *)_unit_ptr, _class_type, _object_name),
     pin_rx(),
     pin_tx()
 {
@@ -98,6 +98,7 @@ void bsp_usart::send_sett(void *sett)
     USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_PE, ENABLE);
     USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_ERR, ENABLE);
 
+    USART_OverSampling8Cmd((USART_TypeDef *)unit_ptr, ENABLE);
     USART_Init((USART_TypeDef *)unit_ptr, &usart_init_struct);
     USART_LINBreakDetectLengthConfig((USART_TypeDef *)unit_ptr, setting.USART_LIN_Break_Detection_Length);
     USART_LINCmd((USART_TypeDef *)unit_ptr, (setting.USART_LIN_Enable == true) ? ENABLE : DISABLE);
@@ -174,11 +175,28 @@ void bsp_usart::interrupt_handler(void)
     callback((void *)(uint32_t)data, flags);
 };
 
+uint32_t bsp_usart::round_baud(uint32_t baud)
+{
+        // Расчет истинного бодрейта
+    RCC_ClocksTypeDef RCC_ClocksStatus;
+    RCC_GetClocksFreq(&RCC_ClocksStatus);
+    uint32_t freq = (unit_ptr == USART1) ? RCC_ClocksStatus.PCLK2_Frequency : RCC_ClocksStatus.PCLK1_Frequency;
+    freq <<= 1; // Умножаем на два, потому что включаем USART_OverSampling8Cmd((USART_TypeDef *)unit_ptr, ENABLE);
+    uint16_t brr = freq / baud;
+    return freq / brr;
+};
+
 // Прерывания от интерфейсов uart
 //------------------------------------------------------------------------------
 extern "C" void USART1_IRQHandler(void)
 {
-    bsp_usart *unit = (bsp_usart*)bsp_unit::object_search(USART1);
+    static bsp_usart *unit = NULL;
+    
+    if (unit == NULL)
+    {
+        unit = (bsp_usart*)bsp_unit::object_search(USART1);
+    }
+    
     if (unit != NULL)
     {
         unit->interrupt_handler();
@@ -191,7 +209,13 @@ extern "C" void USART1_IRQHandler(void)
 
 extern "C" void USART2_IRQHandler(void)
 {
-    bsp_usart *unit = (bsp_usart*)bsp_unit::object_search(USART2);
+    static bsp_usart *unit = NULL;
+    
+    if (unit == NULL)
+    {
+        unit = (bsp_usart*)bsp_unit::object_search(USART2);
+    }
+    
     if (unit != NULL)
     {
         unit->interrupt_handler();
@@ -204,7 +228,13 @@ extern "C" void USART2_IRQHandler(void)
 
 extern "C" void USART3_IRQHandler(void)
 {
-    bsp_usart *unit = (bsp_usart*)bsp_unit::object_search(USART3);
+    static bsp_usart *unit = NULL;
+    
+    if (unit == NULL)
+    {
+        unit = (bsp_usart*)bsp_unit::object_search(USART3);
+    }
+    
     if (unit != NULL)
     {
         unit->interrupt_handler();
@@ -217,7 +247,13 @@ extern "C" void USART3_IRQHandler(void)
 
 extern "C" void UART4_IRQHandler(void)
 {
-    bsp_usart *unit = (bsp_usart*)bsp_unit::object_search(UART4);
+    static bsp_usart *unit = NULL;
+    
+    if (unit == NULL)
+    {
+        unit = (bsp_usart*)bsp_unit::object_search(UART4);
+    }
+    
     if (unit != NULL)
     {
         unit->interrupt_handler();
@@ -230,7 +266,13 @@ extern "C" void UART4_IRQHandler(void)
 
 extern "C" void UART5_IRQHandler(void)
 {
-    bsp_usart *unit = (bsp_usart*)bsp_unit::object_search(UART5);
+    static bsp_usart *unit = NULL;
+    
+    if (unit == NULL)
+    {
+        unit = (bsp_usart*)bsp_unit::object_search(UART5);
+    }
+    
     if (unit != NULL)
     {
         unit->interrupt_handler();

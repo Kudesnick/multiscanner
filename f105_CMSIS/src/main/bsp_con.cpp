@@ -4,6 +4,7 @@
 #include "misc.h"
 
 #include "fifo.h"
+#include "iface.h"
 #include "bsp_io.h"
 #include "bsp_usart.h"
 #include "fifo_con.h"
@@ -41,7 +42,7 @@ void bsp_con::callback(void * msg, uint32_t flags)
 }
 
 bsp_con::bsp_con(USART_TypeDef *_unit_ptr, fifo_con * buf, bsp_con_config_t * _setting):
-    bsp_usart(_unit_ptr),
+    bsp_usart(_unit_ptr, IFACE_TYPE_CON, IFACE_NAME_CON),
     bufer(buf)
 {
     set_setting(_setting);
@@ -97,4 +98,9 @@ void bsp_con::set_setting(bsp_con_config_t * sett)
     };
     
     send_sett((void *)&tmp_sett);
+}
+
+uint32_t bsp_con::round_baud(uint32_t baud)
+{
+    return bsp_usart::round_baud(baud);
 }

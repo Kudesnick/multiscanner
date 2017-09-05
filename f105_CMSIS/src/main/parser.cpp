@@ -9,6 +9,8 @@
 #include "thread_con.h"
 #include "parser.h"
 #include "parser_help.h"
+#include "parser_get.h"
+#include "parser_set.h"
 
 char * parser_uint_to_str(uint32_t num)
 {
@@ -26,20 +28,36 @@ char * parser_uint_to_str(uint32_t num)
     return &str[i];
 }
 
-uint32_t parser_str_to_uint(char * str)
+uint32_t parser_str_to_uint(char ** str)
 {
     uint32_t result = 0;
     
-    for (uint8_t i = 0; strchr(" \0", str[i]) == NULL; i++)
+    if (*str[0] != '\0')
     {
-        result *= 10;
-        if (str[i] < '0' || str[i] > '9')
+        for (uint8_t i = 0; strchr(" \0", *str[0]) == NULL; i++)
         {
-            str = NULL;
-            result = NULL;
-            break;
+            result *= 10;
+            if (*str[0] < '0' || *str[0] > '9')
+            {
+                *str = NULL;
+                result = NULL;
+                break;
+            }
+            result += *str[0] - '0';
+            
+            *str += sizeof(char);
         }
-        result += str[i] - '0';
+        
+        if (*str != NULL
+            && *str[0] == ' '
+            )
+        {
+            *str += sizeof(char);
+        }
+    }
+    else
+    {
+        *str = NULL;
     }
     
     return result;
@@ -102,7 +120,7 @@ void parser_recursion(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t 
     }
     else if (cmd_list[i].func != NULL)
     {
-        cmd_list[i].func(*str, cmd_list[i].param);
+        cmd_list[i].func(str, cmd_list[i].param);
     }
     else if (cmd_list[i].param != NULL)
     {
@@ -136,8 +154,8 @@ void parser_parse(char * str)
         { "help", parser_help,     NULL}, // Получить справку о программе
         {"about",        NULL, str_info},
         { "info",        NULL, str_info}, // Сводная информация об устройстве (версия, поддерживаемые интерфейсы и пр.)
-        {  "get",        NULL,     NULL}, // Получить параметры настройки интерфейса
-        {  "set",        NULL,     NULL}, // Настроить интерфейс
+        {  "get",  parser_get,     NULL}, // Получить параметры настройки интерфейса
+        {  "set",  parser_set,     NULL}, // Настроить интерфейс
         { "can1",        NULL,     NULL}, // Отправить сообщение по can1
         { "can2",        NULL,     NULL}, // Отправить сообщение по can2
         { "lin1",        NULL,     NULL}, // Отправить сообщение по lin1

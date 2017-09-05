@@ -9,7 +9,7 @@
 #include "parser.h"
 #include "parser_help.h"
 
-static bool parser_help_set(char * str, const void * param)
+static bool parser_help_set(char ** str, const void * param)
 {
     static const char str_con[] = "Console settings:\r\n"
                                     "\t" TAG_BLUE "con"                             TAG_DEF " - interface name\r\n"
@@ -80,9 +80,9 @@ static bool parser_help_set(char * str, const void * param)
         {"urt2", NULL, str_uart},
     };
 
-    if (str[0] != '\0')
+    if (*str[0] != '\0')
     {
-        parser_recursion(&str, cmd_list, countof_arr(cmd_list));
+        parser_recursion(str, cmd_list, countof_arr(cmd_list));
     }
     else
     {
@@ -96,7 +96,7 @@ static bool parser_help_set(char * str, const void * param)
     return false;
 };
 
-bool parser_help(char * str, const void * param) // Получить справку о программе
+bool parser_help(char ** str, const void * param) // Получить справку о программе
 {
     static const char str_get[] = "Get the interface settings.\r\n"
                             "\tEnter" TAG_LT "get <con|can1|can2|lin1|lin2|uart1|uart2>" TAG_GT "\r\n"
@@ -146,9 +146,9 @@ bool parser_help(char * str, const void * param) // Получить справку о программе
         {"urt2",            NULL, str_uart}, // Отправить сообщение по uart2
     };
 
-    if (str[0] != '\0')
+    if (*str[0] != '\0')
     {
-        parser_recursion(&str, cmd_list, countof_arr(cmd_list));
+        parser_recursion(str, cmd_list, countof_arr(cmd_list));
     }
     else
     {
