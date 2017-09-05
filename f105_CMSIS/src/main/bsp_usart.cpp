@@ -98,6 +98,7 @@ void bsp_usart::send_sett(void *sett)
     USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_PE, ENABLE);
     USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_ERR, ENABLE);
 
+    USART_OverSampling8Cmd((USART_TypeDef *)unit_ptr, ENABLE);
     USART_Init((USART_TypeDef *)unit_ptr, &usart_init_struct);
     USART_LINBreakDetectLengthConfig((USART_TypeDef *)unit_ptr, setting.USART_LIN_Break_Detection_Length);
     USART_LINCmd((USART_TypeDef *)unit_ptr, (setting.USART_LIN_Enable == true) ? ENABLE : DISABLE);
@@ -172,6 +173,17 @@ void bsp_usart::interrupt_handler(void)
 //    }
     
     callback((void *)(uint32_t)data, flags);
+};
+
+uint32_t bsp_usart::round_baud(uint32_t baud)
+{
+        // Расчет истинного бодрейта
+    RCC_ClocksTypeDef RCC_ClocksStatus;
+    RCC_GetClocksFreq(&RCC_ClocksStatus);
+    uint32_t freq = (unit_ptr == USART1) ? RCC_ClocksStatus.PCLK2_Frequency : RCC_ClocksStatus.PCLK1_Frequency;
+    freq <<= 1; // Умножаем на два, потому что включаем USART_OverSampling8Cmd((USART_TypeDef *)unit_ptr, ENABLE);
+    uint16_t brr = freq / setting.USART_BaudRate;
+    return freq / brr;
 };
 
 // Прерывания от интерфейсов uart

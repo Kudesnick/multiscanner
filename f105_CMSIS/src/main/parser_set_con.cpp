@@ -11,7 +11,7 @@
 #include "parser_set.h"
 #include "parser_set_con.h"
 
-static bsp_con_config_t * sett = NULL;
+static bsp_con_config_t sett;
 
 static bool parser_yn_decode(char ** str, bool *res)
 {
@@ -85,7 +85,7 @@ static bool parser_set_baud(char ** str, const void * param)
     if (tmp_str != NULL)
     {
         *str = tmp_str;
-        sett->baudrate = baud;
+        sett.baudrate = baud;
         result = true;
     }
 
@@ -103,7 +103,7 @@ static bool parser_set_parity(char ** str, const void * param)
         parity == USART_Parity_Odd
         )
     {
-        sett->parity = parity;
+        sett.parity = parity;
         result = true;
     }
     
@@ -122,7 +122,7 @@ static bool parser_set_stop_bits(char ** str, const void * param)
         stop_bits == USART_StopBits_1_5
         )
     {
-        sett->stop_bits = stop_bits;
+        sett.stop_bits = stop_bits;
         result = true;
     }
     
@@ -136,7 +136,7 @@ static bool parser_set_echo(char ** str, const void * param)
     
     if (result)
     {
-        sett->echo = yn;
+        sett.echo = yn;
     }
     
     return result;
@@ -149,7 +149,7 @@ static bool parser_set_color(char ** str, const void * param)
     
     if (result)
     {
-        sett->color = yn;
+        sett.color = yn;
     }
     
     return result;
@@ -186,11 +186,24 @@ bool parser_set_con(char ** str, const void * param)
     
     if (ptr != NULL)
     {
-        bsp_con_config_t * sett = ptr->get_setting();
+        sett = *ptr->get_setting();
         
         if (parser_iteration(str, cmd_list, countof_arr(cmd_list)) == true)
         {
-            console_send_string("New console setting.\r\n");
+            uint64_t real_baud = ptr->round_baud(sett.baudrate);
+ 
+            if (real_baud * 100 / sett.baudrate > 3)
+            {
+                console_send_string(TAG_RED "Operation aborted!" TAG_DEF " Real baudrate will be " TAG_BLUE);
+                    console_send_string(parser_uint_to_str(real_baud));
+                    console_send_string(TAG_DEF " baud.\r\n"
+                    "the error will be more than 3%\r\n");
+            }
+            
+            else
+            {
+                ptr->set_setting(&sett);
+            }
         }
     }
     else

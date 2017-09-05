@@ -44,6 +44,7 @@ class bsp_usart: public bsp_unit
         virtual void *get_sett(void); // Получение настроек модуля
         virtual bool send_msg(void *msg); // Отправка данных
         virtual void interrupt_handler(void); // Обработчик прерывания, основные манипуляции с флагами. Из него вызывается callback
+        uint32_t round_baud(uint32_t baud); // Вычисление истинного бодрейта после применения настроек
 };
 
 #endif /* _BSP_USART_H_ */

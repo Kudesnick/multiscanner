@@ -30,6 +30,7 @@ class bsp_con : private bsp_usart
         bool send(const char *buf);
         bsp_con_config_t *get_setting(void);
         void set_setting(bsp_con_config_t * sett);
+        uint32_t round_baud(uint32_t baud); // Вычисление истинного бодрейта после применения настроек
 };
 
 #endif  /* _BSP_CON_N_ */ 
