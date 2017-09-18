@@ -9,9 +9,9 @@
 #include "bsp_usart.h"
 #include "fifo_con.h"
 #include "units_config.h"
-#include "bsp_con.h"
+#include "bsp_serial.h"
 
-bsp_con_config_t bsp_con::default_sett =
+bsp_serial_config_t bsp_con::default_sett =
 {
     /* .baudrate  = */CON_BAUD,
     /* .parity    = */CON_PARITY,

@@ -5,35 +5,23 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "fifo_con.h"
+#include "fifo_serial.h"
 #include "bsp_usart.h"
 
-// причины завершения фрейма
-enum
-{
-    SERIAL_MSG_BRK_TIMEOUT, // Завершение по таймауту
-    SERIAL_MSG_BRK_LAST_ID, // Детектирован байт завершения
-    SERIAL_MSG_BRK_FIRST_ID, // Детектирован байт начала следующей посылки
-    SERIAL_MSG_BRK_LENGTH, // Достигнута фиксированная длина посылки
-    SERIAL_MSG_BRK_OVF, // Превышена длина буфера сообщения
-    SERIAL_MSG_BRK_FRAME_ERR, // Ошибка фрейма
-    SERIAL_MSG_BRK_PARITY_ERR, // Ошибка паритета
-} msg_brk_reason_t;
-
 typedef struct
 {
-            uint64_t timestamp;
-             uint8_t data[16];
-    msg_brk_reason_t reason;
-} msg_serial_t;
-
-typedef struct
-{
-    uint32_t baudrate;  // Бодрейт
-    uint16_t parity;    // Паритет
-    uint16_t stop_bits; // Количество стоповых битов
-        bool echo;      // Эхо отправки сообщений
-        bool color;     // Выделение цветом в консоле
+    // Хардварные настройки
+    uint32_t baudrate;      // Бодрейт
+    uint16_t word_length;   // Длина сообщения в битах
+    uint16_t parity;        // Паритет
+    uint16_t stop_bits;     // Количество стоповых битов
+    // Программные настройки
+    uint16_t timeout;       // Таймаут окончания сообщения, мс.
+     int16_t byte_of_begin; // Байт, детектируемый как начало сообщения (если < 0 - игнорируется)
+     int16_t byte_of_end;   // Байт, детектируемый как окончание сообщения (если < 0 - игнорируется)
+     uint8_t max_len;       // Максимальная длина сообщения (если 0 - ограничивается буфером)
+        bool echo;          // Эхо отправки сообщений
+        bool enable;        // Вкл./выкл. интерфейс
 } bsp_serial_config_t;
 
 class bsp_serial : private bsp_usart

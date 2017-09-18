@@ -41,4 +41,4 @@ class fifo_con
 		fifo_con(void);
 };
 
-#endif /* _FIFO_H_ */
+#endif /* _FIFO_CON_H_ */
