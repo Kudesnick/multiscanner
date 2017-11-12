@@ -7,6 +7,7 @@
              размер буферов для каждого интерфейса.
  */
 
+#include <stdint.h>
 #include <misc.h>
 
 //-------- <<< Use Configuration Wizard in Context Menu >>> --------------------
@@ -267,5 +268,40 @@
 
 
 //	</h>
+
+/// Тип интерфейса.
+typedef enum : uint8_t
+{
+    IFACE_TYPE_DEF,     ///< Умолчательный тип. На практике не применяется. Его использование говорит об ошибке в программе
+    IFACE_TYPE_CON,     ///< Интерфейс консоли. Прикладной уровень.
+#if (CAN1_ENABLED != 0 || CAN2_ENABLED != 0)
+    IFACE_TYPE_CAN,     ///< CAN интерфейс. Среда передачи определяется внешним драйвером.
+#endif
+#if (LIN1_ENABLED != 0 || LIN2_ENABLED != 0) 
+    IFACE_TYPE_UART,    ///< UART. Канальный уровень без надстроек.
+    IFACE_TYPE_LIN,     ///< LIN. Использует физический модуль USART.
+#endif
+} iface_type_t;
+
+/// Имена конкретных интерфейсов, доступных в системе
+typedef enum : uint8_t
+{
+    IFACE_NAME_DEF,    ///< Имя по умолчанию. Его использование говорит об ошибке в программе
+    IFACE_NAME_CON,
+#if (CAN1_ENABLED != 0)
+    IFACE_NAME_CAN1,
+#endif
+#if (CAN2_ENABLED != 0)
+    IFACE_NAME_CAN2,
+#endif
+#if (LIN1_ENABLED != 0)
+    IFACE_NAME_UART1,
+    IFACE_NAME_LIN1,
+#endif
+#if (LIN2_ENABLED != 0)
+    IFACE_NAME_UART2,
+    IFACE_NAME_LIN2,
+#endif
+} iface_name_t;
 
 #endif /* _UNIT_CONFIG_H_ */
