@@ -17,7 +17,7 @@
  *  объект попадает в тот или иной список. Возможно множественное наследование,
  *  тогда объект попадает в несколько списков.
  */
-typedef enum
+typedef enum : uint8_t
 {
     LIST_TYPE_DEFAULT,  ///< Тип по умолчанию
     LIST_TYPE_UNIT,     ///< Тип ввода/вывода. (Используется модулем абстрактного класса ввода-вывода)
@@ -35,11 +35,11 @@ typedef enum
  *  
  *  @warning Деструктора нет. Использовать только со статически создаваемыми объектами
  */
-template <const uint16_t list_type> class cpp_list
+template <const list_type_t list_type> class cpp_list
 {
     private:
-#warning поменять uint16_t на list_type_t
-        static const uint16_t obj_list_type = list_type;
+#warning поменять uint16_t на list_type_t а также для class_type и object_name
+        static const list_type_t obj_list_type = list_type;
         static cpp_list *last_pointer; ///< Указатель на последний элемент в списке
         cpp_list *prev_pointer;        ///< Предыдущий элемент списка
         uint16_t class_type;           ///< Тип модуля (класса)
@@ -49,7 +49,7 @@ template <const uint16_t list_type> class cpp_list
         cpp_list(uint16_t _class_type = NULL, uint16_t _object_name = NULL);
         cpp_list* get_prev_pointer(void);            ///< Получить указатель на предыдущий элемент списка
         static cpp_list* get_last_pointer(void);     ///< Получить указатель на последний элемент в списке
-        uint16_t get_list_type(void);                ///< Возвращает тип списка
+        list_type_t get_list_type(void);                ///< Возвращает тип списка
         uint16_t get_class_type(void);               ///< Возвращает тип класса (задается в конструкторе производного класса)
         uint16_t get_object_name(void);              ///< Возвращает имя объекта (задается при создании конкретного объекта, если надо)
         static cpp_list* get_object(uint16_t _class_type, uint16_t _object_name); ///< Поиск объекта по имени
@@ -59,7 +59,7 @@ template <const uint16_t list_type> class cpp_list
  *  @brief Указатель на последний элемент в списке
  *  @details элемент указывает на последний созданный объект класса-наследника списка
  */
-template <const uint16_t list_type> cpp_list<list_type> * cpp_list<list_type>::last_pointer = NULL;
+template <const list_type_t list_type> cpp_list<list_type> * cpp_list<list_type>::last_pointer = NULL;
 
 /**
  *  @brief Конструктор
@@ -72,7 +72,7 @@ template <const uint16_t list_type> cpp_list<list_type> * cpp_list<list_type>::l
  *
  *  @return указатель на объект
  */
-template <const uint16_t list_type> cpp_list<list_type>::cpp_list(uint16_t _class_type, uint16_t _object_name):
+template <const list_type_t list_type> cpp_list<list_type>::cpp_list(uint16_t _class_type, uint16_t _object_name):
     class_type(_class_type),
     object_name(_object_name)
 {
@@ -85,7 +85,7 @@ template <const uint16_t list_type> cpp_list<list_type>::cpp_list(uint16_t _clas
  *
  *  @return указатель на объект. NULL, если текущий объект - первый в списке
  */
-template <const uint16_t list_type> cpp_list<list_type> * cpp_list<list_type>::get_prev_pointer(void)
+template <const list_type_t list_type> cpp_list<list_type> * cpp_list<list_type>::get_prev_pointer(void)
 {
     return prev_pointer;
 };
@@ -95,7 +95,7 @@ template <const uint16_t list_type> cpp_list<list_type> * cpp_list<list_type>::g
  *
  *  @return указатель на объект. NULL, если список пуст
  */
-template <const uint16_t list_type> cpp_list<list_type> * cpp_list<list_type>::get_last_pointer(void)
+template <const list_type_t list_type> cpp_list<list_type> * cpp_list<list_type>::get_last_pointer(void)
 {
     return last_pointer;
 };
@@ -108,7 +108,7 @@ template <const uint16_t list_type> cpp_list<list_type> * cpp_list<list_type>::g
  *
  *  @return Тип списка
  */
-template <const uint16_t list_type> uint16_t cpp_list<list_type>::get_list_type(void)
+template <const list_type_t list_type> list_type_t cpp_list<list_type>::get_list_type(void)
 {
     return obj_list_type;
 };
@@ -120,7 +120,7 @@ template <const uint16_t list_type> uint16_t cpp_list<list_type>::get_list_type(
  *
  *  @return Тип класса
  */
-template <const uint16_t list_type> uint16_t cpp_list<list_type>::get_class_type(void)
+template <const list_type_t list_type> uint16_t cpp_list<list_type>::get_class_type(void)
 {
     return class_type;
 };
@@ -135,7 +135,7 @@ template <const uint16_t list_type> uint16_t cpp_list<list_type>::get_class_type
  *
  *  @return Имя объекта
  */
-template <const uint16_t list_type> uint16_t cpp_list<list_type>::get_object_name(void)
+template <const list_type_t list_type> uint16_t cpp_list<list_type>::get_object_name(void)
 {
     return object_name;
 };
@@ -153,7 +153,7 @@ template <const uint16_t list_type> uint16_t cpp_list<list_type>::get_object_nam
  *
  *  @return Указатель на объект. Ели не найден - возвращает NULL
  */
-template <const uint16_t list_type> cpp_list<list_type> * cpp_list<list_type>::get_object(uint16_t _class_type, uint16_t _object_name)
+template <const list_type_t list_type> cpp_list<list_type> * cpp_list<list_type>::get_object(uint16_t _class_type, uint16_t _object_name)
 {
     cpp_list * ptr = get_last_pointer();
 
