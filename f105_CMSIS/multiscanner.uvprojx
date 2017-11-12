@@ -486,11 +486,6 @@
           <GroupName>config</GroupName>
           <Files>
             <File>
-              <FileName>ifaces_types.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\src\config\ifaces_types.h</FilePath>
-            </File>
-            <File>
               <FileName>units_config.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\src\config\units_config.h</FilePath>
