@@ -40,7 +40,7 @@ typedef enum : uint8_t
 } msg_direction_t;
 
 /// Заголовок сообщения, универсальный для всех интерфейсов
-define struct 
+struct msg_header_t
 {
     iface_type_t msg_type;  ///< Тип сообщения
     iface_name_t route;     ///< В какой интерфейс передаем
@@ -49,7 +49,7 @@ define struct
     uint64_t time;          ///< метка времени
     uint64_t interval;      ///< Интервал для повторений
     uint16_t count;         ///< Счетчик повторений
-} msg_header_t;
+};
 
 // Структуры тела сообщения CAN
 //-----------------------------
@@ -72,13 +72,13 @@ typedef uint32_t can_id_t;
 
 #define CAN_DATA_LEN_MAX 8
 
-typedef struct
+typedef struct : msg_header_t
 {
     can_id_t id;
     can_msg_type_t type;
     uint8_t data[CAN_DATA_LEN_MAX];
     msg_brk_reason_can_t reason; ///< Причина окончания сообщения (или ошибка отправки)
-} msg_body_can_t;
+} msg_can_t;
 
 // Структуры тела сообщения LIN
 //-----------------------------
@@ -99,14 +99,14 @@ typedef enum : uint8_t
 
 #define LIN_DATA_LEN_MAX 8
 
-typedef struct
+typedef struct : msg_header_t
 {
     uint8_t id;
     can_msg_type_t type;
     uint8_t data[LIN_DATA_LEN_MAX];
     uint8_t crc;
     msg_brk_reason_lin_t reason; ///< Причина окончания сообщения (или ошибка отправки)
-} msg_body_lin_t;
+} msg_lin_t;
 
 // Структуры тела сообщения UART
 //------------------------------
@@ -125,23 +125,20 @@ typedef enum : uint8_t
 
 #define UART_DATA_LEN_MAX 16
 
-typedef struct
+typedef struct : msg_header_t
 {
     uint8_t data[UART_DATA_LEN_MAX];
     msg_brk_reason_lin_t reason; ///< Причина окончания сообщения (или ошибка отправки)
-} msg_body_uart_t;
+} msg_uart_t;
 
 /// Структура сообщения универсальная
 //-----------------------------------
-typedef struct struct_msg_t
+typedef union
 {
-    msg_header_t header;
-    union
-    {
-         msg_body_can_t msg_can;
-         msg_body_lin_t msg_lin;
-        msg_body_uart_t msg_uart;
-    }
+    ms_can_t  can;
+    ms_lin_t  lin;
+    ms_uart_t uart;
+}
 } msg_t;
 
 #endif /* _IFACE_ */
