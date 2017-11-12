@@ -1,8 +1,13 @@
-//------------------------------------------------------------------------------
-// Настройки интерфейсов
-//------------------------------------------------------------------------------
+/**
+ *  @file units_config.h
+ *
+ *  @brief Настройки интерфейсов
+ *  @details В этом модуле задаются настройки, зависящие от схемотехники устройства:
+             выбор управляющих пинов, конкретных аппаратных модулей, отвечающих за тот или иной интерфейс,
+             размер буферов для каждого интерфейса.
+ */
 
-#include "misc.h"
+#include <misc.h>
 
 //-------- <<< Use Configuration Wizard in Context Menu >>> --------------------
 
@@ -232,22 +237,22 @@
 //      <o8>Stop bits <0=>1 <1=>2
 //      <o9>Tx buffer size (bytes) <8=>8 <16=>16 <32=>32 <64=>64 <128=>128 <256=>256 <512=>512 <1024=>1024 <2048=>2048 <4096=>4096 <8192=>8192 <16384=>16384
 //      <o10>Rx buffer size (bytes) <8=>8 <16=>16 <32=>32 <64=>64 <128=>128 <256=>256 <512=>512 <1024=>1024 <2048=>2048 <4096=>4096 <8192=>8192 <16384=>16384
-#define CON_PORT_NUM 2
-#define CON_STB_AVAILABLE 0
-#define CON_STB_PORT GPIO_PORT(1)
-#define CON_STB_PIN_NUM 0
-#define CON_STB_ON 0
+#define CON_PORT_NUM 2              ///< Номер модуля UART, отвечающий за консольный ввод-вывод
+#define CON_STB_AVAILABLE 0         ///< Чекбокс наличия пина STANDBY в схеме драйвера консоли
+#define CON_STB_PORT GPIO_PORT(1)   ///< Порт пина STANDBY     
+#define CON_STB_PIN_NUM 0           ///< Номер пина STANDBY
+#define CON_STB_ON 0                ///< Лог. уровень STANDBY, соответствующий активному драйверу
 
-#define CON_BAUD 9600
-#define CON_PARITY PARITY_TYPE(0)
-#define CON_BYTE_LENGTH 8
-#define CON_STOP_BITS 0
+#define CON_BAUD 9600               ///< Бодрейт консоли по умолчанию
+#define CON_PARITY PARITY_TYPE(0)   ///< Бит паритетта
+#define CON_BYTE_LENGTH 8           ///< Длина слова данных (с учетом бита паритета)
+#define CON_STOP_BITS 0             ///< Количество стоповых битов
 
-#define CON_TX_BUFFER_SIZE 32
-#define CON_RX_BUFFER_SIZE 32
+#define CON_TX_BUFFER_SIZE 1024     ///< Длина буфера передатчика
+#define CON_RX_BUFFER_SIZE 256      ///< Длина буфера приемника
 
-#define CON_STB_OFF (CON_STB_ON ^ 1)
-#define CON_STB_PIN  CON_STB_PORT,CON_STB_PIN_NUM
+#define CON_STB_OFF (CON_STB_ON ^ 1) ///< Лог. уровень STANDBY, соответствующий режиму ожидания драйвера
+#define CON_STB_PIN  CON_STB_PORT,CON_STB_PIN_NUM ///< Выражение, описывающее конкретный пин STANDBY (порт и номер пина)
 #if   (CON_PORT_NUM == 1)
     #define CON_UNIT USART1
 #elif (CON_PORT_NUM == 2)
