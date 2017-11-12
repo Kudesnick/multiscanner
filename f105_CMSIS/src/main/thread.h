@@ -10,7 +10,7 @@
 
 #include "list.h"
 
-typedef enum
+typedef enum : uint8_t
 {
     THREAD_TYPE_DEFAULT,
     THREAD_TYPE_CONSOLE

@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-#include "misc.h"
+#include <misc.h>
 
 #define atom_inc(var) __atom_inc(&var)
 #define atom_dec_to_zero(var) __atom_dec_to_zero(&var)
