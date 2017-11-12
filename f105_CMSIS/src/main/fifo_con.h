@@ -5,14 +5,12 @@
 #ifndef _FIFO_CON_H_
 #define _FIFO_CON_H_
 
-#include "stdint.h"
+#include <stdint.h>
 
 #include "fifo.h"
+#include "units_config.h"
 
-#define RX_BUFFER_SIZE FIFO_SIZE_256
-#define TX_BUFFER_SIZE FIFO_SIZE_1024
-
-class fifo_con_rx_buffer: public cpp_fifo<char, RX_BUFFER_SIZE>
+class fifo_con_rx_buffer: public cpp_fifo<char, CON_RX_BUFFER_SIZE>
 {
 	private:
 		uint32_t word_counter;
@@ -26,7 +24,7 @@ class fifo_con_rx_buffer: public cpp_fifo<char, RX_BUFFER_SIZE>
         virtual char extract(void);
 };
 
-class fifo_con_tx_buffer: public cpp_fifo<char, TX_BUFFER_SIZE>
+class fifo_con_tx_buffer: public cpp_fifo<char, CON_TX_BUFFER_SIZE>
 {
 	public:
 		fifo_con_tx_buffer(void);
