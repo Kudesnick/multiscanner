@@ -5,6 +5,7 @@
 #include "fifo_buffers.h"
 
 fifo_buff::fifo_buff(void):
+    cpp_list(),
     rx(),
     tx()
 {

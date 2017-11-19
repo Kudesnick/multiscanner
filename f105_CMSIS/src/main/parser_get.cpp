@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "iface.h"
 #include "thread_con.h"
 #include "parser.h"
 #include "parser_get.h"
@@ -55,26 +54,12 @@ static void parser_get_stop_bits_decode(uint16_t stop_bits)
 
 static void parser_get_enable_decode(bool enable)
 {
-    if (enable)
-    {
-        console_send_string("enabled\r\n");
-    }
-    else
-    {
-        console_send_string("disabled\r\n");
-    }
+    console_send_string((enable) ? "enabled\r\n" : "disabled\r\n");
 };
 
 static void parser_get_yes_decode(bool enable)
 {
-    if (enable)
-    {
-        console_send_string("yes\r\n");
-    }
-    else
-    {
-        console_send_string("no\r\n");
-    }
+    console_send_string((enable) ? "yes\r\n" : "no\r\n");
 };
 
 static bool parser_get_con(char ** str, const void * param)

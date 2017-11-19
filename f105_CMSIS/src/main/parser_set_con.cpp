@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "iface.h"
 #include "thread_con.h"
 #include "parser.h"
 #include "parser_set.h"

@@ -34,7 +34,7 @@ void thread_con::routine(void)
     if (buf.rx.get_str_count() > 0)
     { // В буфере полноценная команда
 
-        static char str_buf[RX_BUFFER_SIZE];
+        static char str_buf[CON_RX_BUFFER_SIZE];
 
         for(uint16_t i = 0; i < sizeof(str_buf)/sizeof(str_buf[0]); i++)
         {

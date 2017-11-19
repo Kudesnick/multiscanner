@@ -53,7 +53,7 @@
 
 //	<e0>CAN1 enabled
 //      <o1>can physics port num <1=>CAN1 <2=>CAN2
-//		<e2>strobe port enabled
+//		<e2>standby port enabled
 //			<o3>Port <0=>GPIOA <1=>GPIOB <2=>GPIOC <3=>GPIOD <4=>GPIOE <5=>GPIOF <6=>GPIOG
 //    		<o4>Pin <0=>0 <1=>1 <2=>2 <3=>3 <4=>4 <5=>5 <6=>6 <7=>7 <8=>8 <9=>9 <10=>10 <11=>11 <12=>12 <13=>13 <14=>14 <15=>15
 //			<o5>Active level <0=>0 <1=>1
@@ -76,7 +76,7 @@
 
 //	<e0>CAN2 enabled
 //      <o1>can physics port num <1=>CAN1 <2=>CAN2
-//		<e2>strobe port enabled
+//		<e2>standby port enabled
 //			<o3>Port <0=>GPIOA <1=>GPIOB <2=>GPIOC <3=>GPIOD <4=>GPIOE <5=>GPIOF <6=>GPIOG
 //    		<o4>Pin <0=>0 <1=>1 <2=>2 <3=>3 <4=>4 <5=>5 <6=>6 <7=>7 <8=>8 <9=>9 <10=>10 <11=>11 <12=>12 <13=>13 <14=>14 <15=>15
 //			<o5>Active level <0=>0 <1=>1
@@ -100,17 +100,17 @@
 
 //	<e0>LIN1 enabled
 //      <o1>lin physics port num <1=>UART1 <2=>UART2 <3=>UART3 <4=>UART4 <5=>UART5
-//		<e2>strobe port enabled
+//		<e2>standby port enabled
 //			<o3>Port <0=>GPIOA <1=>GPIOB <2=>GPIOC <3=>GPIOD <4=>GPIOE <5=>GPIOF <6=>GPIOG
 //    		<o4>Pin <0=>0 <1=>1 <2=>2 <3=>3 <4=>4 <5=>5 <6=>6 <7=>7 <8=>8 <9=>9 <10=>10 <11=>11 <12=>12 <13=>13 <14=>14 <15=>15
 //			<o5>Active level <0=>0 <1=>1
 //		</e>
-#define LIN1_ENABLED 0
+#define LIN1_ENABLED 1
 #define LIN1_Driver_NUM 2
 #define LIN1_STB_AVAILABLE 1
-#define LIN1_STB_PORT GPIO_PORT(1)
-#define LIN1_STB_PIN_NUM 0
-#define LIN1_STB_ON 0
+#define LIN1_STB_PORT GPIO_PORT(2)
+#define LIN1_STB_PIN_NUM 8
+#define LIN1_STB_ON 1
 
 #define LIN1_STB_OFF (LIN1_STB_ON ^ 1)
 #define LIN1_STB_PIN  LIN1_STB_PORT,LIN1_STB_PIN_NUM
@@ -121,9 +121,9 @@
 //			<o3>Active level <0=>0 <1=>1
 //		</e>
 #define LIN1_PULL_UP_MASTER_AVAILABLE 1
-#define LIN1_PULL_UP_MASTER_PORT GPIO_PORT(1)
-#define LIN1_PULL_UP_MASTER_PIN_NUM 0
-#define LIN1_PULL_UP_MASTER_ON 0
+#define LIN1_PULL_UP_MASTER_PORT GPIO_PORT(2)
+#define LIN1_PULL_UP_MASTER_PIN_NUM 6
+#define LIN1_PULL_UP_MASTER_ON 1
 
 #define LIN1_PULL_UP_MASTER_OFF (LIN1_PULL_UP_MASTER_ON ^ 1)
 #define LIN1_PULL_UP_MASTER_PIN  LIN1_PULL_UP_MASTER_PORT,LIN1_PULL_UP_MASTER_PIN_NUM
@@ -134,9 +134,9 @@
 //			<o3>Active level <0=>0 <1=>1
 //		</e>
 #define LIN1_PULL_UP_SLAVE_AVAILABLE 1
-#define LIN1_PULL_UP_SLAVE_PORT GPIO_PORT(1)
-#define LIN1_PULL_UP_SLAVE_PIN_NUM 0
-#define LIN1_PULL_UP_SLAVE_ON 0
+#define LIN1_PULL_UP_SLAVE_PORT GPIO_PORT(0)
+#define LIN1_PULL_UP_SLAVE_PIN_NUM 6
+#define LIN1_PULL_UP_SLAVE_ON 1
 
 #define LIN1_PULL_UP_SLAVE_OFF (LIN1_PULL_UP_SLAVE_ON ^ 1)
 #define LIN1_PULL_UP_SLAVE_PIN  LIN1_PULL_UP_SLAVE_PORT,LIN1_PULL_UP_SLAVE_PIN_NUM
@@ -157,7 +157,7 @@
 
 //	<e0>LIN2 enabled
 //      <o1>lin physics port num <1=>UART1 <2=>UART2 <3=>UART3 <4=>UART4 <5=>UART5
-//		<e2>strobe port enabled
+//		<e2>standby port enabled
 //			<o3>Port <0=>GPIOA <1=>GPIOB <2=>GPIOC <3=>GPIOD <4=>GPIOE <5=>GPIOF <6=>GPIOG
 //    		<o4>Pin <0=>0 <1=>1 <2=>2 <3=>3 <4=>4 <5=>5 <6=>6 <7=>7 <8=>8 <9=>9 <10=>10 <11=>11 <12=>12 <13=>13 <14=>14 <15=>15
 //			<o5>Active level <0=>0 <1=>1
@@ -282,10 +282,10 @@ typedef enum : uint8_t
 {
     IFACE_TYPE_DEF,     ///< Умолчательный тип. На практике не применяется. Его использование говорит об ошибке в программе
     IFACE_TYPE_CON,     ///< Интерфейс консоли. Прикладной уровень.
-#if (CAN1_ENABLED != 0 || CAN2_ENABLED != 0)
+#if (CAN1_ENABLED != 0) || (CAN2_ENABLED != 0)
     IFACE_TYPE_CAN,     ///< CAN интерфейс. Среда передачи определяется внешним драйвером.
 #endif
-#if (LIN1_ENABLED != 0 || LIN2_ENABLED != 0) 
+#if (LIN1_ENABLED != 0) || (LIN2_ENABLED != 0) 
     IFACE_TYPE_UART,    ///< UART. Канальный уровень без надстроек.
     IFACE_TYPE_LIN,     ///< LIN. Использует физический модуль USART.
 #endif

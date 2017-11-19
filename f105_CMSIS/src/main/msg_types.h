@@ -17,6 +17,7 @@
 #define UART_DATA_LEN_MAX 16
 
 #pragma pack(1) // пакуем все структуры в этом модуле. Они используются в буферах.
+#pragma anon_unions
 
 /// Направление передачи сообщения
 typedef enum : uint8_t
@@ -33,14 +34,15 @@ struct msg_header_t
     msg_direction_t direct; ///< Направление передачи
     union
     {
+        uint64_t rx_timestamp;
         struct
         {
             uint32_t counter;      ///< Отсчет времеи до следующей передачи
-            uint32_t interval;      ///< Интервал для повторений
-        } tx_timer;
-        uint64_t rx_timestamp;
-    }
-    uint16_t count;         ///< Счетчик повторений
+            uint16_t interval;     ///< Интервал для повторений
+            uint16_t count;        ///< Счетчик повторений
+        };
+    };
+    
 };
 
 // Структуры тела сообщения CAN
@@ -117,7 +119,7 @@ typedef struct : msg_header_t
 {
     uint8_t len;
     uint8_t data[UART_DATA_LEN_MAX];
-    msg_brk_reason_lin_t reason; ///< Причина окончания сообщения (или ошибка отправки)
+    msg_brk_reason_uart_t reason; ///< Причина окончания сообщения (или ошибка отправки)
 } msg_uart_t;
 
 /// Структура сообщения универсальная

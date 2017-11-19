@@ -4,7 +4,6 @@
 #include "misc.h"
 
 #include "fifo.h"
-#include "iface.h"
 #include "bsp_io.h"
 #include "bsp_usart.h"
 #include "fifo_con.h"
@@ -86,10 +85,10 @@ void bsp_con::set_setting(bsp_con_config_t * sett)
     bsp_usart_setting_t tmp_sett = 
     {
         // Хардварные настройки
-        /*.USART_BaudRate                   = */ setting.baudrate,
-        /*.USART_WordLength                 = */ USART_WordLength_8b,
-        /*.USART_StopBits                   = */ setting.stop_bits,
-        /*.USART_Parity                     = */ setting.parity,
+        /*.USART_BaudRate                   = */ sett->baudrate,
+        /*.USART_WordLength                 = */ (sett->parity == USART_Parity_No) ? USART_WordLength_8b : USART_WordLength_9b,
+        /*.USART_StopBits                   = */ sett->stop_bits,
+        /*.USART_Parity                     = */ sett->parity,
         /*.USART_Mode                       = */ USART_Mode_Rx | USART_Mode_Tx,
         /*.USART_LIN_Break_Detection_Length = */ USART_LINBreakDetectLength_10b,
         // Софтварные настройки

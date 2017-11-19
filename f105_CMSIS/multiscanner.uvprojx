@@ -333,7 +333,7 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls>--no_multibyte_chars</MiscControls>
+              <MiscControls>--no_multibyte_chars --cpp11</MiscControls>
               <Define>STM32F10X_CL, DEBUG, HSE_VALUE=16000000</Define>
               <Undefine></Undefine>
               <IncludePath>.\src\main;.\src\config</IncludePath>
