@@ -2,7 +2,7 @@
 
 #include "bsp_usart.h"
 
-bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr, uint16_t _class_type, uint16_t _object_name):
+bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr, iface_type_t _class_type, iface_name_t _object_name):
     bsp_unit((void *)_unit_ptr, _class_type, _object_name),
     pin_rx(),
     pin_tx()

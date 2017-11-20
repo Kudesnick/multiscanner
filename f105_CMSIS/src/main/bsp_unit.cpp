@@ -5,9 +5,10 @@
 #include "misc.h"
 
 #include "list.h"
+#include "units_config.h"
 #include "bsp_unit.h"
 
-bsp_unit::bsp_unit(void *_unit_ptr, uint16_t _class_type, uint16_t _object_name):
+bsp_unit::bsp_unit(void *_unit_ptr, iface_type_t _class_type, iface_name_t _object_name):
     cpp_list(_class_type, _object_name),
     unit_ptr(_unit_ptr)
 {

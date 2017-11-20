@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "units_config.h"
+
 /**
  *  @brief Типы списков для разграничения списков объектов
  *  @details В зависимости от того, какой list_type_t указывается при наследовании шаблона,
@@ -39,21 +41,20 @@ typedef enum : uint8_t
 template <const list_type_t list_type> class cpp_list
 {
     private:
-#warning поменять uint16_t на list_type_t а также для class_type и object_name
         static const list_type_t obj_list_type = list_type;
         static cpp_list *last_pointer; ///< Указатель на последний элемент в списке
         cpp_list *prev_pointer;        ///< Предыдущий элемент списка
-        uint16_t class_type;           ///< Тип модуля (класса)
-        uint16_t object_name;          ///< Имя объекта
+        iface_type_t class_type;       ///< Тип модуля (класса)
+        iface_name_t object_name;      ///< Имя объекта
     protected:
     public:
-        cpp_list(uint16_t _class_type = NULL, uint16_t _object_name = NULL);
+        cpp_list(iface_type_t _class_type = IFACE_TYPE_DEF, iface_name_t _object_name = IFACE_NAME_DEF);
         cpp_list* get_prev_pointer(void);            ///< Получить указатель на предыдущий элемент списка
         static cpp_list* get_last_pointer(void);     ///< Получить указатель на последний элемент в списке
-        list_type_t get_list_type(void);                ///< Возвращает тип списка
-        uint16_t get_class_type(void);               ///< Возвращает тип класса (задается в конструкторе производного класса)
-        uint16_t get_object_name(void);              ///< Возвращает имя объекта (задается при создании конкретного объекта, если надо)
-        static cpp_list* get_object(uint16_t _class_type, uint16_t _object_name); ///< Поиск объекта по имени
+        list_type_t get_list_type(void);             ///< Возвращает тип списка
+        iface_type_t get_class_type(void);           ///< Возвращает тип класса (задается в конструкторе производного класса)
+        iface_name_t get_object_name(void);          ///< Возвращает имя объекта (задается при создании конкретного объекта, если надо)
+        static cpp_list* get_object(iface_type_t _class_type, iface_name_t _object_name); ///< Поиск объекта по имени
 };
 
 /**
@@ -73,7 +74,7 @@ template <const list_type_t list_type> cpp_list<list_type> * cpp_list<list_type>
  *
  *  @return указатель на объект
  */
-template <const list_type_t list_type> cpp_list<list_type>::cpp_list(uint16_t _class_type, uint16_t _object_name):
+template <const list_type_t list_type> cpp_list<list_type>::cpp_list(iface_type_t _class_type, iface_name_t _object_name):
     class_type(_class_type),
     object_name(_object_name)
 {
@@ -121,7 +122,7 @@ template <const list_type_t list_type> list_type_t cpp_list<list_type>::get_list
  *
  *  @return Тип класса
  */
-template <const list_type_t list_type> uint16_t cpp_list<list_type>::get_class_type(void)
+template <const list_type_t list_type> iface_type_t cpp_list<list_type>::get_class_type(void)
 {
     return class_type;
 };
@@ -136,7 +137,7 @@ template <const list_type_t list_type> uint16_t cpp_list<list_type>::get_class_t
  *
  *  @return Имя объекта
  */
-template <const list_type_t list_type> uint16_t cpp_list<list_type>::get_object_name(void)
+template <const list_type_t list_type> iface_name_t cpp_list<list_type>::get_object_name(void)
 {
     return object_name;
 };
@@ -154,7 +155,7 @@ template <const list_type_t list_type> uint16_t cpp_list<list_type>::get_object_
  *
  *  @return Указатель на объект. Ели не найден - возвращает NULL
  */
-template <const list_type_t list_type> cpp_list<list_type> * cpp_list<list_type>::get_object(uint16_t _class_type, uint16_t _object_name)
+template <const list_type_t list_type> cpp_list<list_type> * cpp_list<list_type>::get_object(iface_type_t _class_type, iface_name_t _object_name)
 {
     cpp_list * ptr = get_last_pointer();
 

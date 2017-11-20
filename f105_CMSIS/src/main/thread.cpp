@@ -8,7 +8,7 @@
 #include "list.h"
 #include "thread.h"
 
-thread::thread(uint16_t _class_type, uint16_t _object_name):
+thread::thread(iface_type_t _class_type, iface_name_t _object_name):
     cpp_list(_class_type, _object_name)
 {
 };

@@ -6,7 +6,7 @@
 
 fifo_buff::fifo_buff(void):
     cpp_list(),
-    rx(),
-    tx()
+    tx(),
+    rx()
 {
 };

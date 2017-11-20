@@ -12,7 +12,7 @@
 #include "units_config.h"
 
 thread_con::thread_con(void (* _parse)(char * str)):
-    thread(THREAD_TYPE_CONSOLE),
+    thread(IFACE_TYPE_CON, IFACE_NAME_CON),
     buf(),
     unit(CON_UNIT, &buf),
     parse(_parse)
@@ -56,11 +56,11 @@ bool console_send_string(const char * str)
 {
     bool result = false;
 
-    thread_con * ptr = (thread_con *)thread_con::get_last_pointer();
+    thread_con * ptr = (thread_con *)thread::get_last_pointer();
 
     while (ptr != NULL)
     {
-        if (ptr->get_class_type() == THREAD_TYPE_CONSOLE)
+        if (ptr->get_class_type() == IFACE_TYPE_CON)
         {
             if(ptr->send_str(str) == true)
             {

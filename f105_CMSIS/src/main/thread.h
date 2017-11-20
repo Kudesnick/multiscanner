@@ -10,18 +10,12 @@
 
 #include "list.h"
 
-typedef enum : uint8_t
-{
-    THREAD_TYPE_DEFAULT,
-    THREAD_TYPE_CONSOLE
-} thread_type_t;
-
 class thread : public cpp_list<LIST_TYPE_THREAD>
 {
     private:
     protected:
     public:
-        thread(uint16_t _class_type = NULL, uint16_t _object_name = NULL);
+        thread(iface_type_t _class_type = IFACE_TYPE_DEF, iface_name_t _object_name = IFACE_NAME_DEF);
         virtual void routine(void) = NULL;
 };
 
