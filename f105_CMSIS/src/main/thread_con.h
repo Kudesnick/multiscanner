@@ -1,9 +1,8 @@
-#ifndef _THREAD_CON_H_
-#define _THREAD_CON_H_
-
 //------------------------------------------------------------------------------
 // Класс консоли
 //------------------------------------------------------------------------------
+
+#pragma once
 
 #include <stdint.h>
 #include <string.h>
@@ -28,5 +27,3 @@ class thread_con : public thread
 
 // Функция - точка входа для парсера.
 bool console_send_string(const char * str);
-
-#endif /* _THREAD_CON_H_ */

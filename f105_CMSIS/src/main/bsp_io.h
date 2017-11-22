@@ -2,8 +2,7 @@
 // Порт ввода-вывода
 //------------------------------------------------------------------------------
 
-#ifndef _BSP_IO_
-#define _BSP_IO_
+#pragma once
 
 #include "stm32f10x_conf.h"
 
@@ -76,5 +75,3 @@ class bsp_io
         void set_val(bool value);
         void set_sped(GPIOSpeed_TypeDef speed = GPIO_Speed_default);
 };
-
-#endif /* _BSP_IO_ */

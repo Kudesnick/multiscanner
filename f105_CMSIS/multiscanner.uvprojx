@@ -336,7 +336,7 @@
               <MiscControls>--no_multibyte_chars --cpp11</MiscControls>
               <Define>STM32F10X_CL, DEBUG, HSE_VALUE=16000000</Define>
               <Undefine></Undefine>
-              <IncludePath>.\src\main;.\src\config</IncludePath>
+              <IncludePath>.\src\main</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -380,6 +380,11 @@
         <Group>
           <GroupName>main</GroupName>
           <Files>
+            <File>
+              <FileName>units_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\main\units_config.h</FilePath>
+            </File>
             <File>
               <FileName>list.h</FileName>
               <FileType>5</FileType>
@@ -479,16 +484,6 @@
               <FileName>parser_set_con.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\parser_set_con.cpp</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>config</GroupName>
-          <Files>
-            <File>
-              <FileName>units_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\src\config\units_config.h</FilePath>
             </File>
           </Files>
         </Group>

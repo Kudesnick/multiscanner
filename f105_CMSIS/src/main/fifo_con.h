@@ -2,8 +2,7 @@
 // Промежуточный буфер для консоли
 //------------------------------------------------------------------------------
 
-#ifndef _FIFO_CON_H_
-#define _FIFO_CON_H_
+#pragma once
 
 #include <stdint.h>
 
@@ -38,5 +37,3 @@ class fifo_con
 		fifo_con_tx_buffer tx;
 		fifo_con(void);
 };
-
-#endif /* _FIFO_CON_H_ */

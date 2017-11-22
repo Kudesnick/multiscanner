@@ -2,8 +2,7 @@
 // Атомарные операции
 //------------------------------------------------------------------------------
 
-#ifndef _ATOM_H_
-#define _ATOM_H_
+#pragma once
 
 #include <stdint.h>
 
@@ -14,5 +13,3 @@
 
 void __atom_inc(uint32_t * ptr);
 void __atom_dec_to_zero(uint32_t * ptr);
-
-#endif /* _ATOM_H_ */

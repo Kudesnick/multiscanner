@@ -5,8 +5,7 @@
  *  @details используется для автоматической генерации списков объектов
  */
 
-#ifndef _LIST_H_
-#define _LIST_H_
+#pragma once
 
 #include <stdint.h>
 #include <string.h>
@@ -178,5 +177,3 @@ template <const list_type_t list_type> cpp_list<list_type> * cpp_list<list_type>
     
     return ptr;
 };
-
-#endif /* _LIST_H_ */

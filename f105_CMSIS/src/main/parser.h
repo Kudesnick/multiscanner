@@ -1,5 +1,5 @@
-#ifndef _PARSER_H_
-#define _PARSER_H_
+
+#pragma once
 
 //------------------------------------------------------------------------------
 // Общие команды и типы для парсера строк
@@ -42,5 +42,3 @@ void     parser_all_param_to_str(const parse_fsm_steps_t * cmd_list, uint16_t cm
 int16_t  parser_find(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len);                        // Поиск команд в таблице
 void     parser_recursion(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len);                   // Перебор по таблице, как узлу дерева
 void     parser_parse(char * str);         // Собственно, парсим строку
-
-#endif /* _PARSER_H_ */

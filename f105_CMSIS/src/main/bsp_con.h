@@ -1,5 +1,5 @@
-#ifndef _BSP_CON_N_
-#define _BSP_CON_N_
+
+#pragma once
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -32,5 +32,3 @@ class bsp_con : private bsp_usart
         void set_setting(bsp_con_config_t * sett);
         uint32_t round_baud(uint32_t baud); // Вычисление истинного бодрейта после применения настроек
 };
-
-#endif  /* _BSP_CON_N_ */ 

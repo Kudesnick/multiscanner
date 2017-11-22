@@ -2,8 +2,7 @@
 // Буферы
 //------------------------------------------------------------------------------
 
-#ifndef _FIFO_BUFFERS_H_
-#define _FIFO_BUFFERS_H_
+#pragma once
 
 #include <stdint.h>
 
@@ -19,5 +18,3 @@ class fifo_buff : cpp_list<LIST_TYPE_BUFFER>
 		cpp_fifo<msg_t, IFACES_RX_BUFFER_SIZE> rx;
 		fifo_buff(void);
 };
-
-#endif /* _FIFO_BUFF_H_ */

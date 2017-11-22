@@ -7,13 +7,12 @@
              размер буферов для каждого интерфейса.
  */
 
+#pragma once
+
 #include <stdint.h>
 #include <misc.h>
 
 //-------- <<< Use Configuration Wizard in Context Menu >>> --------------------
-
-#ifndef _UNIT_CONFIG_H_
-#define _UNIT_CONFIG_H_
 
 #ifndef NULL
 	#define NULL 0
@@ -311,5 +310,3 @@ typedef enum : uint8_t
     IFACE_NAME_LIN2,
 #endif
 } iface_name_t;
-
-#endif /* _UNIT_CONFIG_H_ */

@@ -1,5 +1,5 @@
-#ifndef _BSP_UNIT_H_
-#define _BSP_UNIT_H_
+
+#pragma once
 
 //------------------------------------------------------------------------------
 // Абстрактный класс модуля ввода/вывода
@@ -23,5 +23,3 @@ class bsp_unit : public cpp_list<LIST_TYPE_UNIT>
         virtual bool send_msg(void *msg) = NULL;     // Отправка данных
         virtual void interrupt_handler(void) = NULL; // Обработчик прерывания, основные манипуляции с флагами. Из него вызывается callback
 };
-
-#endif /* _BSP_UNIT_H_ */

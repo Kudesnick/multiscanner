@@ -5,8 +5,7 @@
  *  @details перечислены все типы сообщений и возвращаемые коды ошибок
  */
 
-#ifndef _MSG_TYPES_
-#define _MSG_TYPES_
+#pragma once
 
 #include <stdint.h>
 
@@ -131,5 +130,3 @@ typedef union
     msg_lin_t  lin;
     msg_uart_t uart;
 } msg_t;
-
-#endif /* _MSG_TYPES_ */

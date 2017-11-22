@@ -2,8 +2,7 @@
  * cpp_multiscanner класс основного приложения
  ********************************************************************/
 
-#ifndef _MULTISCANNER_
-#define _MULTISCANNER_
+#pragma once
 
 #include "thread_con.h"
 #include "parser.h"
@@ -20,5 +19,3 @@ class cpp_multiscanner
         };
         void routine(void);
 };
-
-#endif /* _MULTISCANNER_ */

@@ -1,5 +1,5 @@
-#ifndef _BSP_SERIAL_N_
-#define _BSP_SERIAL_N_
+
+#pragma once
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -39,5 +39,3 @@ class bsp_serial : private bsp_usart
         void set_setting(bsp_serial_config_t * sett);
         uint32_t round_baud(uint32_t baud); // Вычисление истинного бодрейта после применения настроек
 };
-
-#endif  /* _BSP_SERIAL_N_ */ 

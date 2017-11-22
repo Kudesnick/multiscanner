@@ -2,8 +2,7 @@
 // Буфер данных
 //------------------------------------------------------------------------------
 
-#ifndef _FIFO_H_
-#define _FIFO_H_
+#pragma once
 
 #include <stdint.h>
 
@@ -103,5 +102,3 @@ template <typename data_t, const fifo_ptr_t count> void cpp_fifo<data_t, count>:
 {
     head = end;
 }
-
-#endif /* _FIFO_H_ */
