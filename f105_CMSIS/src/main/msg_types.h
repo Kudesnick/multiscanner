@@ -63,7 +63,7 @@ typedef enum : uint8_t
 
 typedef uint32_t can_id_t;
 
-typedef struct : msg_header_t
+typedef struct
 {
     can_id_t id;
     can_msg_type_t type;
@@ -89,7 +89,7 @@ typedef enum : uint8_t
     LIN_TYPE_V2,
 } lin_msg_type_t;
 
-typedef struct : msg_header_t
+typedef struct
 {
     uint8_t id;
     can_msg_type_t type;
@@ -114,7 +114,7 @@ typedef enum : uint8_t
     MSG_BRK_UART_PARITY_ERR,  ///< Ошибка паритета
 } msg_brk_reason_uart_t;
 
-typedef struct : msg_header_t
+typedef struct
 {
     uint8_t len;
     uint8_t data[UART_DATA_LEN_MAX];
@@ -123,10 +123,12 @@ typedef struct : msg_header_t
 
 /// Структура сообщения универсальная
 //-----------------------------------
-typedef union
+typedef struct : msg_header_t
 {
-#warning проверить, что в итоге все варианты занимают одинаковый объем памяти
-    msg_can_t  can;
-    msg_lin_t  lin;
-    msg_uart_t uart;
+    union
+    {
+        msg_can_t  can;
+        msg_lin_t  lin;
+        msg_uart_t uart;
+    };
 } msg_t;

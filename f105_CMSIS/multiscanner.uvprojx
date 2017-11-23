@@ -446,6 +446,11 @@
               <FilePath>.\src\main\thread.cpp</FilePath>
             </File>
             <File>
+              <FileName>thread_iface.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\thread_iface.cpp</FilePath>
+            </File>
+            <File>
               <FileName>thread_con.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\thread_con.cpp</FilePath>
