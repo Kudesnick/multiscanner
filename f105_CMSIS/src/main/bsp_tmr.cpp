@@ -16,6 +16,30 @@
 #include "bsp_tmr.h"
 
 
+
+void bsp_tmr::stop_timers_detect(void)
+{
+    bool timer_must_work = false;
+    
+    for (bsp_tmr * tmr_ptr = (bsp_tmr *)bsp_tmr::get_last_pointer();
+         tmr_ptr != NULL;
+         tmr_ptr = (bsp_tmr *)bsp_tmr::get_last_pointer()
+         )
+    {
+        if (   tmr_ptr->unit == unit
+            && !tmr_ptr->paused)
+        {
+            timer_must_work = true;
+        }
+    }
+    
+    if (!timer_must_work)
+    {
+        TIM_Cmd(unit, DISABLE);
+        TIM_ITConfig(unit, TIM_IT_Update, DISABLE);
+    }
+};
+
 static void bsp_tmr_routine(TIM_TypeDef * _unit)
 {
     for (bsp_tmr * tmr_ptr = (bsp_tmr *)bsp_tmr::get_last_pointer();
@@ -37,6 +61,11 @@ static void bsp_tmr_routine(TIM_TypeDef * _unit)
             }
         }
     }
+}
+
+extern "C" void TIM1_UP_IRQHandler(void)
+{
+    bsp_tmr_routine(TIM1);
 }
 
 extern "C" void TIM2_IRQHandler(void)
