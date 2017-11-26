@@ -8,13 +8,15 @@
 #include <string.h>
 
 #include "list.h"
+#include "bsp_clk.h"
 
 class bsp_unit : public cpp_list<LIST_TYPE_UNIT>
 {
     private:    
     protected:
-        void *unit_ptr;                // Указатель на физический модуль ввода/вывода
-        virtual void callback(void *msg, uint32_t flags) = NULL; // Вызывается из прерывания. По сути - высокоуровневый обработчик.
+        void *unit_ptr;                                          ///< Указатель на физический модуль ввода/вывода
+        virtual void callback(void *msg, uint32_t flags) = NULL; ///< Вызывается из прерывания. По сути - высокоуровневый обработчик.
+        static bsp_clk timer;                                   ///< Системный таймер - единый для всех интерфейсов
     public:
         bsp_unit(void *_unit_ptr, iface_type_t _class_type = IFACE_TYPE_DEF, iface_name_t _object_name = IFACE_NAME_DEF);
         static bsp_unit *object_search(void *unit);  ///< Поиск объекта по имени модуля (нужно для вызова из прерываний)

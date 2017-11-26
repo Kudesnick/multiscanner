@@ -13,7 +13,9 @@
 
 bool thread_con::send_msg(msg_t *msg)
 {
+    bool result = false;
 #warning реализовать функцию.
+    return result;
 }
 
 bool thread_con::send_msg_rdy(void)

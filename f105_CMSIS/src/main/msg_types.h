@@ -51,7 +51,7 @@ struct msg_header_t
 typedef enum : uint8_t
 {
     MSG_BRK_CAN_COMPLETE,       ///< Сообщение принято без ошибок
-    MSG_BRK_CAN_TIMEOUT,        ///< Передача сообщения прервана по таймауту
+    MSG_BRK_CAN_TX_TIMEOUT,     ///< Передача сообщения прервана по таймауту
 #warning добавить все возможные типы ошибок для интерфейса CAN
 } msg_brk_reason_can_t;
 
@@ -79,8 +79,12 @@ typedef struct
 typedef enum : uint8_t
 {
     MSG_BRK_LIN_COMPLETE,       ///< Сообщение принято без ошибок
-    MSG_BRK_LIN_TIMEOUT,        ///< Передача сообщения прервана по таймауту
-#warning добавить все возможные типы ошибок для интерфейса LIN
+    MSG_BRK_LIN_TIMEOUT,        ///< Завершение по таймауту
+    MSG_BRK_LIN_NON_BREAK,      ///< Не было импульса BRAKE перед началом передачи данных
+    MSG_BRK_LIN_NON_SYNC,       ///< Не было синхронизирующей последовательности после импульса BRAKE
+    MSG_BRK_LIN_ID_CHCK_ERR,    ///< Ошибка паритета ID пакета
+    MSG_BRK_LIN_CHCK_ERR,       ///< Ошибка контрольной суммы пакета
+    MSG_BRK_LIN_FRAME_ERR,      ///< Ошибка фрейма
 } msg_brk_reason_lin_t;
 
 typedef enum : uint8_t
@@ -118,6 +122,7 @@ typedef struct
 {
     uint8_t len;
     uint8_t data[UART_DATA_LEN_MAX];
+    uint16_t baud; ///< Истинный бодрейт пакета, измеренный по синхроимпульсу
     msg_brk_reason_uart_t reason; ///< Причина окончания сообщения (или ошибка отправки)
 } msg_uart_t;
 

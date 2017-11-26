@@ -24,6 +24,7 @@ bsp_serial_config_t bsp_serial::default_sett =
     /* .enable        = */ true,
 };
 
+
 // Прерывание по приему/передаче
 void bsp_serial::callback(void * msg, uint32_t flags)
 {
@@ -72,8 +73,7 @@ void bsp_serial::callback(void * msg, uint32_t flags)
             msg_buf.msg_type = IFACE_TYPE_UART;
             msg_buf.route = (iface_name_t)get_object_name();
             msg_buf.direct = MSG_RX;
-#warning вот здесь воткнуть метку времени (из системного таймера, например)
-            msg_buf.rx_timestamp = 12345;
+            msg_buf.rx_timestamp = timer.get_timestamp();
         }
         
         internal_rx.add(data);
@@ -87,18 +87,18 @@ void bsp_serial::callback(void * msg, uint32_t flags)
                 )
             )
         {
-#warning лютаякопипаста (см. строку "if (data == setting.byte_of_begin)"), но пока ничего лучше не придумал
+            // лютая копипаста (см. строку "if (data == setting.byte_of_begin)"), но пока ничего лучше не придумал
             msg_buf.uart.len = internal_rx.get_full_count();
             
             if(msg_buf.uart.len > 0)
             {
                 for(uint8_t i = 0; i < msg_buf.uart.len; msg_buf.uart.data[i++] = internal_rx.extract());
-                
-                
+
                 msg_buf.uart.reason =
                     (flags & USART_FLAG_FE)                                     ? MSG_BRK_UART_FRAME_ERR :
                     (flags & USART_FLAG_PE)                                     ? MSG_BRK_UART_PARITY_ERR :
                     (data == setting.byte_of_end)                               ? MSG_BRK_UART_LAST_ID :
+                    (data == setting.byte_of_begin)                             ? MSG_BRK_UART_FIRST_ID :
                     (internal_rx.get_full_count() >= internal_rx.get_count())   ? MSG_BRK_UART_OVF :
                                                                                   MSG_BRK_UART_LENGTH;
                 if (!bufer->rx.is_full())
