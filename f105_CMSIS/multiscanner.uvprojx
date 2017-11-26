@@ -411,6 +411,11 @@
               <FilePath>.\src\main\bsp_io.cpp</FilePath>
             </File>
             <File>
+              <FileName>bsp_clk.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\bsp_clk.cpp</FilePath>
+            </File>
+            <File>
               <FileName>bsp_unit.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\bsp_unit.cpp</FilePath>

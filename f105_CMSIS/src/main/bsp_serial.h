@@ -35,6 +35,7 @@ class bsp_serial : private bsp_usart
     protected:
     public:
         bsp_serial(USART_TypeDef *_unit_ptr, fifo_buff * buf, bsp_serial_config_t * _setting = &default_sett, iface_name_t _name = IFACE_NAME_DEF);
+        bool send(const uint8_t data);
         bsp_serial_config_t *get_setting(void);
         void set_setting(bsp_serial_config_t * sett);
         uint32_t round_baud(uint32_t baud); // Вычисление истинного бодрейта после применения настроек

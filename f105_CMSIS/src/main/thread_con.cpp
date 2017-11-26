@@ -11,10 +11,20 @@
 #include "thread_con.h"
 #include "units_config.h"
 
+bool thread_con::send_msg(msg_t *msg)
+{
+#warning реализовать функцию.
+}
+
+bool thread_con::send_msg_rdy(void)
+{
+    return unit.tx_ready();
+}
+    
 thread_con::thread_con(void (* _parse)(char * str)):
-    thread(IFACE_TYPE_CON, IFACE_NAME_CON),
-    buf(),
-    unit(CON_UNIT, &buf),
+    thread_iface(IFACE_TYPE_CON, IFACE_NAME_CON),
+    con_buf(),
+    unit(CON_UNIT, &con_buf),
     parse(_parse)
 {
 };
@@ -31,14 +41,16 @@ bool thread_con::send_str(const char * str)
 
 void thread_con::routine(void)
 {
-    if (buf.rx.get_str_count() > 0)
+    thread_iface::routine();
+    
+    if (con_buf.rx.get_str_count() > 0)
     { // В буфере полноценная команда
 
         static char str_buf[CON_RX_BUFFER_SIZE];
 
         for(uint16_t i = 0; i < sizeof(str_buf)/sizeof(str_buf[0]); i++)
         {
-            str_buf[i] = buf.rx.extract();
+            str_buf[i] = con_buf.rx.extract();
 
             if (str_buf[i] == '\0')
             {

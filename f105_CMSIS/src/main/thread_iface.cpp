@@ -54,9 +54,9 @@ void thread_iface::routine(void)
 {
     static uint64_t timestamp = 0;
 
-    if (iface_complete())
+    if (send_msg_rdy())
     {
-        uint64_t delta_time = get_timestamp() - timestamp;
+        uint64_t delta_time = timer.get_timestamp() - timestamp;
         timestamp += delta_time;
         
         for(fifo_ptr_t i = buf.tx.get_full_count(); i > 0; i--)
@@ -81,7 +81,7 @@ void thread_iface::routine(void)
                     else
                     {
                         msg.counter = 0;
-                    }    
+                    }
                     
                     if (msg.count != 0)
                     {
@@ -90,7 +90,7 @@ void thread_iface::routine(void)
                     buf.tx.add(msg);
                 }
                 
-                if (!iface_complete())
+                if (!send_msg_rdy())
                 {
                     break;
                 }

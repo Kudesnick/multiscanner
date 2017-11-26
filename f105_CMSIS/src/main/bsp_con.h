@@ -17,7 +17,7 @@ typedef struct
         bool color;     // Выделение цветом в консоле
 } bsp_con_config_t;
 
-class bsp_con : private bsp_usart
+class bsp_con : public bsp_usart
 {
     private:
         fifo_con * bufer;

@@ -69,11 +69,11 @@ void bsp_serial::callback(void * msg, uint32_t flags)
         // Принятый байт - первый
         if (internal_rx.is_empty())
         {
-            msg_buf.uart.msg_type = IFACE_TYPE_UART;
-            msg_buf.uart.route = (iface_name_t)get_object_name();
-            msg_buf.uart.direct = MSG_RX;
+            msg_buf.msg_type = IFACE_TYPE_UART;
+            msg_buf.route = (iface_name_t)get_object_name();
+            msg_buf.direct = MSG_RX;
 #warning вот здесь воткнуть метку времени (из системного таймера, например)
-            msg_buf.uart.rx_timestamp = 12345;
+            msg_buf.rx_timestamp = 12345;
         }
         
         internal_rx.add(data);
@@ -122,28 +122,32 @@ bsp_serial::bsp_serial(USART_TypeDef *_unit_ptr, fifo_buff * buf, bsp_serial_con
     set_setting(_setting);
 }
 
-#warning Реализовать адекватно
-//// Переслать данные
-//bool bsp_con::send(const char *buf)
-//{
-//    __disable_irq();
-//#warning Гарантирует, что мы не затрем данные, но, возможно, что мы пропустим начало передачи.
-//        bool tx_complete = bufer->tx.is_empty();
-//    __enable_irq();
-//    
-//    bool result = bufer->tx.send_str(buf, setting.color);
-//    
-//    if (result == true
-//        && tx_complete == true
-//        )
-//    {
-//        static uint16_t msg;
-//        msg = bufer->tx.extract();
-//        send_msg((void *) &msg);
-//    }
-//
-//    return result;
-//}
+// Переслать данные
+bool bsp_serial::send(const uint8_t data)
+{
+    __disable_irq();
+#warning Гарантирует, что мы не затрем данные, но, возможно, что мы пропустим начало передачи.
+        bool tx_complete = internal_tx.is_empty();
+    __enable_irq();
+    
+    bool result = !internal_tx.is_full();
+    
+    if (result)
+    {
+        internal_tx.add(data);
+    }
+    
+    if (   result == true
+        && tx_complete == true
+        )
+    {
+        static uint16_t msg;
+        msg = internal_tx.extract();
+        send_msg((void *) &msg);
+    }
+
+    return result;
+}
 
 bsp_serial_config_t * bsp_serial::get_setting(void)
 {

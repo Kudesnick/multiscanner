@@ -52,7 +52,7 @@ bool bsp_con::send(const char *buf)
 {
     __disable_irq();
 #warning Гарантирует, что мы не затрем данные, но, возможно, что мы пропустим начало передачи.
-        bool tx_complete = bufer->tx.is_empty();
+        bool tx_complete = bufer->tx.is_empty() && tx_ready();
     __enable_irq();
     
     bool result = bufer->tx.send_str(buf, setting.color);
