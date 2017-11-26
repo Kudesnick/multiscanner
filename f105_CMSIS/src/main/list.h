@@ -160,10 +160,10 @@ template <const list_type_t list_type> iface_name_t cpp_list<list_type>::get_obj
  */
 template <const list_type_t list_type> cpp_list<list_type> * cpp_list<list_type>::get_object(iface_type_t _class_type, iface_name_t _object_name)
 {
-    cpp_list * ptr = get_last_pointer();
-
-#warning изменил алгоритм, но сейчас проект не компиллится - надо тестить в последствии   
-    while (ptr != NULL)
+    for(cpp_list * ptr = get_last_pointer();
+        ptr != NULL;
+        ptr = ptr->get_prev_pointer()
+        )
     {
         if (   ptr->get_object_name() == _object_name
             && (   _class_type == NULL
@@ -171,13 +171,9 @@ template <const list_type_t list_type> cpp_list<list_type> * cpp_list<list_type>
                 )
             )
         {
-            break;
-        }
-        else
-        {
-            ptr = ptr->get_prev_pointer();
+            return ptr;
         }
     }
     
-    return ptr;
+    return NULL;
 };
