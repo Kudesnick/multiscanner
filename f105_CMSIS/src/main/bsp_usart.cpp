@@ -147,11 +147,12 @@ void bsp_usart::interrupt_handler(void)
     {
         flags |= USART_FLAG_PE;
     }
-#warning Тут надо расшифровать флаги ошибок (кошерно)
-//    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_ERR))
-//    {
-//        flags |= USART_FLAG_ERR;
-//    }
+    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_ERR))
+    {
+        flags |= (USART_GetFlagStatus((USART_TypeDef *)unit_ptr, USART_FLAG_ORE)) ? USART_FLAG_ORE : 0;
+        flags |= (USART_GetFlagStatus((USART_TypeDef *)unit_ptr, USART_FLAG_NE )) ? USART_FLAG_NE  : 0;
+        flags |= (USART_GetFlagStatus((USART_TypeDef *)unit_ptr, USART_FLAG_FE )) ? USART_FLAG_FE  : 0;
+    }
     if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_IDLE))
     {
         flags |= USART_FLAG_IDLE;
@@ -163,14 +164,13 @@ void bsp_usart::interrupt_handler(void)
         data = USART_ReceiveData((USART_TypeDef *)unit_ptr);
         USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_RXNE);
     }
-#warning почему-то срабатывает в консоле, хотя LIN выключен и прерывание тоже
-//    USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_LBD);
-//    {
-//        flags |= USART_IT_RXNE;
-//        USART_ReceiveData((USART_TypeDef *)unit_ptr);
-//        data = USART_LIN_BRK_DATA;
-//        USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_LBD);
-//    }
+    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_LBD))
+    {
+        flags |= USART_IT_LBD;
+        USART_ReceiveData((USART_TypeDef *)unit_ptr);
+        data = USART_LIN_BRK_DATA;
+        USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_LBD);
+    }
     
     callback((void *)(uint32_t)data, flags);
 };
