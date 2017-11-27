@@ -147,11 +147,17 @@ void bsp_usart::interrupt_handler(void)
     {
         flags |= USART_FLAG_PE;
     }
-    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_ERR))
+    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_ORE))
     {
-        flags |= (USART_GetFlagStatus((USART_TypeDef *)unit_ptr, USART_FLAG_ORE)) ? USART_FLAG_ORE : 0;
-        flags |= (USART_GetFlagStatus((USART_TypeDef *)unit_ptr, USART_FLAG_NE )) ? USART_FLAG_NE  : 0;
-        flags |= (USART_GetFlagStatus((USART_TypeDef *)unit_ptr, USART_FLAG_FE )) ? USART_FLAG_FE  : 0;
+        flags |= USART_FLAG_ORE;
+    }
+    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_NE))
+    {
+        flags |= USART_FLAG_NE;
+    }
+    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_FE))
+    {
+        flags |= USART_FLAG_FE;
     }
     if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_IDLE))
     {
