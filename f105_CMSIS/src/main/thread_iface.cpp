@@ -1,10 +1,10 @@
 /**
- *  @file    tread_iface.cpp
+ *  @file    thread_iface.cpp
  *
  *  @brief   класс потока интерфейса
  *  @details универсальный абстрактный класс потока интерфейса. Предоставляет интерфейс для роутинга сообщений
  *
- *  @author  #kudesnick
+ *  @author  
  *  @date    22.11.2017
  */
 

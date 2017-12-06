@@ -11,9 +11,9 @@
 
 #include "units_config.h"
 
-#define CAN_DATA_LEN_MAX 8
-#define LIN_DATA_LEN_MAX 8
-#define UART_DATA_LEN_MAX 16
+#define CAN_DATA_LEN_MAX  FIFO_SIZE_8
+#define LIN_DATA_LEN_MAX  FIFO_SIZE_8
+#define UART_DATA_LEN_MAX FIFO_SIZE_16
 
 #pragma pack(1) // пакуем все структуры в этом модуле. Они используются в буферах.
 #pragma anon_unions
