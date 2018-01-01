@@ -4,11 +4,15 @@
 
 #include "multiscanner.h"
 #include "thread_con.h"
+#include "units_config.h"
 
 cpp_multiscanner::cpp_multiscanner(void)
 {
     // просто перечисляем здесь все создаваемые потоки c модификатором static
     static thread_con console(parser_parse);
+    #if (LIN1_ENABLED == 1)
+
+    #endif
 };
 
 int cpp_multiscanner::routine(void)

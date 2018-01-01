@@ -197,6 +197,7 @@ bool bsp_usart::tx_ready(void)
     return USART_GetFlagStatus((USART_TypeDef *)unit_ptr, USART_FLAG_TXE);
 }
 
+
 // Прерывания от интерфейсов uart
 //------------------------------------------------------------------------------
 extern "C" void USART1_IRQHandler(void)
