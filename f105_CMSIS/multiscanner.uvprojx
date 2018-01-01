@@ -386,69 +386,9 @@
               <FilePath>.\src\main\units_config.h</FilePath>
             </File>
             <File>
-              <FileName>list.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\src\main\list.h</FilePath>
-            </File>
-            <File>
-              <FileName>fifo.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\src\main\fifo.h</FilePath>
-            </File>
-            <File>
               <FileName>msg_types.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\src\main\msg_types.h</FilePath>
-            </File>
-            <File>
-              <FileName>atom.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\atom.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_io.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\bsp_io.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_tmr.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\bsp_tmr.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_clk.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\bsp_clk.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_unit.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\bsp_unit.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_usart.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\bsp_usart.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_con.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\bsp_con.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_serial.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\bsp_serial.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>fifo_buffers.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\fifo_buffers.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>fifo_con.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\fifo_con.cpp</FilePath>
             </File>
             <File>
               <FileName>thread.cpp</FileName>
@@ -461,11 +401,6 @@
               <FilePath>.\src\main\thread_iface.cpp</FilePath>
             </File>
             <File>
-              <FileName>thread_con.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\thread_con.cpp</FilePath>
-            </File>
-            <File>
               <FileName>multiscanner.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\multiscanner.cpp</FilePath>
@@ -475,20 +410,100 @@
               <FileType>8</FileType>
               <FilePath>.\src\main\main.cpp</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>lib</GroupName>
+          <Files>
             <File>
-              <FileName>parser.cpp</FileName>
+              <FileName>fifo_buffers.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\src\main\parser.cpp</FilePath>
+              <FilePath>.\src\main\fifo_buffers.cpp</FilePath>
             </File>
             <File>
-              <FileName>parser_help.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\parser_help.cpp</FilePath>
+              <FileName>fifo.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\main\fifo.h</FilePath>
             </File>
             <File>
-              <FileName>parser_get.cpp</FileName>
+              <FileName>list.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\main\list.h</FilePath>
+            </File>
+            <File>
+              <FileName>atom.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\src\main\parser_get.cpp</FilePath>
+              <FilePath>.\src\main\atom.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>bsp</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp_clk.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\bsp_clk.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_tmr.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\bsp_tmr.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_io.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\bsp_io.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>units</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp_usart.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\bsp_usart.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_unit.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\bsp_unit.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ifaces</GroupName>
+          <Files>
+            <File>
+              <FileName>thread_con.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\thread_con.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>fifo_con.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\fifo_con.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_serial.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\bsp_serial.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_con.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\bsp_con.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>parser</GroupName>
+          <Files>
+            <File>
+              <FileName>parser_set_con.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\parser_set_con.cpp</FilePath>
             </File>
             <File>
               <FileName>parser_set.cpp</FileName>
@@ -496,9 +511,19 @@
               <FilePath>.\src\main\parser_set.cpp</FilePath>
             </File>
             <File>
-              <FileName>parser_set_con.cpp</FileName>
+              <FileName>parser_get.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\src\main\parser_set_con.cpp</FilePath>
+              <FilePath>.\src\main\parser_get.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>parser_help.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\parser_help.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>parser.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\parser.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -529,6 +554,12 @@
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="CAN" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH RCC">
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
+        <targetInfos>
+          <targetInfo name="DEBUG"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="EXTI" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH">
+        <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.2.0"/>
         <targetInfos>
           <targetInfo name="DEBUG"/>
         </targetInfos>

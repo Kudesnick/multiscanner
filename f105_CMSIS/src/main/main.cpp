@@ -6,9 +6,5 @@
 
 int main(void)
 {   
-    static cpp_multiscanner application;
-
-    application.routine();
-	
-	return 0;
-}
+    return cpp_multiscanner::routine();
+};

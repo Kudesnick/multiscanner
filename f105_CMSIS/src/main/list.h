@@ -30,6 +30,7 @@ typedef enum : uint8_t
     LIST_TYPE_BUFFER ,  ///< Буфера ввода-вывода
     LIST_TYPE_SYS_CLK,  ///< Системный таймер
     LIST_TYPE_TMR    ,  ///< Таймеры
+    LIST_TYPE_IO     ,  ///< Порты ввода-вывода
 } list_type_t;
 
 /**
