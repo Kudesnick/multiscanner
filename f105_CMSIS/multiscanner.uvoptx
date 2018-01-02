@@ -400,12 +400,12 @@
     <File>
       <GroupNumber>4</GroupNumber>
       <FileNumber>14</FileNumber>
-      <FileType>8</FileType>
+      <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\src\main\bsp_usart.cpp</PathWithFileName>
-      <FilenameWithoutPath>bsp_usart.cpp</FilenameWithoutPath>
+      <PathWithFileName>.\src\main\bsp_unit.h</PathWithFileName>
+      <FilenameWithoutPath>bsp_unit.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -421,6 +421,18 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
+    <File>
+      <GroupNumber>4</GroupNumber>
+      <FileNumber>16</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\src\main\bsp_usart.cpp</PathWithFileName>
+      <FilenameWithoutPath>bsp_usart.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
   </Group>
 
   <Group>
@@ -429,18 +441,6 @@
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
-    <File>
-      <GroupNumber>5</GroupNumber>
-      <FileNumber>16</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>.\src\main\thread_con.cpp</PathWithFileName>
-      <FilenameWithoutPath>thread_con.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
     <File>
       <GroupNumber>5</GroupNumber>
       <FileNumber>17</FileNumber>
@@ -460,8 +460,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\src\main\bsp_serial.cpp</PathWithFileName>
-      <FilenameWithoutPath>bsp_serial.cpp</FilenameWithoutPath>
+      <PathWithFileName>.\src\main\bsp_con.cpp</PathWithFileName>
+      <FilenameWithoutPath>bsp_con.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -472,8 +472,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\src\main\bsp_con.cpp</PathWithFileName>
-      <FilenameWithoutPath>bsp_con.cpp</FilenameWithoutPath>
+      <PathWithFileName>.\src\main\thread_con.cpp</PathWithFileName>
+      <FilenameWithoutPath>thread_con.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

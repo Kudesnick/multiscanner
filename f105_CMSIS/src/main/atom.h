@@ -8,8 +8,8 @@
 
 #include <misc.h>
 
-#define atom_inc(var) __atom_inc(&var)
-#define atom_dec_to_zero(var) __atom_dec_to_zero(&var)
+#define atom_inc(var) __atom_inc(&(var))
+#define atom_dec_to_zero(var) __atom_dec_to_zero(&(var))
 
 void __atom_inc(uint32_t * ptr);
 void __atom_dec_to_zero(uint32_t * ptr);

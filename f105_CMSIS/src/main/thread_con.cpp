@@ -20,7 +20,8 @@ bool thread_con::send_msg(msg_t *msg)
 
 bool thread_con::send_msg_rdy(void)
 {
-    return unit.tx_ready();
+#warning пока заглушка, но надо разрулить
+    return true; //unit.tx_empty;
 }
     
 thread_con::thread_con(void (* _parse)(char * str)):

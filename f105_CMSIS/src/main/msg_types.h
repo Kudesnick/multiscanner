@@ -50,9 +50,16 @@ struct msg_header_t
 /// Причины завершения фрейма CAN-сообщения
 typedef enum : uint8_t
 {
-    MSG_BRK_CAN_COMPLETE,       ///< Сообщение принято без ошибок
-    MSG_BRK_CAN_TX_TIMEOUT,     ///< Передача сообщения прервана по таймауту
-#warning добавить все возможные типы ошибок для интерфейса CAN
+    MSG_BRK_CAN_COMPLETE            , ///< Сообщение принято без ошибок
+    MSG_BRK_CAN_TX_TIMEOUT          , ///< Передача сообщения прервана по таймауту
+    MSG_BRK_CAN_TX_ERR              , ///< Неизвестная ошибка передачи
+    MSG_BRK_CAN_RX_STUFF_ERR        ,  
+    MSG_BRK_CAN_RX_FORM_ERR         ,  
+    MSG_BRK_CAN_RX_ACK_ERR          ,  
+    MSG_BRK_CAN_RX_BIT_RECESSIVE_ERR,
+    MSG_BRK_CAN_RX_BIT_DOMINANT_ERR ,
+    MSG_BRK_CAN_RX_CRC_ERR          ,
+    MSG_BRK_CAN_RX_SOFTWARE_SET_ERR ,
 } msg_brk_reason_can_t;
 
 typedef enum : uint8_t

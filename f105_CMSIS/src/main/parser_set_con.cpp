@@ -181,7 +181,7 @@ bool parser_set_con(char ** str, const void * param)
         {      "-color", parser_set_color    , NULL},
     };
     
-    bsp_con * ptr = (bsp_con *)bsp_unit::get_object(IFACE_TYPE_CON, (iface_name_t)(uint32_t)param);
+    bsp_con * ptr = (bsp_con *)bsp_con::cpp_list<LIST_TYPE_UNIT>::get_object(IFACE_TYPE_CON, (iface_name_t)(uint32_t)param);
     
     if (ptr != NULL)
     {

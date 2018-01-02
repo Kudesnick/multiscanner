@@ -15,7 +15,6 @@ typedef struct
     uint16_t parity;        // Паритет
     uint16_t stop_bits;     // Количество стоповых битов
     // Программные настройки
-    uint16_t timeout;       // Таймаут окончания сообщения, мс.
      int16_t byte_of_begin; // Байт, детектируемый как начало сообщения (если < 0 - игнорируется)
      int16_t byte_of_end;   // Байт, детектируемый как окончание сообщения (если < 0 - игнорируется)
      uint8_t max_len;       // Максимальная длина сообщения (если 0 - ограничивается буфером)
@@ -23,7 +22,7 @@ typedef struct
         bool enable;        // Вкл./выкл. интерфейс
 } bsp_serial_config_t;
 
-class bsp_serial : private bsp_usart
+class bsp_serial : public bsp_usart
 {
     private:
         fifo_buff * bufer;
@@ -34,7 +33,7 @@ class bsp_serial : private bsp_usart
         virtual void callback(void * msg, uint32_t flags); // В теле метода преобразовать (void *)->(uint8_t)
     protected:
     public:
-        bsp_serial(USART_TypeDef *_unit_ptr, fifo_buff * buf, bsp_serial_config_t * _setting = &default_sett, iface_name_t _name = IFACE_NAME_DEF);
+        bsp_serial(unit_t *_unit_ptr, fifo_buff * buf, bsp_serial_config_t * _setting = &default_sett, iface_name_t _name = IFACE_NAME_DEF);
         bool send(const uint8_t data);
         bsp_serial_config_t *get_setting(void);
         void set_setting(bsp_serial_config_t * sett);

@@ -11,7 +11,7 @@ cpp_multiscanner::cpp_multiscanner(void)
     // просто перечисляем здесь все создаваемые потоки c модификатором static
     static thread_con console(parser_parse);
     #if (LIN1_ENABLED == 1)
-
+//        static thread_serial serial_1(IFACE_NAME_UART1);
     #endif
 };
 

@@ -461,14 +461,19 @@
           <GroupName>units</GroupName>
           <Files>
             <File>
-              <FileName>bsp_usart.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\bsp_usart.cpp</FilePath>
+              <FileName>bsp_unit.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\main\bsp_unit.h</FilePath>
             </File>
             <File>
               <FileName>bsp_unit.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\bsp_unit.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_usart.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\bsp_usart.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -476,24 +481,19 @@
           <GroupName>ifaces</GroupName>
           <Files>
             <File>
-              <FileName>thread_con.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\thread_con.cpp</FilePath>
-            </File>
-            <File>
               <FileName>fifo_con.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\fifo_con.cpp</FilePath>
             </File>
             <File>
-              <FileName>bsp_serial.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\bsp_serial.cpp</FilePath>
-            </File>
-            <File>
               <FileName>bsp_con.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\bsp_con.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>thread_con.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\thread_con.cpp</FilePath>
             </File>
           </Files>
         </Group>

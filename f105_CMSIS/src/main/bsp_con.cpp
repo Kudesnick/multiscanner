@@ -20,27 +20,30 @@ bsp_con_config_t bsp_con::default_sett =
 };
 
 // Прерывание по приему/передаче
-void bsp_con::callback(void * msg, uint32_t flags)
+void bsp_con::callback(void)
 {
-    if (flags & USART_FLAG_TXE)
+    bsp_usart::callback();
+    
+    if (clbk_data.flags & USART_FLAG_TXE)
     {
         if (!bufer->tx.is_empty())
         {
-            static uint16_t s_msg;
-            s_msg = bufer->tx.extract();
-            send_msg((void *) &s_msg);
+            message_t s_msg = bufer->tx.extract();
+            send_msg(&s_msg);
+        }
+        else
+        {
+            tx_empty = true;
         }
     }
     
-    if (flags & USART_FLAG_RXNE)
+    if (clbk_data.flags & USART_FLAG_RXNE)
     {
-        uint32_t data = (uint32_t)msg;
-        
-        bufer->rx.add((char)data);
+        bufer->rx.add(clbk_data.data);
     }
 }
 
-bsp_con::bsp_con(USART_TypeDef *_unit_ptr, fifo_con * buf, bsp_con_config_t * _setting):
+bsp_con::bsp_con(unit_t *_unit_ptr, fifo_con * buf, bsp_con_config_t * _setting):
     bsp_usart(_unit_ptr, IFACE_TYPE_CON, IFACE_NAME_CON),
     bufer(buf)
 {
@@ -49,21 +52,22 @@ bsp_con::bsp_con(USART_TypeDef *_unit_ptr, fifo_con * buf, bsp_con_config_t * _s
 
 // Переслать данные
 bool bsp_con::send(const char *buf)
-{
-    __disable_irq();
-#warning Гарантирует, что мы не затрем данные, но, возможно, что мы пропустим начало передачи.
-        bool tx_complete = bufer->tx.is_empty() && tx_ready();
-    __enable_irq();
-    
+{   
     bool result = bufer->tx.send_str(buf, setting.color);
     
-    if (result == true
-        && tx_complete == true
-        )
+    if (result == true)
     {
-        static uint16_t msg;
-        msg = bufer->tx.extract();
-        send_msg((void *) &msg);
+        __disable_irq();
+        
+        if (   !bufer->tx.is_empty()
+            && tx_empty)
+        {
+            tx_empty = false;
+            message_t s_msg = bufer->tx.extract();
+            send_msg(&s_msg);
+        }
+        
+        __enable_irq();
     }
 
     return result;
@@ -82,7 +86,7 @@ void bsp_con::set_setting(bsp_con_config_t * sett)
 {
     setting = *sett;
     
-    bsp_usart_setting_t tmp_sett = 
+    settings_t tmp_sett = 
     {
         // Хардварные настройки
         /*.USART_BaudRate                   = */ sett->baudrate,
@@ -96,10 +100,13 @@ void bsp_con::set_setting(bsp_con_config_t * sett)
         /*.USART_Enable     = */ true,
     };
     
-    send_sett((void *)&tmp_sett);
+    send_sett(&tmp_sett);
 }
 
 uint32_t bsp_con::round_baud(uint32_t baud)
 {
-    return bsp_usart::round_baud(baud);
+    settings_t tmp_sett = * get_sett();
+    tmp_sett.USART_BaudRate = baud;
+    
+    return bsp_usart::round_baud(&tmp_sett);
 }

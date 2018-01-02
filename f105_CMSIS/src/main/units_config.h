@@ -105,7 +105,7 @@
 //			<o5>Active level <0=>0 <1=>1
 //		</e>
 #define LIN1_ENABLED 1
-#define LIN1_Driver_NUM 2
+#define LIN1_UNIT_NUM 2
 #define LIN1_STB_AVAILABLE 1
 #define LIN1_STB_PORT GPIO_PORT(2)
 #define LIN1_STB_PIN_NUM 8
@@ -140,16 +140,16 @@
 #define LIN1_PULL_UP_SLAVE_OFF (LIN1_PULL_UP_SLAVE_ON ^ 1)
 #define LIN1_PULL_UP_SLAVE_PIN  LIN1_PULL_UP_SLAVE_PORT,LIN1_PULL_UP_SLAVE_PIN_NUM
 
-#if   (LIN1_Driver_NUM == 1)
-    #define LIN1_Driver Driver_USART1
-#elif (LIN1_Driver_NUM == 2)
-    #define LIN1_Driver Driver_USART2
-#elif (LIN1_Driver_NUM == 3)
-    #define LIN1_Driver Driver_USART3
-#elif (LIN1_Driver_NUM == 4)
-    #define LIN1_Driver Driver_USART4
-#elif (LIN1_Driver_NUM == 5)
-    #define LIN1_Driver Driver_USART5
+#if   (LIN1_UNIT_NUM == 1)
+    #define LIN1_UNIT USART1
+#elif (LIN1_UNIT_NUM == 2)
+    #define LIN1_UNIT USART2
+#elif (LIN1_UNIT_NUM == 3)
+    #define LIN1_UNIT USART3
+#elif (LIN1_UNIT_NUM == 4)
+    #define LIN1_UNIT UART4
+#elif (LIN1_UNIT_NUM == 5)
+    #define LIN1_UNIT UART5
 #endif
 //	</e>
 
@@ -162,7 +162,7 @@
 //			<o5>Active level <0=>0 <1=>1
 //		</e>
 #define LIN2_ENABLED 0
-#define LIN2_Driver_NUM 2
+#define LIN2_UNIT_NUM 2
 #define LIN2_STB_AVAILABLE 1
 #define LIN2_STB_PORT GPIO_PORT(1)
 #define LIN2_STB_PIN_NUM 0
@@ -210,16 +210,16 @@
 #define LIN2LIN_OFF (LIN2LIN_ON ^ 1)
 #define LIN2LIN_PIN  LIN2LIN_PORT,LIN2LIN_PIN_NUM
 
-#if   (LIN2_Driver_NUM == 1)
-    #define LIN2_Driver Driver_USART1
-#elif (LIN2_Driver_NUM == 2)
-    #define LIN2_Driver Driver_USART2
-#elif (LIN2_Driver_NUM == 3)
-    #define LIN2_Driver Driver_USART3
-#elif (LIN2_Driver_NUM == 4)
-    #define LIN2_Driver Driver_USART4
-#elif (LIN2_Driver_NUM == 5)
-    #define LIN2_Driver Driver_USART5
+#if   (LIN2_UNIT_NUM == 1)
+    #define LIN2_UNIT USART1
+#elif (LIN2_UNIT_NUM == 2)
+    #define LIN2_UNIT USART2
+#elif (LIN2_UNIT_NUM == 3)
+    #define LIN2_UNIT USART3
+#elif (LIN2_UNIT_NUM == 4)
+    #define LIN2_UNIT UART4
+#elif (LIN2_UNIT_NUM == 5)
+    #define LIN2_UNIT UART5
 #endif
 //  </e>
 

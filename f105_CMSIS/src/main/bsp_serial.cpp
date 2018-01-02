@@ -16,7 +16,6 @@ bsp_serial_config_t bsp_serial::default_sett =
     /* .baudrate      = */ CON_BAUD,
     /* .parity        = */ CON_PARITY,
     /* .stop_bits     = */ USART_StopBits_1,
-    /* .timeout       = */ 500,
     /* .byte_of_begin = */ -1,
     /* .byte_of_end   = */ -1,
     /* .max_len       = */ 0,
@@ -113,7 +112,7 @@ void bsp_serial::callback(void * msg, uint32_t flags)
     }
 }
 
-bsp_serial::bsp_serial(USART_TypeDef *_unit_ptr, fifo_buff * buf, bsp_serial_config_t * _setting, iface_name_t _name):
+bsp_serial::bsp_serial(unit_t *_unit_ptr, fifo_buff * buf, bsp_serial_config_t * _setting, iface_name_t _name):
     bsp_usart(_unit_ptr, IFACE_TYPE_UART, _name),
     bufer(buf),
     internal_tx(),
@@ -162,7 +161,7 @@ void bsp_serial::set_setting(bsp_serial_config_t * sett)
 {
     setting = *sett;
     
-    bsp_usart_setting_t tmp_sett = 
+    settings_t tmp_sett = 
     {
         // Хардварные настройки
         /*.USART_BaudRate                   = */ sett->baudrate,
@@ -176,10 +175,13 @@ void bsp_serial::set_setting(bsp_serial_config_t * sett)
         /*.USART_Enable     = */ true,
     };
     
-    send_sett((void *)&tmp_sett);
+    send_sett(&tmp_sett);
 }
 
 uint32_t bsp_serial::round_baud(uint32_t baud)
 {
-    return bsp_usart::round_baud(baud);
+    settings_t tmp_sett = * get_sett();
+    tmp_sett.USART_BaudRate = baud;
+    
+    return bsp_usart::round_baud(&tmp_sett);
 }

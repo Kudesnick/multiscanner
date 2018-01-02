@@ -64,7 +64,7 @@ static void parser_get_yes_decode(bool enable)
 
 static bool parser_get_con(char ** str, const void * param)
 {
-    bsp_con * ptr = (bsp_con *)bsp_con::get_object(IFACE_TYPE_CON, (iface_name_t)(uint32_t)param);
+    bsp_con * ptr = (bsp_con *)bsp_con::cpp_list<LIST_TYPE_UNIT>::get_object(IFACE_TYPE_CON, (iface_name_t)(uint32_t)param);
     
     if (ptr != NULL)
     {
