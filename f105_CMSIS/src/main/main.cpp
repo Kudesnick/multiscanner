@@ -1,14 +1,16 @@
-/********************************************************************
- * Основная программа
- ********************************************************************/
+/**
+ *  @file    main.cpp
+ *
+ *  @brief   Основная программа
+ *  @details Здесь просто запускаем основной процесс
+ *
+ *  @author  
+ *  @date    
+ */
 
 #include "multiscanner.h"
 
 int main(void)
 {   
-    static cpp_multiscanner application;
-
-    application.routine();
-	
-	return 0;
-}
+    return cpp_multiscanner::routine();
+};

@@ -1,28 +1,26 @@
-#ifndef _THREAD_H_
-#define _THREAD_H_
-
-//------------------------------------------------------------------------------
-// Абстрактный класс потока
-//------------------------------------------------------------------------------
-
-#include <stdint.h>
-#include <string.h>
+/**
+ *  @file    thread.h
+ *
+ *  @brief   Абстрактный класс потока
+ *  @details Потоки представляют собой алгоритмы, выполняемые в режиме кооперативной многозадачности
+ *           все запускаемые потоки выполняются по очереди в основном цикле
+ *
+ *  @author  
+ *  @date    
+ */
+#pragma once
 
 #include "list.h"
+#include "bsp_clk.h"
 
-typedef enum
-{
-    THREAD_TYPE_DEFAULT,
-    THREAD_TYPE_CONSOLE
-} thread_type_t;
-
+/// Абстрактный класс потока
 class thread : public cpp_list<LIST_TYPE_THREAD>
 {
     private:
     protected:
+        static bsp_clk timer; ///< Системный таймер. Общий для всех потоков
     public:
-        thread(uint16_t _class_type = NULL, uint16_t _object_name = NULL);
-        virtual void routine(void) = NULL;
+        /// Конструктор потока
+        thread(iface_type_t _class_type = IFACE_TYPE_DEF, iface_name_t _object_name = IFACE_NAME_DEF);
+        virtual void routine(void) = NULL; ///< Собственно, тело потока
 };
-
-#endif /* _BSP_UNIT_H_ */

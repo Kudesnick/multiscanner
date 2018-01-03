@@ -1,14 +1,21 @@
-//------------------------------------------------------------------------------
-// Абстрактный класс потока
-//------------------------------------------------------------------------------
-
-#include <stdint.h>
-#include <string.h>
+/**
+ *  @file    thread.h
+ *
+ *  @brief   Абстрактный класс потока
+ *  @details Потоки представляют собой алгоритмы, выполняемые в режиме кооперативной многозадачности
+ *           все запускаемые потоки выполняются по очереди в основном цикле
+ *
+ *  @author  
+ *  @date    
+ */
 
 #include "list.h"
 #include "thread.h"
 
-thread::thread(uint16_t _class_type, uint16_t _object_name):
+/// Таймер потоков должен считать с интервалом 1 мс.
+bsp_clk thread::timer = bsp_clk();
+
+thread::thread(iface_type_t _class_type, iface_name_t _object_name):
     cpp_list(_class_type, _object_name)
 {
 };

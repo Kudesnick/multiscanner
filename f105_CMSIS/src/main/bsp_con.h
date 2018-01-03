@@ -1,5 +1,5 @@
-#ifndef _BSP_CON_N_
-#define _BSP_CON_N_
+
+#pragma once
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -8,7 +8,7 @@
 #include "fifo_con.h"
 #include "bsp_usart.h"
 
-typedef struct
+typedef __packed struct
 {
     uint32_t baudrate;  // Бодрейт
     uint16_t parity;    // Паритет
@@ -17,20 +17,18 @@ typedef struct
         bool color;     // Выделение цветом в консоле
 } bsp_con_config_t;
 
-class bsp_con : private bsp_usart
+class bsp_con : public bsp_usart
 {
     private:
         fifo_con * bufer;
         static bsp_con_config_t default_sett;
         bsp_con_config_t setting;
-        virtual void callback(void * msg, uint32_t flags); // В теле метода преобразовать (void *)->(uint16_t)
+        virtual void callback(void);
     protected:
     public:
-        bsp_con(USART_TypeDef *_unit_ptr, fifo_con * buf, bsp_con_config_t * _setting = &default_sett);
+        bsp_con(unit_t *_unit_ptr, fifo_con * buf, bsp_con_config_t * _setting = &default_sett);
         bool send(const char *buf);
         bsp_con_config_t *get_setting(void);
         void set_setting(bsp_con_config_t * sett);
         uint32_t round_baud(uint32_t baud); // Вычисление истинного бодрейта после применения настроек
 };
-
-#endif  /* _BSP_CON_N_ */ 

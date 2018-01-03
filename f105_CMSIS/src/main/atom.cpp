@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------------
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "misc.h"
 #include "atom.h"

@@ -2,8 +2,9 @@
 
 #include "bsp_usart.h"
 
-bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr, uint16_t _class_type, uint16_t _object_name):
-    bsp_unit((void *)_unit_ptr, _class_type, _object_name),
+bsp_usart::bsp_usart(unit_t *_unit_ptr, iface_type_t _class_type, iface_name_t _object_name):
+    bsp_unit(_unit_ptr, _class_type, _object_name),
+    cpp_list<LIST_TYPE_UNIT_USART>(_class_type, _object_name),
     pin_rx(),
     pin_tx()
 {
@@ -72,136 +73,191 @@ bsp_usart::bsp_usart(USART_TypeDef *_unit_ptr, uint16_t _class_type, uint16_t _o
     }
 };
 
-void bsp_usart::send_sett(void *sett)
+void bsp_usart::send_sett(settings_t *sett)
 {
-    setting = *(bsp_usart_setting_t*)sett;
+    setting = *sett;
     
-    USART_InitTypeDef usart_init_struct =
-    {
-        /*.USART_BaudRate            = */setting.USART_BaudRate,
-        /*.USART_WordLength          = */setting.USART_WordLength,
-        /*.USART_StopBits            = */setting.USART_StopBits,
-        /*.USART_Parity              = */setting.USART_Parity,
-        /*.USART_Mode                = */setting.USART_Mode,
-        /*.USART_HardwareFlowControl = */USART_HardwareFlowControl_None,
-    };
+    // Если модуль включен, то настраиваем его под себя
+    if (setting.USART_Enable)
+    { 
 
-    USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_TXE, DISABLE);
-    USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_TC);
-    USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_TC, DISABLE);
+        USART_InitTypeDef usart_init_struct =
+        {
+            /*.USART_BaudRate            = */setting.USART_BaudRate,
+            /*.USART_WordLength          = */setting.USART_WordLength,
+            /*.USART_StopBits            = */setting.USART_StopBits,
+            /*.USART_Parity              = */setting.USART_Parity,
+            /*.USART_Mode                = */setting.USART_Mode,
+            /*.USART_HardwareFlowControl = */USART_HardwareFlowControl_None,
+        };
+    
+        USART_ITConfig(unit_ptr, USART_IT_TXE, DISABLE);
+        USART_ClearITPendingBit(unit_ptr, USART_IT_TC);
+        USART_ITConfig(unit_ptr, USART_IT_TC, DISABLE);
 
-    USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_RXNE);
-    USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_RXNE, ENABLE);
-    USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_IDLE, DISABLE);
-    USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_LBD);
-    USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_LBD, (setting.USART_LIN_Enable) ? ENABLE : DISABLE);
-    USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_PE, ENABLE);
-    USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_ERR, ENABLE);
+        USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_RXNE);
+        USART_ITConfig(unit_ptr, USART_IT_RXNE, ENABLE);
+        USART_ITConfig(unit_ptr, USART_IT_IDLE, DISABLE);
+        USART_ClearITPendingBit(unit_ptr, USART_IT_LBD);
+        USART_ITConfig(unit_ptr, USART_IT_LBD, (setting.USART_LIN_Enable) ? ENABLE : DISABLE);
+        USART_ITConfig(unit_ptr, USART_IT_PE, ENABLE);
+        USART_ITConfig(unit_ptr, USART_IT_ERR, ENABLE);
+    
+        USART_OverSampling8Cmd(unit_ptr, ENABLE);
+        USART_Init(unit_ptr, &usart_init_struct);
+        USART_LINBreakDetectLengthConfig(unit_ptr, setting.USART_LIN_Break_Detection_Length);
+        USART_LINCmd(unit_ptr, (setting.USART_LIN_Enable == true) ? ENABLE : DISABLE);
+        
+        USART_Cmd(unit_ptr, ENABLE);
+        
+        switch ((uint32_t)unit_ptr)
+        {
+            case (uint32_t)USART1: NVIC_EnableIRQ(USART1_IRQn); break;
+            case (uint32_t)USART2: NVIC_EnableIRQ(USART2_IRQn); break;
+            case (uint32_t)USART3: NVIC_EnableIRQ(USART3_IRQn); break;
+            case (uint32_t)UART4:  NVIC_EnableIRQ(UART4_IRQn);  break;
+            case (uint32_t)UART5:  NVIC_EnableIRQ(UART5_IRQn);  break;
+        }
+    }
+    // Если модуль не включен, то пытаемся выключить аппаратный модуль
+    else
+    { 
+        bsp_usart* ptr = (bsp_usart *)bsp_usart::cpp_list<LIST_TYPE_UNIT_USART>::get_last_pointer();
+        bool this_unit_is_used = false;
+        
+        while (ptr != NULL && !this_unit_is_used)
+        {
+            if (   ptr->unit_ptr == unit_ptr
+                && ptr->get_sett()->USART_Enable)
+            {
+                this_unit_is_used = true;
+            }
+            
+            ptr = (bsp_usart *)ptr->cpp_list<LIST_TYPE_UNIT_USART>::get_prev_pointer();
+        }
 
-    USART_OverSampling8Cmd((USART_TypeDef *)unit_ptr, ENABLE);
-    USART_Init((USART_TypeDef *)unit_ptr, &usart_init_struct);
-    USART_LINBreakDetectLengthConfig((USART_TypeDef *)unit_ptr, setting.USART_LIN_Break_Detection_Length);
-    USART_LINCmd((USART_TypeDef *)unit_ptr, (setting.USART_LIN_Enable == true) ? ENABLE : DISABLE);
-    USART_Cmd((USART_TypeDef *)unit_ptr, (setting.USART_Enable == true) ? ENABLE : DISABLE);
+        if (!this_unit_is_used)
+        {
+            USART_Cmd(unit_ptr, DISABLE);
+        }
+    }
 };
 
-void *bsp_usart::get_sett(void)
+settings_t *bsp_usart::get_sett(void)
 {
-    static bsp_usart_setting_t sett;
+    static settings_t sett;
     sett = setting;
-    return (void *)&sett;
+    return &sett;
 };
 
-bool bsp_usart::send_msg(void* msg)
+bool bsp_usart::send_msg(message_t * msg)
 {
     bool result = false;
     
-    if (USART_GetFlagStatus((USART_TypeDef *)unit_ptr, USART_FLAG_TXE))
+    if (USART_GetFlagStatus(unit_ptr, USART_FLAG_TXE))
     {
-        USART_SendData((USART_TypeDef *)unit_ptr, *(bsp_usart_msg_t *)msg);
-        USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_TXE, ENABLE);
+        USART_SendData(unit_ptr, *msg);
+        USART_ITConfig(unit_ptr, USART_IT_TXE, ENABLE);
         result = true;
     }
     
     return result;
 };
 
-void bsp_usart::interrupt_handler(void)
+message_t * bsp_usart::get_msg(void)
 {
-    uint16_t data = 0;
-    uint16_t flags = 0;
-    
-    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_TXE))
-    {
-        flags |= USART_FLAG_TXE;
-        USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_TXE, DISABLE);
-    };
-    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_TC))
-    {
-        flags |= USART_FLAG_TC;
-        USART_ITConfig((USART_TypeDef *)unit_ptr, USART_IT_TC, DISABLE);
-        USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_TC);
-    };
-
-    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_PE))
-    {
-        flags |= USART_FLAG_PE;
-    }
-#warning Тут надо расшифровать флаги ошибок (кошерно)
-//    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_ERR))
-//    {
-//        flags |= USART_FLAG_ERR;
-//    }
-    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_IDLE))
-    {
-        flags |= USART_FLAG_IDLE;
-        data = USART_IDLE_DATA;
-    }
-    if (USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_RXNE))
-    {
-        flags |= USART_FLAG_RXNE;
-        data = USART_ReceiveData((USART_TypeDef *)unit_ptr);
-        USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_RXNE);
-    }
-#warning почему-то срабатывает в консоле, хотя LIN выключен и прерывание тоже
-//    USART_GetITStatus((USART_TypeDef *)unit_ptr, USART_IT_LBD);
-//    {
-//        flags |= USART_IT_RXNE;
-//        USART_ReceiveData((USART_TypeDef *)unit_ptr);
-//        data = USART_LIN_BRK_DATA;
-//        USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_LBD);
-//    }
-    
-    callback((void *)(uint32_t)data, flags);
+    return (clbk_data.data == USART_NULL_DATA) ? NULL : &clbk_data.data;
 };
 
-uint32_t bsp_usart::round_baud(uint32_t baud)
+void bsp_usart::callback(void)
+{
+    clbk_data.data = USART_NULL_DATA;
+    clbk_data.flags = 0;
+
+    if (USART_GetITStatus(unit_ptr, USART_IT_TXE))
+    {
+        clbk_data.flags |= USART_FLAG_TXE;
+        USART_ITConfig(unit_ptr, USART_IT_TXE, DISABLE);
+    }
+    if (USART_GetITStatus(unit_ptr, USART_IT_TC))
+    {
+        clbk_data.flags |= USART_FLAG_TC;
+        USART_ITConfig(unit_ptr, USART_IT_TC, DISABLE);
+        USART_ClearITPendingBit(unit_ptr, USART_IT_TC);
+    }
+    if (USART_GetITStatus(unit_ptr, USART_IT_PE))
+    {
+        clbk_data.flags |= USART_FLAG_PE;
+    }
+    if (USART_GetITStatus(unit_ptr, USART_IT_ORE))
+    {
+        clbk_data.flags |= USART_FLAG_ORE;
+    }
+    if (USART_GetITStatus(unit_ptr, USART_IT_NE))
+    {
+        clbk_data.flags |= USART_FLAG_NE;
+    }
+    if (USART_GetITStatus(unit_ptr, USART_IT_FE))
+    {
+        clbk_data.flags |= USART_FLAG_FE;
+    }
+    if (USART_GetITStatus(unit_ptr, USART_IT_IDLE))
+    {
+        clbk_data.flags |= USART_FLAG_IDLE;
+        clbk_data.data = USART_IDLE_DATA;
+    }
+    if (USART_GetITStatus(unit_ptr, USART_IT_RXNE))
+    {
+        clbk_data.flags |= USART_FLAG_RXNE;
+        clbk_data.data = USART_ReceiveData(unit_ptr);
+        USART_ClearITPendingBit(unit_ptr, USART_IT_RXNE);
+    }
+    if (USART_GetITStatus(unit_ptr, USART_IT_LBD))
+    {
+        clbk_data.flags |= USART_IT_LBD;
+        USART_ReceiveData(unit_ptr);
+        clbk_data.data = USART_LIN_BRK_DATA;
+        USART_ClearITPendingBit(unit_ptr, USART_IT_LBD);
+    }
+};
+
+uint32_t bsp_usart::round_baud(settings_t *sett)
 {
         // Расчет истинного бодрейта
     RCC_ClocksTypeDef RCC_ClocksStatus;
     RCC_GetClocksFreq(&RCC_ClocksStatus);
     uint32_t freq = (unit_ptr == USART1) ? RCC_ClocksStatus.PCLK2_Frequency : RCC_ClocksStatus.PCLK1_Frequency;
     freq <<= 1; // Умножаем на два, потому что включаем USART_OverSampling8Cmd((USART_TypeDef *)unit_ptr, ENABLE);
-    uint16_t brr = freq / baud;
+    uint16_t brr = freq / sett->USART_BaudRate;
     return freq / brr;
 };
+
+static bool irq_handler(unit_t *unit)
+{
+    bsp_usart* ptr = (bsp_usart *)bsp_usart::cpp_list<LIST_TYPE_UNIT_USART>::get_last_pointer();
+    bool this_unit_is_used = false;
+    
+    while (ptr != NULL && !this_unit_is_used)
+    {
+        if (   ptr->unit_ptr == unit
+            && ptr->get_sett()->USART_Enable)
+        {
+            this_unit_is_used = true;
+            
+            ptr->callback();
+        }
+        
+        ptr = (bsp_usart *)ptr->cpp_list<LIST_TYPE_UNIT_USART>::get_prev_pointer();
+    }
+
+    return this_unit_is_used;
+}
 
 // Прерывания от интерфейсов uart
 //------------------------------------------------------------------------------
 extern "C" void USART1_IRQHandler(void)
 {
-    static bsp_usart *unit = NULL;
-    
-    if (unit == NULL)
-    {
-        unit = (bsp_usart*)bsp_unit::object_search(USART1);
-    }
-    
-    if (unit != NULL)
-    {
-        unit->interrupt_handler();
-    }
-    else
+    if (!irq_handler(USART1))
     {
         NVIC_DisableIRQ(USART1_IRQn);
     }
@@ -209,18 +265,7 @@ extern "C" void USART1_IRQHandler(void)
 
 extern "C" void USART2_IRQHandler(void)
 {
-    static bsp_usart *unit = NULL;
-    
-    if (unit == NULL)
-    {
-        unit = (bsp_usart*)bsp_unit::object_search(USART2);
-    }
-    
-    if (unit != NULL)
-    {
-        unit->interrupt_handler();
-    }
-    else
+    if (!irq_handler(USART2))
     {
         NVIC_DisableIRQ(USART2_IRQn);
     }
@@ -228,18 +273,7 @@ extern "C" void USART2_IRQHandler(void)
 
 extern "C" void USART3_IRQHandler(void)
 {
-    static bsp_usart *unit = NULL;
-    
-    if (unit == NULL)
-    {
-        unit = (bsp_usart*)bsp_unit::object_search(USART3);
-    }
-    
-    if (unit != NULL)
-    {
-        unit->interrupt_handler();
-    }
-    else
+    if (!irq_handler(USART3))
     {
         NVIC_DisableIRQ(USART3_IRQn);
     }
@@ -247,18 +281,7 @@ extern "C" void USART3_IRQHandler(void)
 
 extern "C" void UART4_IRQHandler(void)
 {
-    static bsp_usart *unit = NULL;
-    
-    if (unit == NULL)
-    {
-        unit = (bsp_usart*)bsp_unit::object_search(UART4);
-    }
-    
-    if (unit != NULL)
-    {
-        unit->interrupt_handler();
-    }
-    else
+    if (!irq_handler(UART4))
     {
         NVIC_DisableIRQ(UART4_IRQn);
     }
@@ -266,18 +289,7 @@ extern "C" void UART4_IRQHandler(void)
 
 extern "C" void UART5_IRQHandler(void)
 {
-    static bsp_usart *unit = NULL;
-    
-    if (unit == NULL)
-    {
-        unit = (bsp_usart*)bsp_unit::object_search(UART5);
-    }
-    
-    if (unit != NULL)
-    {
-        unit->interrupt_handler();
-    }
-    else
+    if (!irq_handler(UART5))
     {
         NVIC_DisableIRQ(UART5_IRQn);
     }

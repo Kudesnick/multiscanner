@@ -1,8 +1,8 @@
-#ifndef _BSP_USART_H_
-#define _BSP_USART_H_
+
+#pragma once
 
 #include <stdint.h>
-#include <string.h>
+#include <stdbool.h>
 
 #include "bsp_io.h"
 #include "bsp_unit.h"
@@ -11,10 +11,11 @@
 // Класс порта ввода/вывода UART
 //------------------------------------------------------------------------------
 
-#define USART_LIN_BRK_DATA (uint16_t)0x8000;
-#define USART_IDLE_DATA    (uint16_t)0xFFFF;
+#define USART_LIN_BRK_DATA ((uint16_t)0x8000)
+#define USART_IDLE_DATA    ((uint16_t)0xFFFF)
+#define USART_NULL_DATA    ((uint16_t)0xF000)
 
-typedef struct
+typedef __packed struct
 {
     // Хардварные настройки
     uint32_t USART_BaudRate;
@@ -28,23 +29,32 @@ typedef struct
     bool USART_Enable;
 } bsp_usart_setting_t;
 
-typedef uint16_t bsp_usart_msg_t;
+typedef USART_TypeDef       unit_t;
+typedef uint16_t            message_t;
+typedef bsp_usart_setting_t settings_t;
 
-class bsp_usart: public bsp_unit
+typedef struct
+{
+    message_t data;
+    uint16_t flags;
+} bsp_usart_callback_data_t;
+
+
+class bsp_usart: public bsp_unit<unit_t, message_t, settings_t>, public cpp_list<LIST_TYPE_UNIT_USART>
 {
     private:
         bsp_io pin_rx;
         bsp_io pin_tx;
     protected:
         bsp_usart_setting_t setting;
+        virtual void callback(void);
+        bsp_usart_callback_data_t clbk_data;
+        friend bool irq_handler(unit_t *unit);
+        virtual void send_sett(settings_t *sett); ///< Применение новых настроек модуля
+        virtual settings_t *get_sett(void);       ///< Получение настроек модуля
+        virtual bool send_msg(message_t *msg);    ///< Отправка данных
+        virtual message_t *get_msg(void);         ///< Получение данных
     public:
-        bsp_usart(USART_TypeDef *_unit_ptr, uint16_t _class_type = NULL, uint16_t _object_name = NULL);
-        void send_sett(bsp_usart_setting_t *sett);
-        virtual void send_sett(void *sett); // Применение новых настроек модуля
-        virtual void *get_sett(void); // Получение настроек модуля
-        virtual bool send_msg(void *msg); // Отправка данных
-        virtual void interrupt_handler(void); // Обработчик прерывания, основные манипуляции с флагами. Из него вызывается callback
-        uint32_t round_baud(uint32_t baud); // Вычисление истинного бодрейта после применения настроек
+        bsp_usart(unit_t *_unit_ptr, iface_type_t _class_type = IFACE_TYPE_DEF, iface_name_t _object_name = IFACE_NAME_DEF);
+        uint32_t round_baud(settings_t *sett);    ///< Вычисление истинного бодрейта после применения настроек
 };
-
-#endif /* _BSP_USART_H_ */
