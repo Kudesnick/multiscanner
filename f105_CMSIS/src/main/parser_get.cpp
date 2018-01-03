@@ -9,6 +9,7 @@
 #include "parser.h"
 #include "parser_get.h"
 #include "bsp_con.h"
+#include "bsp_serial.h"
 
 static void parser_get_parity_decode(uint16_t parity)
 {
@@ -90,7 +91,52 @@ static bool parser_get_con(char ** str, const void * param)
     }
     
     return false;
-}
+};
+
+static bool parser_get_urt(char ** str, const void * param)
+{
+    bsp_serial * ptr = (bsp_serial *)bsp_serial::cpp_list<LIST_TYPE_UNIT>::get_object(IFACE_TYPE_UART, (iface_name_t)(uint32_t)param);
+    
+    if (ptr != NULL)
+    {
+        bsp_serial_config_t * sett = ptr->get_setting();
+        
+        console_send_string("Current the USART interface settings:\r\n");
+            console_send_string("\tbaudrate: ");
+                console_send_string(parser_uint_to_str(sett->baudrate));
+                console_send_string("\r\n");
+            parser_get_parity_decode(sett->parity);
+            parser_get_stop_bits_decode(sett->stop_bits);
+            console_send_string("\tbyte of begin: ");
+                if ((sett->byte_of_begin & 0xFF) != sett->byte_of_begin)
+                    console_send_string("not set");
+                else
+                    console_send_string(parser_uint_to_hex(sett->byte_of_begin, sizeof(uint8_t)*2));
+                console_send_string("\r\n");
+            console_send_string("\tbyte of end: ");
+                if ((sett->byte_of_end & 0xFF) != sett->byte_of_end)
+                    console_send_string("not set");
+                else
+                    console_send_string(parser_uint_to_hex(sett->byte_of_end, sizeof(uint8_t)*2));
+                console_send_string("\r\n");
+            console_send_string("\tmax message length: ");
+                if (sett->max_len > 0)
+                    console_send_string(parser_uint_to_str(sett->max_len));
+                else
+                    console_send_string(parser_uint_to_str(UART_DATA_LEN_MAX));
+                console_send_string("\r\n");
+            console_send_string("\techo of transmit: ");
+                parser_get_enable_decode(sett->echo);
+            console_send_string("\tenabled interface: ");
+                parser_get_yes_decode(sett->enable);
+    }
+    else
+    {
+        console_send_string(parser_str_err_iface_fnd);
+    }
+    
+    return false;
+};
 
 bool parser_get(char ** str, const void * param)
 {
@@ -101,8 +147,8 @@ bool parser_get(char ** str, const void * param)
         {"can2", NULL, NULL},
         {"lin1", NULL, NULL},
         {"lin2", NULL, NULL},
-        {"urt1", NULL, NULL},
-        {"urt2", NULL, NULL},
+        {"urt1", parser_get_urt, (uint32_t *)IFACE_NAME_UART1},
+        {"urt2", parser_get_urt, (uint32_t *)IFACE_NAME_UART2},
     };
 
     parser_recursion(str, cmd_list, countof_arr(cmd_list));

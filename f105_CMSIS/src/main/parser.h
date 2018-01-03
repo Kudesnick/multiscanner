@@ -34,8 +34,10 @@ struct parse_fsm_steps_t
 const char parser_str_err_bad_cmd[]    = TAG_RED "Error!" TAG_DEF " This command is invalid.\r\n";
 const char parser_str_err_null_cmd[]   = TAG_RED "Error!" TAG_DEF " This command is " TAG_RED_B "not realised" TAG_DEF ".\r\n";
 const char parser_str_err_syntax_cmd[] = TAG_RED "Error!" TAG_DEF " This command syntax is invalid. Print" TAG_LT "help" TAG_GT ".\r\n";
+const char parser_str_err_iface_fnd[]  = TAG_RED "Error!" TAG_DEF " This interface not found.\r\n";
 
 char *   parser_uint_to_str(uint32_t num); // перевод числа в строку
+char *   parser_uint_to_hex(uint64_t num, uint8_t size); // ѕеревод числа в hex-строку
 uint32_t parser_str_to_uint(char ** str);   // перевод строки в число
 void     parser_lowercase(char *buf);      // ѕриведение к нижнему регистру
 void     parser_all_param_to_str(const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len, const char delim = '|'); // ѕослать все параметры на консоль

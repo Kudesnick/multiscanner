@@ -33,7 +33,7 @@ bool parser_set(char ** str, const void * param)
             {"can1", parser_set_def, (uint32_t *)IFACE_NAME_CAN1},
         #endif
         #if (CAN2_ENABLED != 0)
-        {"can2", parser_set_def, (uint32_t *)IFACE_NAME_CAN2},
+            {"can2", parser_set_def, (uint32_t *)IFACE_NAME_CAN2},
         #endif
         #if (LIN1_ENABLED != 0)
             {"lin1", parser_set_def, (uint32_t *)IFACE_NAME_LIN1},

@@ -36,7 +36,7 @@ class bsp_serial : public bsp_usart
         virtual void callback(void);
     protected:
     public:
-        bsp_serial(unit_t *_unit_ptr, fifo_buff * _buffer, bsp_serial_config_t * _setting = &default_sett, iface_name_t _name = IFACE_NAME_DEF);
+        bsp_serial(unit_t *_unit_ptr, fifo_buff * _buffer, iface_name_t _name = IFACE_NAME_DEF, bsp_serial_config_t * _setting = &default_sett);
         bool send(msg_t * msg);
         bsp_serial_config_t *get_setting(void);
         void set_setting(bsp_serial_config_t * sett);

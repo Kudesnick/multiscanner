@@ -30,7 +30,7 @@ bool thread_serial::send_msg_rdy(void)
 
 thread_serial::thread_serial(USART_TypeDef * _unit, iface_name_t _object_name):
     thread_iface(IFACE_TYPE_UART, _object_name),
-    unit(_unit, &buf)
+    unit(_unit, &buf, _object_name)
 {
 
 };

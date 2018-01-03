@@ -135,7 +135,7 @@ void bsp_serial::callback(void)
     }
 }
 
-bsp_serial::bsp_serial(unit_t *_unit_ptr, fifo_buff * _buffer, bsp_serial_config_t * _setting, iface_name_t _name):
+bsp_serial::bsp_serial(unit_t *_unit_ptr, fifo_buff * _buffer, iface_name_t _name, bsp_serial_config_t * _setting):
     bsp_usart(_unit_ptr, IFACE_TYPE_UART, _name),
     buffer(_buffer)
 {
