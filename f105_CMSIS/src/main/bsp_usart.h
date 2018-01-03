@@ -15,7 +15,7 @@
 #define USART_IDLE_DATA    ((uint16_t)0xFFFF)
 #define USART_NULL_DATA    ((uint16_t)0xF000)
 
-typedef struct
+typedef __packed struct
 {
     // Хардварные настройки
     uint32_t USART_BaudRate;

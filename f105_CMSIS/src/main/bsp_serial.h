@@ -10,7 +10,7 @@
 
 #define MSG_BUF_LEN FIFO_SIZE_4
 
-typedef struct
+typedef __packed struct
 {
     // Хардварные настройки
     uint32_t baudrate;      // Бодрейт

@@ -15,7 +15,6 @@
 #define LIN_DATA_LEN_MAX  FIFO_SIZE_8
 #define UART_DATA_LEN_MAX FIFO_SIZE_16
 
-#pragma pack(1) // пакуем все структуры в этом модуле. Они используются в буферах.
 #pragma anon_unions
 
 /// Направление передачи сообщения
@@ -26,15 +25,15 @@ typedef enum : uint8_t
 } msg_direction_t;
 
 /// Заголовок сообщения, подготовленного для передачи, универсальный для всех интерфейсов
-struct msg_header_t
+__packed struct msg_header_t
 {
     iface_type_t msg_type;  ///< Тип сообщения
     iface_name_t route;     ///< В какой интерфейс передаем
     msg_direction_t direct; ///< Направление передачи
-    union
+    __packed union
     {
         uint64_t rx_timestamp;
-        struct
+        __packed struct
         {
             uint32_t counter;      ///< Отсчет времеи до следующей передачи
             uint16_t interval;     ///< Интервал для повторений
@@ -70,7 +69,7 @@ typedef enum : uint8_t
 
 typedef uint32_t can_id_t;
 
-typedef struct
+typedef __packed struct
 {
     can_id_t id;
     can_msg_type_t type;
@@ -100,7 +99,7 @@ typedef enum : uint8_t
     LIN_TYPE_V2,
 } lin_msg_type_t;
 
-typedef struct
+typedef __packed struct
 {
     uint8_t id;
     can_msg_type_t type;
@@ -126,7 +125,7 @@ typedef enum : uint8_t
     MSG_BRK_UART_PARITY_ERR,  ///< Ошибка паритета
 } msg_brk_reason_uart_t;
 
-typedef struct
+typedef __packed struct
 {
     uint8_t len;
     uint8_t data[UART_DATA_LEN_MAX];
@@ -136,9 +135,9 @@ typedef struct
 
 /// Структура сообщения универсальная
 //-----------------------------------
-typedef struct : msg_header_t
+typedef __packed struct : msg_header_t
 {
-    union
+    __packed union
     {
         msg_can_t  can;
         msg_lin_t  lin;

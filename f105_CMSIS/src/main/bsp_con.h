@@ -8,7 +8,7 @@
 #include "fifo_con.h"
 #include "bsp_usart.h"
 
-typedef struct
+typedef __packed struct
 {
     uint32_t baudrate;  // Бодрейт
     uint16_t parity;    // Паритет
