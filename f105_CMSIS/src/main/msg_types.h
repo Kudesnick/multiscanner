@@ -116,6 +116,7 @@ typedef struct
 /// Причины завершения фрейма UART-сообщения
 typedef enum : uint8_t
 {
+    MSG_BRK_UART_NA,
     MSG_BRK_UART_TIMEOUT,     ///< Завершение по таймауту
     MSG_BRK_UART_LAST_ID,     ///< Детектирован байт завершения
     MSG_BRK_UART_FIRST_ID,    ///< Детектирован байт начала следующей посылки

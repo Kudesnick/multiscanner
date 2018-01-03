@@ -48,7 +48,8 @@ bool thread_iface::msg_send(msg_t *msg)
 /**
  *  @brief   основной процесс ввода-вывода
  *  @details провер€ем буфер на передачу, передаем сообщение, если интерфейс свободен.
- *           если нет, то откладываем передачу до освобождени€ и передаем управление планировщику
+ *           если нет, то откладываем передачу до освобождени€ и передаем управление планировщику.
+ *           здесь же разруливаем повторную передачу сообщений по таймауту.
  */
 void thread_iface::routine(void)
 {
@@ -63,15 +64,24 @@ void thread_iface::routine(void)
         {
             msg_t msg = buf.tx.extract();
             
+            // ≈сли таймер еще не вышел - декрементируем его
             if (msg.counter > delta_time)
             {
                 msg.counter -= delta_time;
                 buf.tx.add(msg);
             }
+            // ≈сли не можем передать, то закидываем назад в буфер но с обнуленным таймером
+            else if (!send_msg_rdy())
+            {
+                msg.counter -= delta_time;
+                buf.tx.add(msg);
+            }
+            // ѕередаем сообщение
             else
             {
                 send_msg(&msg);
 
+                // ≈сли счетчик количества передач не обнулен - декрементируем его и назад в очередь
                 if (msg.count != 1)
                 {
                     if (msg.interval >= (delta_time - msg.counter))
@@ -89,13 +99,7 @@ void thread_iface::routine(void)
                     }
                     buf.tx.add(msg);
                 }
-                
-                if (!send_msg_rdy())
-                {
-                    break;
-                }
             }
-            
         }
     }
 }

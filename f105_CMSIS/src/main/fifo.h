@@ -63,6 +63,7 @@ template <typename data_t, const fifo_size_t count> class cpp_fifo
 		virtual data_t extract(void);       ///< Извлечь элемент из очереди
 		data_t read_head(void);             ///< Прочитать голову
 		data_t read_end(void);              ///< Прочитать хвост
+        void cut_head(void);                ///< Удалить элемент из очереди
 		void clear(void);                   ///< Очистить очередь
 };
 
@@ -174,6 +175,17 @@ template <typename data_t, const fifo_size_t count> data_t cpp_fifo<data_t, coun
 template <typename data_t, const fifo_size_t count> data_t cpp_fifo<data_t, count>::read_end(void)
 {
     return fifo[(end - 1) & (count - 1)];
+}
+
+/**
+ *  @brief Удаление элемента из очереди
+ *
+ *  @warning Здесь не происходит проверки очереди на переполнение.
+ *           В случае попытки извлечения элемента из пустой очереди, она заполняется мусором
+ */
+template <typename data_t, const fifo_size_t count> void cpp_fifo<data_t, count>::cut_head(void)
+{
+    head++;
 }
 
 /**

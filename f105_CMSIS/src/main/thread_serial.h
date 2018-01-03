@@ -11,11 +11,9 @@
 #pragma once
 
 #include <stdint.h>
-#include <string.h>
+#include <stdbool.h>
 
-#include "thread.h"
 #include "thread_iface.h"
-#include "fifo_buffers.h"
 #include "msg_types.h"
 #include "bsp_serial.h"
 
@@ -31,5 +29,5 @@ class thread_serial : public thread_iface
         virtual bool send_msg(msg_t *msg); ///< Посылаем сообщение непосредственно в периферийный модуль
         virtual bool send_msg_rdy(void); ///< Модуль интерфейса готов для передачи сообщения
     public:
-        thread_serial(iface_name_t _object_name = IFACE_NAME_DEF);
+        thread_serial(USART_TypeDef * _unit, iface_name_t _object_name = IFACE_NAME_DEF);
 };

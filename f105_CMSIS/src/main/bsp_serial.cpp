@@ -23,26 +23,42 @@ bsp_serial_config_t bsp_serial::default_sett =
     /* .enable        = */ true,
 };
 
-
 // ѕрерывание по приему/передаче
-void bsp_serial::callback(void * msg, uint32_t flags)
+void bsp_serial::callback(void)
 {
+    bsp_usart::callback();
+    
     // ѕередача байта закончена
-    if (flags & USART_FLAG_TXE)
+    if (   clbk_data.flags & USART_FLAG_TXE
+        && !internal_tx.is_empty()
+        )
     {
-#warning реализовать загрузку следующего сообщени€, но только через таймаут, чтобы сообщени€ не сливались
+        message_t msg = internal_tx.extract();
+        send_msg(&msg);
+    }
+    // ѕередача сообщени€ закончена
+    if (   clbk_data.flags & USART_FLAG_IDLE
+        && !internal_tx_buf.is_empty()
+        && internal_tx.is_empty()
+        )
+    {
+        msg_t tmp_msg = internal_tx_buf.extract();
+        
+        for (uint8_t i = 0; i < tmp_msg.uart.len; i++)
+        {
+            internal_tx.add(tmp_msg.uart.data[i]);
+        }
         if (!internal_tx.is_empty())
         {
-            static uint16_t s_msg;
-            s_msg = internal_tx.extract();
-            send_msg((void *) &s_msg);
+            message_t msg = internal_tx.extract();
+            send_msg(&msg);
         }
     }
 
     // ѕрин€т байт
-    if (flags & USART_FLAG_RXNE)
+    if (clbk_data.flags & USART_FLAG_RXNE)
     {
-        uint8_t data = (uint32_t)(uint32_t *)msg;
+        uint8_t data = clbk_data.data;
 
         static msg_t msg_buf;
         
@@ -57,9 +73,9 @@ void bsp_serial::callback(void * msg, uint32_t flags)
                 
                 msg_buf.uart.reason = MSG_BRK_UART_FIRST_ID;
             
-                if (!bufer->rx.is_full())
+                if (!buffer->rx.is_full())
                 {
-                    bufer->rx.add(msg_buf);
+                    buffer->rx.add(msg_buf);
                 }
                 
                 internal_rx.clear();
@@ -70,21 +86,29 @@ void bsp_serial::callback(void * msg, uint32_t flags)
         if (internal_rx.is_empty())
         {
             msg_buf.msg_type = IFACE_TYPE_UART;
-            msg_buf.route = (iface_name_t)get_object_name();
+            msg_buf.route = (iface_name_t)cpp_list<LIST_TYPE_UNIT_USART>::get_object_name();
             msg_buf.direct = MSG_RX;
-            msg_buf.rx_timestamp = timer.get_timestamp();
+            msg_buf.rx_timestamp = timer->get_timestamp();
         }
         
-        internal_rx.add(data);
+        if ((clbk_data.flags & USART_FLAG_IDLE) == 0)
+        {
+            internal_rx.add(data);
+        }
         
-        // Ѕайт продетектирован как конец пакета или длина пакета 
-        if (   flags & (USART_FLAG_FE | USART_FLAG_PE)
-            || data == setting.byte_of_end
-            || internal_rx.get_full_count() >= internal_rx.get_count()
-            || (   setting.max_len > 0
-                && internal_rx.get_full_count() + 1 >= setting.max_len
-                )
-            )
+        msg_brk_reason_uart_t tmp_reason = 
+            (clbk_data.flags & USART_FLAG_FE)                           ? MSG_BRK_UART_FRAME_ERR :
+            (clbk_data.flags & USART_FLAG_PE)                           ? MSG_BRK_UART_PARITY_ERR :
+            (clbk_data.flags & USART_FLAG_IDLE)                         ? MSG_BRK_UART_TIMEOUT :
+            (data == setting.byte_of_end)                               ? MSG_BRK_UART_LAST_ID :
+            (data == setting.byte_of_begin)                             ? MSG_BRK_UART_FIRST_ID :
+            (internal_rx.get_full_count() >= internal_rx.get_count())   ? MSG_BRK_UART_OVF :
+            (   setting.max_len > 0
+             && internal_rx.get_full_count() >= setting.max_len)        ? MSG_BRK_UART_LENGTH :
+                                                                          MSG_BRK_UART_NA;
+        
+        // Ѕайт продетектирован как конец пакета или длина пакета превышена
+        if (tmp_reason != MSG_BRK_UART_NA)
         {
             // люта€ копипаста (см. строку "if (data == setting.byte_of_begin)"), но пока ничего лучше не придумал
             msg_buf.uart.len = internal_rx.get_full_count();
@@ -93,18 +117,17 @@ void bsp_serial::callback(void * msg, uint32_t flags)
             {
                 for(uint8_t i = 0; i < msg_buf.uart.len; msg_buf.uart.data[i++] = internal_rx.extract());
 
-                msg_buf.uart.reason =
-                    (flags & USART_FLAG_FE)                                     ? MSG_BRK_UART_FRAME_ERR :
-                    (flags & USART_FLAG_PE)                                     ? MSG_BRK_UART_PARITY_ERR :
-                    (data == setting.byte_of_end)                               ? MSG_BRK_UART_LAST_ID :
-                    (data == setting.byte_of_begin)                             ? MSG_BRK_UART_FIRST_ID :
-                    (internal_rx.get_full_count() >= internal_rx.get_count())   ? MSG_BRK_UART_OVF :
-                                                                                  MSG_BRK_UART_LENGTH;
-                if (!bufer->rx.is_full())
-                {
-                    bufer->rx.add(msg_buf);
-                }
+                msg_buf.uart.reason = tmp_reason;
                 
+                if (!buffer->rx.is_full())
+                {
+                    buffer->rx.add(msg_buf);
+                }
+                else
+                {
+#warning реализовать обработку переполнени€ буфера
+                }
+
                 internal_rx.clear();
             }
             
@@ -112,39 +135,55 @@ void bsp_serial::callback(void * msg, uint32_t flags)
     }
 }
 
-bsp_serial::bsp_serial(unit_t *_unit_ptr, fifo_buff * buf, bsp_serial_config_t * _setting, iface_name_t _name):
+bsp_serial::bsp_serial(unit_t *_unit_ptr, fifo_buff * _buffer, bsp_serial_config_t * _setting, iface_name_t _name):
     bsp_usart(_unit_ptr, IFACE_TYPE_UART, _name),
-    bufer(buf),
-    internal_tx(),
-    internal_rx()
+    buffer(_buffer)
 {
     set_setting(_setting);
 }
 
 // ѕереслать данные
-bool bsp_serial::send(const uint8_t data)
+bool bsp_serial::send(msg_t * msg)
 {
-    __disable_irq();
-#warning √арантирует, что мы не затрем данные, но, возможно, что мы пропустим начало передачи.
-        bool tx_complete = internal_tx.is_empty();
-    __enable_irq();
-    
-    bool result = !internal_tx.is_full();
+    bool result = (!internal_tx_buf.is_full() || internal_tx.is_empty()) && (msg->msg_type == IFACE_TYPE_UART);
     
     if (result)
     {
-        internal_tx.add(data);
-    }
-    
-    if (   result == true
-        && tx_complete == true
-        )
-    {
-        static uint16_t msg;
-        msg = internal_tx.extract();
-        send_msg((void *) &msg);
-    }
+        __disable_irq();
 
+        if (!internal_tx.is_empty())
+        {
+            internal_tx_buf.add(*msg);
+        }
+        else
+        {
+            msg_t tmp_msg;
+            
+            if (!internal_tx_buf.is_empty())
+            {
+                tmp_msg = internal_tx_buf.extract();
+                internal_tx_buf.add(*msg);
+            }
+            else
+            {
+                tmp_msg = *msg;
+            }
+            
+            for (uint8_t i = 0; i < tmp_msg.uart.len; i++)
+            {
+                internal_tx.add(tmp_msg.uart.data[i]);
+            }
+            
+            if (tx_empty)
+            {
+                message_t s_msg = internal_tx.extract();
+                send_msg(&s_msg);
+            }
+        }
+        
+        __enable_irq();
+    }
+ 
     return result;
 }
 

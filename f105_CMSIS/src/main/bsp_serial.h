@@ -8,6 +8,8 @@
 #include "fifo_buffers.h"
 #include "bsp_usart.h"
 
+#define MSG_BUF_LEN FIFO_SIZE_4
+
 typedef struct
 {
     // Хардварные настройки
@@ -25,16 +27,17 @@ typedef struct
 class bsp_serial : public bsp_usart
 {
     private:
-        fifo_buff * bufer;
+        cpp_fifo<msg_t, FIFO_SIZE_4> internal_tx_buf;
         cpp_fifo<uint8_t, UART_DATA_LEN_MAX> internal_tx;
         cpp_fifo<uint8_t, UART_DATA_LEN_MAX> internal_rx;
+        fifo_buff * buffer;
         static bsp_serial_config_t default_sett;
         bsp_serial_config_t setting;
-        virtual void callback(void * msg, uint32_t flags); // В теле метода преобразовать (void *)->(uint8_t)
+        virtual void callback(void);
     protected:
     public:
-        bsp_serial(unit_t *_unit_ptr, fifo_buff * buf, bsp_serial_config_t * _setting = &default_sett, iface_name_t _name = IFACE_NAME_DEF);
-        bool send(const uint8_t data);
+        bsp_serial(unit_t *_unit_ptr, fifo_buff * _buffer, bsp_serial_config_t * _setting = &default_sett, iface_name_t _name = IFACE_NAME_DEF);
+        bool send(msg_t * msg);
         bsp_serial_config_t *get_setting(void);
         void set_setting(bsp_serial_config_t * sett);
         uint32_t round_baud(uint32_t baud); // Вычисление истинного бодрейта после применения настроек
