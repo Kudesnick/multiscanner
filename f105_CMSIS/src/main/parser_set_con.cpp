@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "thread_con.h"
+#include "thread_serial.h"
 #include "parser.h"
 #include "parser_set.h"
 #include "parser_set_con.h"
@@ -193,6 +194,81 @@ bool parser_set_con(char ** str, const void * const param, void * const result)
         
         if (parser_iteration(str, cmd_list, countof_arr(cmd_list)) == true)
         {
+            uint32_t real_baud = ptr->round_baud(sett.baudrate);
+            uint32_t delta = (real_baud >= sett.baudrate) ? real_baud - sett.baudrate : sett.baudrate - real_baud;
+
+            if ((uint64_t)delta * 100 / sett.baudrate > 3)
+            {
+                console_send_string(TAG_RED "Operation aborted!" TAG_DEF " Real baudrate will be " TAG_BLUE);
+                    console_send_string(parser_uint_to_str(real_baud));
+                    console_send_string(TAG_DEF " baud.\r\n"
+                    "the error will be more than 3%\r\n");
+            }
+            
+            else
+            {
+                ptr->set_setting(&sett);
+            }
+        }
+        else
+        {
+            console_send_string(parser_str_err_syntax_cmd);
+        }
+    }
+    else
+    {
+        console_send_string(parser_str_err_iface_fnd);
+    }
+
+    return false;
+}
+
+bool parser_set_urt(char ** str, const void * const param, void * const result)
+{
+    static bsp_serial_config_t sett;
+    static const parse_fsm_steps_t cmd_list[] =
+    {
+        {          "-b", parser_set_baud      ,             NULL             , (void *)&sett.baudrate     },
+        {       "-baud", parser_set_baud      ,             NULL             , (void *)&sett.baudrate     },
+        {   "-baudrate", parser_set_baud      ,             NULL             , (void *)&sett.baudrate     },
+        {         "-pn", parser_set_parity    , (uint32_t *)USART_Parity_No  , (void *)&sett.parity       },
+        {          "-n", parser_set_parity    , (uint32_t *)USART_Parity_No  , (void *)&sett.parity       },
+        {  "-parity-no", parser_set_parity    , (uint32_t *)USART_Parity_No  , (void *)&sett.parity       },
+        {         "-no", parser_set_parity    , (uint32_t *)USART_Parity_No  , (void *)&sett.parity       },
+        {         "-pe", parser_set_parity    , (uint32_t *)USART_Parity_Even, (void *)&sett.parity       },
+        {          "-e", parser_set_parity    , (uint32_t *)USART_Parity_Even, (void *)&sett.parity       },
+        {"-parity-even", parser_set_parity    , (uint32_t *)USART_Parity_Even, (void *)&sett.parity       },
+        {       "-even", parser_set_parity    , (uint32_t *)USART_Parity_Even, (void *)&sett.parity       },
+        {         "-po", parser_set_parity    , (uint32_t *)USART_Parity_Odd , (void *)&sett.parity       },
+        {          "-o", parser_set_parity    , (uint32_t *)USART_Parity_Odd , (void *)&sett.parity       },
+        { "-parity-odd", parser_set_parity    , (uint32_t *)USART_Parity_Odd , (void *)&sett.parity       },
+        {        "-odd", parser_set_parity    , (uint32_t *)USART_Parity_Odd , (void *)&sett.parity       },
+        {         "-s1", parser_set_stop_bits , (uint32_t *)USART_StopBits_1 , (void *)&sett.stop_bits    },
+        {      "-stop1", parser_set_stop_bits , (uint32_t *)USART_StopBits_1 , (void *)&sett.stop_bits    },
+        {         "-s2", parser_set_stop_bits , (uint32_t *)USART_StopBits_2 , (void *)&sett.stop_bits    },
+        {      "-stop2", parser_set_stop_bits , (uint32_t *)USART_StopBits_2 , (void *)&sett.stop_bits    },
+        {          "-l", parser_set_msg_len   ,             NULL             , (void *)&sett.max_len      },
+        {        "-len", parser_set_msg_len   ,             NULL             , (void *)&sett.max_len      },
+        {      "-start", parser_set_start_byte,             NULL             , (void *)&sett.byte_of_begin},
+        {        "-end", parser_set_end_byte  ,             NULL             , (void *)&sett.byte_of_end  },
+        {       "-echo", parser_set_echo      ,             NULL             , (void *)&sett.echo         },
+        {         "-on", parser_set_enabled   , (uint32_t *)'y'              , (void *)&sett.enable       },
+        {     "-enable", parser_set_enabled   , (uint32_t *)'y'              , (void *)&sett.enable       },
+        {        "-off", parser_set_enabled   , (uint32_t *)'n'              , (void *)&sett.enable       },
+        {    "-disable", parser_set_enabled   , (uint32_t *)'n'              , (void *)&sett.enable       },
+        {    "-enabled", parser_set_enabled   ,             NULL             , (void *)&sett.enable       },
+    };
+
+    bsp_serial * ptr = (bsp_serial *)bsp_serial::cpp_list<LIST_TYPE_UNIT>::get_object(IFACE_TYPE_UART, (iface_name_t)(uint32_t)param);
+
+    if (ptr != NULL)
+    {
+        sett = *ptr->get_setting();
+        
+        if (parser_iteration(str, cmd_list, countof_arr(cmd_list)) == true)
+        {
+            // Проверка бодрейта
+#warning сдесь же проверить всякие паритеты и прочие числовые значения на соответствие диапазону
             uint32_t real_baud = ptr->round_baud(sett.baudrate);
             uint32_t delta = (real_baud >= sett.baudrate) ? real_baud - sett.baudrate : sett.baudrate - real_baud;
 
