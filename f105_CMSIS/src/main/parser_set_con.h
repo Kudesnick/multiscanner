@@ -7,4 +7,4 @@
 #include <stdint.h>
 #include <string.h>
 
-bool parser_set_con(char ** str, const void * param); // Получить настройки интерфейса
+bool parser_set_con(char ** str, const void * const param, void * const result); // Получить настройки интерфейса

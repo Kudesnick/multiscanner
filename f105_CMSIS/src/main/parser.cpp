@@ -47,6 +47,22 @@ char * parser_uint_to_hex(uint64_t num, uint8_t size)
     return &str[i];
 }
 
+char * parser_bool_to_enable_disable(bool enable)
+{
+    static char str_true[] = "enabled";
+    static char str_false[] = "disabled";
+    
+    return (enable) ? str_true : str_false;
+};
+
+char * parser_bool_to_yes_no(bool yes)
+{
+    static char str_true[] = "yes";
+    static char str_false[] = "no";
+    
+    return (yes) ? str_true : str_false;
+};
+
 uint32_t parser_str_to_uint(char ** str)
 {
     uint32_t result = 0;
@@ -139,7 +155,7 @@ void parser_recursion(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t 
     }
     else if (cmd_list[i].func != NULL)
     {
-        cmd_list[i].func(str, cmd_list[i].param);
+        cmd_list[i].func(str, cmd_list[i].param, cmd_list[i].result);
     }
     else if (cmd_list[i].param != NULL)
     {

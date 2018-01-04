@@ -10,7 +10,7 @@
 #include "parser_set.h"
 #include "parser_set_con.h"
 
-static bool parser_set_def(char ** str, const void * param)
+static bool parser_set_def(char ** str, const void * const param, void * const result)
 {
     bsp_con * ptr = (bsp_con *)bsp_con::cpp_list<LIST_TYPE_UNIT>::get_object(IFACE_TYPE_CON, (iface_name_t)(uint32_t)param);
     
@@ -24,7 +24,7 @@ static bool parser_set_def(char ** str, const void * param)
     return false;
 }
 
-bool parser_set(char ** str, const void * param)
+bool parser_set(char ** str, const void * const param, void * const result)
 {
     static const parse_fsm_steps_t cmd_list[] =
     {
