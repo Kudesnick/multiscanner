@@ -152,13 +152,13 @@ bool parser_get(char ** str, const void * const param, void * const result)
 {
     static const parse_fsm_steps_t cmd_list[] =
     {
-        { "con", parser_get_con, (uint32_t *)IFACE_NAME_CON},
+        { "con", parser_get_con, (void *)IFACE_NAME_CON},
         {"can1", NULL, NULL},
         {"can2", NULL, NULL},
         {"lin1", NULL, NULL},
         {"lin2", NULL, NULL},
-        {"urt1", parser_get_urt, (uint32_t *)IFACE_NAME_UART1},
-        {"urt2", parser_get_urt, (uint32_t *)IFACE_NAME_UART2},
+        {"urt1", parser_get_urt, (void *)IFACE_NAME_UART1},
+        {"urt2", parser_get_urt, (void *)IFACE_NAME_UART2},
     };
 
     parser_recursion(str, cmd_list, countof_arr(cmd_list));

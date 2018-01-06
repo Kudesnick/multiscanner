@@ -69,18 +69,45 @@ uint32_t parser_str_to_uint(char ** str)
     
     if (*str[0] != '\0')
     {
-        for (uint8_t i = 0; strchr(" \0", *str[0]) == NULL; i++)
+        if (strcmp(*str, "0x") == 0)
         {
-            result *= 10;
-            if (*str[0] < '0' || *str[0] > '9')
+            *str += sizeof("0x");
+            for (uint8_t i = 0; strchr(" \0", *str[0]) == NULL; i++)
             {
-                *str = NULL;
-                result = NULL;
-                break;
+                result <<= 4;
+                if (*str[0] >= '0' && *str[0] <= '9')
+                {
+                    result += *str[0] - '0';
+                }
+                else if (*str[0] >= 'a' && *str[0] <= 'f')
+                {
+                    result += *str[0] - 'a' + 0x0A;
+                }
+                else
+                {
+                    *str = NULL;
+                    result = NULL;
+                    break;
+                }
+                
+                *str += sizeof(char);
             }
-            result += *str[0] - '0';
-            
-            *str += sizeof(char);
+        }
+        else
+        {
+            for (uint8_t i = 0; strchr(" \0", *str[0]) == NULL; i++)
+            {
+                result *= 10;
+                if (*str[0] < '0' || *str[0] > '9')
+                {
+                    *str = NULL;
+                    result = NULL;
+                    break;
+                }
+                result += *str[0] - '0';
+                
+                *str += sizeof(char);
+            }
         }
         
         if (*str != NULL

@@ -200,6 +200,10 @@ void bsp_serial::set_setting(bsp_serial_config_t * sett)
 {
     setting = *sett;
     
+    if (setting.max_len > UART_DATA_LEN_MAX) setting.max_len = UART_DATA_LEN_MAX;
+    if ((setting.byte_of_begin & 0xFF) != setting.byte_of_begin) setting.byte_of_begin = -1;
+    if ((setting.byte_of_end & 0xFF) != setting.byte_of_end) setting.byte_of_end = -1;
+    
     settings_t tmp_sett = 
     {
         // Хардварные настройки

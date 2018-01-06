@@ -521,19 +521,14 @@
               <FilePath>.\src\main\parser_help.cpp</FilePath>
             </File>
             <File>
-              <FileName>parser_set.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\parser_set.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>parser_set_con.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\parser_set_con.cpp</FilePath>
-            </File>
-            <File>
               <FileName>parser_get.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\parser_get.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>parser_set.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\parser_set.cpp</FilePath>
             </File>
           </Files>
         </Group>
