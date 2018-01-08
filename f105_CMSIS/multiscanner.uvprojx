@@ -530,6 +530,11 @@
               <FileType>8</FileType>
               <FilePath>.\src\main\parser_set.cpp</FilePath>
             </File>
+            <File>
+              <FileName>parser_msg.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\parser_msg.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

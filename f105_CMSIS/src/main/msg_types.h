@@ -35,7 +35,7 @@ __packed struct msg_header_t
         uint64_t rx_timestamp;
         __packed struct
         {
-            uint32_t counter;      ///< Отсчет времеи до следующей передачи
+            uint32_t counter;      ///< Отсчет времени до следующей передачи
             uint16_t interval;     ///< Интервал для повторений
             uint16_t count;        ///< Счетчик повторений
         };

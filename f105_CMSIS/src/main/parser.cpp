@@ -11,6 +11,7 @@
 #include "parser_help.h"
 #include "parser_get.h"
 #include "parser_set.h"
+#include "parser_msg.h"
 
 char * parser_uint_to_str(uint32_t num)
 {
@@ -69,9 +70,9 @@ uint32_t parser_str_to_uint(char ** str)
     
     if (*str[0] != '\0')
     {
-        if (strcmp(*str, "0x") == 0)
+        if (strstr(*str, "0x") == *str)
         {
-            *str += sizeof("0x");
+            *str += strlen("0x");
             for (uint8_t i = 0; strchr(" \0", *str[0]) == NULL; i++)
             {
                 result <<= 4;
@@ -82,6 +83,10 @@ uint32_t parser_str_to_uint(char ** str)
                 else if (*str[0] >= 'a' && *str[0] <= 'f')
                 {
                     result += *str[0] - 'a' + 0x0A;
+                }
+                else if (*str[0] >= 'A' && *str[0] <= 'F')
+                {
+                    result += *str[0] - 'A' + 0x0A;
                 }
                 else
                 {
@@ -201,6 +206,35 @@ void parser_recursion(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t 
     }
 }
 
+bool parser_iteration(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len)
+{
+    bool result = *str[0] != '\0';
+    
+    while (*str[0] != '\0'
+           && result == true
+           )
+    {
+        int16_t i;
+        
+        if ((i = parser_find(str, cmd_list, cmd_list_len)) < 0)
+        {
+            console_send_string(parser_str_err_bad_cmd);
+            result = false;
+        }
+        else if (cmd_list[i].func != NULL)
+        {
+            result = cmd_list[i].func(str, cmd_list[i].param, cmd_list[i].result);
+        }
+        else
+        {
+            console_send_string(parser_str_err_syntax_cmd);
+            result = false;
+        }
+    }
+    
+    return result;
+}
+
 void parser_parse(char * str)
 {
     static const char str_info[] = "Multiscanner " TAG_GREEN "v0.0.0a" TAG_DEF "\r\n"
@@ -212,18 +246,18 @@ void parser_parse(char * str)
 
     static const parse_fsm_steps_t cmd_list[] =
     {
-        {    "?", parser_help,     NULL},
-        { "help", parser_help,     NULL}, // Получить справку о программе
-        {"about",        NULL, str_info},
-        { "info",        NULL, str_info}, // Сводная информация об устройстве (версия, поддерживаемые интерфейсы и пр.)
-        {  "get",  parser_get,     NULL}, // Получить параметры настройки интерфейса
-        {  "set",  parser_set,     NULL}, // Настроить интерфейс
-        { "can1",        NULL,     NULL}, // Отправить сообщение по can1
-        { "can2",        NULL,     NULL}, // Отправить сообщение по can2
-        { "lin1",        NULL,     NULL}, // Отправить сообщение по lin1
-        { "lin2",        NULL,     NULL}, // Отправить сообщение по lin2
-        { "urt1",        NULL,     NULL}, // Отправить сообщение по uart1
-        { "urt2",        NULL,     NULL}, // Отправить сообщение по uart2
+        {    "?",      parser_help,     NULL},
+        { "help",      parser_help,     NULL}, // Получить справку о программе
+        {"about",             NULL, str_info},
+        { "info",             NULL, str_info}, // Сводная информация об устройстве (версия, поддерживаемые интерфейсы и пр.)
+        {  "get",       parser_get,     NULL}, // Получить параметры настройки интерфейса
+        {  "set",       parser_set,     NULL}, // Настроить интерфейс
+        { "can1",             NULL,     NULL}, // Отправить сообщение по can1
+        { "can2",             NULL,     NULL}, // Отправить сообщение по can2
+        { "lin1",             NULL,     NULL}, // Отправить сообщение по lin1
+        { "lin2",             NULL,     NULL}, // Отправить сообщение по lin2
+        { "urt1", parser_send_uart,     NULL}, // Отправить сообщение по uart1
+        { "urt2", parser_send_uart,     NULL}, // Отправить сообщение по uart2
     };
 
     parser_recursion(&str, cmd_list, countof_arr(cmd_list));

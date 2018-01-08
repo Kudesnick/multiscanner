@@ -43,11 +43,12 @@ const char parser_str_err_iface_fnd[]  = TAG_RED "Error!" TAG_DEF " This interfa
 
 char *   parser_uint_to_str(uint32_t num); // перевод числа в строку
 char *   parser_uint_to_hex(uint64_t num, uint8_t size); // Перевод числа в hex-строку
-char * parser_bool_to_enable_disable(bool enable); // Перевод булева значения к виду enable/disable
-char * parser_bool_to_yes_no(bool yes); // Перевод булева значения к виду yes/no
+char *   parser_bool_to_enable_disable(bool enable); // Перевод булева значения к виду enable/disable
+char *   parser_bool_to_yes_no(bool yes); // Перевод булева значения к виду yes/no
 uint32_t parser_str_to_uint(char ** str);   // перевод строки в число
 void     parser_lowercase(char *buf);      // Приведение к нижнему регистру
 void     parser_all_param_to_str(const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len, const char delim = '|'); // Послать все параметры на консоль
 int16_t  parser_find(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len);                        // Поиск команд в таблице
 void     parser_recursion(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len);                   // Перебор по таблице, как узлу дерева
+bool     parser_iteration(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len);
 void     parser_parse(char * str);         // Собственно, парсим строку

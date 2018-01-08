@@ -43,35 +43,6 @@ static bool parser_yn_decode(char ** str, bool *res)
     return result;
 }
 
-static bool parser_iteration(char ** str, const parse_fsm_steps_t * cmd_list, uint16_t cmd_list_len)
-{
-    bool result = *str[0] != '\0';
-    
-    while (*str[0] != '\0'
-           && result == true
-           )
-    {
-        int16_t i;
-        
-        if ((i = parser_find(str, cmd_list, cmd_list_len)) < 0)
-        {
-            console_send_string(parser_str_err_bad_cmd);
-            result = false;
-        }
-        else if (cmd_list[i].func != NULL)
-        {
-            result = cmd_list[i].func(str, cmd_list[i].param, cmd_list[i].result);
-        }
-        else
-        {
-            console_send_string(parser_str_err_syntax_cmd);
-            result = false;
-        }
-    }
-    
-    return result;
-}
-
 //------------------------------------------------------------------------------
 // Функции обработки параметров. Соответствуют сигнатуре
 // bool(* const func)(char ** str, const void * const param, void * const result)

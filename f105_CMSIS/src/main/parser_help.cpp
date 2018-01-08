@@ -99,7 +99,7 @@ bool parser_help(char ** str, const void * const param, void * const result) // 
     static const char str_get[] = "Get the interface settings.\r\n"
                             "\tEnter" TAG_LT "get <con|can1|can2|lin1|lin2|uart1|uart2>" TAG_GT "\r\n"
                             "\tto get the interface settings.\r\n";
-    
+
     static const char str_can[] = "Send CAN message. Syntax:\r\n"
                                 "\t" TAG_BLUE  "<can1|can2> " TAG_GREEN "<id>" TAG_BLUE " <-s|-e> " TAG_GREEN "<len> <data>" TAG_BLUE " [-n|-a] " TAG_GREEN "[-t time] [-c count]" TAG_DEF "\r\n\r\n"
                                 "\t" TAG_BLUE  "can1, can2"   TAG_DEF " - physical interface name\r\n"
