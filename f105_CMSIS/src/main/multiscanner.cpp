@@ -21,7 +21,7 @@ cpp_multiscanner::cpp_multiscanner(void)
 
 int cpp_multiscanner::routine(void)
 {
-    static cpp_multiscanner multiscanner_singletone;
+    static cpp_multiscanner multiscanner_single;
     
     int result = 0;
     

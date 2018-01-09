@@ -19,32 +19,6 @@ thread_iface::thread_iface(iface_type_t _class_type, iface_name_t _object_name):
 
 }
 
-msg_t *thread_iface::msg_get(void)
-{
-    msg_t * result = NULL;
-    
-    if (!buf.rx.is_empty())
-    {
-        static msg_t msg;
-        msg = buf.rx.extract();
-        result = &msg;
-    }
-    
-    return result;
-}
-
-bool thread_iface::msg_send(msg_t *msg)
-{
-    bool result = msg->msg_type == get_class_type() && !buf.tx.is_full();
-    
-    if (result)
-    {
-        buf.tx.add(*msg);
-    }
-    
-    return result;
-}
-
 /**
  *  @brief   основной процесс ввода-вывода
  *  @details проверяем буфер на передачу, передаем сообщение, если интерфейс свободен.

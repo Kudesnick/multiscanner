@@ -163,18 +163,31 @@ template <const list_type_t list_type> iface_name_t cpp_list<list_type>::get_obj
  */
 template <const list_type_t list_type> cpp_list<list_type> * cpp_list<list_type>::get_object(iface_type_t _class_type, iface_name_t _object_name)
 {
-    for(cpp_list * ptr = get_last_pointer();
-        ptr != NULL;
-        ptr = ptr->get_prev_pointer()
-        )
+    static iface_type_t cache_class_type = IFACE_TYPE_DEF;
+    static iface_name_t cache_iface_name = IFACE_NAME_DEF;
+    static cpp_list * ptr = NULL;
+    
+    // Реализация кеширования поиска
+    if (   _class_type == cache_class_type
+        && _object_name == cache_iface_name)
     {
-        if (   ptr->get_object_name() == _object_name
-            && (   _class_type == NULL
-                || ptr->get_class_type() == _class_type
-                )
-            )
+        return ptr;
+    }
+    else
+    {
+        cache_class_type = _class_type;
+        cache_iface_name = _object_name;
+        
+        for(ptr = get_last_pointer(); ptr != NULL; ptr = ptr->get_prev_pointer())
         {
-            return ptr;
+            if (   ptr->get_object_name() == cache_iface_name
+                && (   cache_class_type == IFACE_TYPE_DEF
+                    || ptr->get_class_type() == cache_class_type
+                    )
+                )
+            {
+                return ptr;
+            }
         }
     }
     

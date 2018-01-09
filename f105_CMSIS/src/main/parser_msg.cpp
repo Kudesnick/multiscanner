@@ -142,7 +142,23 @@ bool parser_send_uart(char ** str, const void * const param, void * const result
             msg.count = count;
             msg.interval = time;
             
-#warning Реализовать отправку в буфер консоли
+            static fifo_buff * buf_ptr = NULL;
+            
+            if (buf_ptr == NULL)
+            {
+                buf_ptr = (fifo_buff *)fifo_buff::cpp_list<LIST_TYPE_BUFFER>::get_object(IFACE_TYPE_CON, IFACE_NAME_CON);
+            }
+            if (buf_ptr != NULL)
+            {
+                if (!buf_ptr->rx.is_full())
+                {
+                    buf_ptr->rx.add(msg);
+                }
+                else
+                {
+                    console_send_string(TAG_RED "Error!" TAG_DEF " Console TX buffer overflow.\r\n");
+                }
+            }
         }
     }
     else

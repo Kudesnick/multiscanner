@@ -401,6 +401,11 @@
               <FilePath>.\src\main\thread_iface.cpp</FilePath>
             </File>
             <File>
+              <FileName>thread_route.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\thread_route.cpp</FilePath>
+            </File>
+            <File>
               <FileName>main.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\main.cpp</FilePath>
