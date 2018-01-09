@@ -246,18 +246,18 @@ void parser_parse(char * str)
 
     static const parse_fsm_steps_t cmd_list[] =
     {
-        {    "?",      parser_help,     NULL},
-        { "help",      parser_help,     NULL}, // Получить справку о программе
-        {"about",             NULL, str_info},
-        { "info",             NULL, str_info}, // Сводная информация об устройстве (версия, поддерживаемые интерфейсы и пр.)
-        {  "get",       parser_get,     NULL}, // Получить параметры настройки интерфейса
-        {  "set",       parser_set,     NULL}, // Настроить интерфейс
-        { "can1",             NULL,     NULL}, // Отправить сообщение по can1
-        { "can2",             NULL,     NULL}, // Отправить сообщение по can2
-        { "lin1",             NULL,     NULL}, // Отправить сообщение по lin1
-        { "lin2",             NULL,     NULL}, // Отправить сообщение по lin2
-        { "urt1", parser_send_uart,     NULL}, // Отправить сообщение по uart1
-        { "urt2", parser_send_uart,     NULL}, // Отправить сообщение по uart2
+        {    "?",      parser_help,                     NULL},
+        { "help",      parser_help,                     NULL}, // Получить справку о программе
+        {"about",             NULL,                 str_info},
+        { "info",             NULL,                 str_info}, // Сводная информация об устройстве (версия, поддерживаемые интерфейсы и пр.)
+        {  "get",       parser_get,                     NULL}, // Получить параметры настройки интерфейса
+        {  "set",       parser_set,                     NULL}, // Настроить интерфейс
+        { "can1",             NULL,                     NULL}, // Отправить сообщение по can1
+        { "can2",             NULL,                     NULL}, // Отправить сообщение по can2
+        { "lin1",             NULL,                     NULL}, // Отправить сообщение по lin1
+        { "lin2",             NULL,                     NULL}, // Отправить сообщение по lin2
+        { "urt1", parser_send_uart, (void *)IFACE_NAME_UART1}, // Отправить сообщение по uart1
+        { "urt2", parser_send_uart, (void *)IFACE_NAME_UART2}, // Отправить сообщение по uart2
     };
 
     parser_recursion(&str, cmd_list, countof_arr(cmd_list));

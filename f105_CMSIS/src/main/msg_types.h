@@ -106,6 +106,7 @@ typedef __packed struct
     uint8_t len;
     uint8_t data[LIN_DATA_LEN_MAX];
     uint8_t crc;
+    uint16_t baud; ///< Истинный бодрейт пакета, измеренный по синхроимпульсу
     msg_brk_reason_lin_t reason; ///< Причина окончания сообщения (или ошибка отправки)
 } msg_lin_t;
 
@@ -129,7 +130,6 @@ typedef __packed struct
 {
     uint8_t len;
     uint8_t data[UART_DATA_LEN_MAX];
-    uint16_t baud; ///< Истинный бодрейт пакета, измеренный по синхроимпульсу
     msg_brk_reason_uart_t reason; ///< Причина окончания сообщения (или ошибка отправки)
 } msg_uart_t;
 

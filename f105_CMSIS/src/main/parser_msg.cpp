@@ -23,12 +23,8 @@ static bool parser_set_uint(char ** str, const void * const param, void * const 
     if (tmp_str != NULL)
     {
         *str = tmp_str;
-        **(result_t **)result = res;
+        *(result_t *)result = res;
         success = true;
-    }
-    else
-    {
-        *(result_t **)result = (result_t *)param;
     }
 
     return success;
@@ -36,7 +32,76 @@ static bool parser_set_uint(char ** str, const void * const param, void * const 
 
 static bool hex_str_to_byte_array(char ** str, uint8_t * arr, uint8_t * size)
 {
-#warning Реализовать парсинг
+    bool result = true;
+    
+    if (*str[0] != '\0')
+    {
+        uint8_t data;
+        uint8_t data_len;
+        
+        for (uint8_t i = 0; strchr(" \0", *str[0]) == NULL; i++)
+        {
+            data <<= 4;
+            if (*str[0] >= '0' && *str[0] <= '9')
+            {
+                data += *str[0] - '0';
+            }
+            else if (*str[0] >= 'a' && *str[0] <= 'f')
+            {
+                data += *str[0] - 'a' + 0x0A;
+            }
+            else if (*str[0] >= 'A' && *str[0] <= 'F')
+            {
+                data += *str[0] - 'A' + 0x0A;
+            }
+            else
+            { // недопустимый символ
+                result = false;
+                break;
+            }
+            
+            *str += sizeof(char);
+            
+            // Попытка записи очередного байта
+            if ((i & 1) == 1)
+            {
+                if ((i >> 1) < *size)
+                {
+                    arr[i >> 1] = data;
+                    data_len = (i >> 1) + 1;
+                }
+                else
+                { // Превышена максимально допустимая длина сообщения
+                    result = false;
+                    break;
+                }
+            }
+            else if (strchr(" \0", *str[0]) != NULL)
+            { // нечетное количество полубайт в сообщении
+                result = false;
+                break;
+            }
+            
+        }
+        
+        if (*str != NULL
+            && *str[0] == ' '
+            )
+        {
+            *str += sizeof(char);
+        }
+        
+        if (result)
+        {
+            *size = data_len;
+        }
+    }
+    else
+    {
+        result = false;
+    }
+    
+    return result;
 }
 
 // Отправить сообщение UART
@@ -54,15 +119,13 @@ bool parser_send_uart(char ** str, const void * const param, void * const result
     
     msg.uart.len = sizeof(msg.uart.data);
     
-    if (hex_str_to_byte_array(str, msg.uart.data, &msg.uart.len) == true)
+    char * tmp_str = *str;
+    if (hex_str_to_byte_array(&tmp_str, msg.uart.data, &msg.uart.len) == true)
     {
-        if (   msg.uart.len == 0
-            || msg.uart.len > sizeof(msg.uart.data))
-        {
-            console_send_string(TAG_RED "Error!" TAG_DEF " Data length is invalid.\r\n");
-        }
+        *str = tmp_str;
         
-        else if (parser_iteration(str, cmd_list, countof_arr(cmd_list)) != true)
+        if (   strlen(*str) != 0
+            && parser_iteration(str, cmd_list, countof_arr(cmd_list)) != true)
         {
             console_send_string(parser_str_err_syntax_cmd); 
         }
@@ -73,7 +136,13 @@ bool parser_send_uart(char ** str, const void * const param, void * const result
         }
         else
         {
-#warning Реализовать наполнение структуры и отправку в буфер
+            msg.msg_type = IFACE_TYPE_UART;
+            msg.route = (iface_name_t)(uint32_t)param;
+            msg.direct = MSG_TX;
+            msg.count = count;
+            msg.interval = time;
+            
+#warning Реализовать отправку в буфер консоли
         }
     }
     else
@@ -81,5 +150,5 @@ bool parser_send_uart(char ** str, const void * const param, void * const result
         console_send_string(parser_str_err_syntax_cmd);
     }
     
-    
+    return false;
 }
