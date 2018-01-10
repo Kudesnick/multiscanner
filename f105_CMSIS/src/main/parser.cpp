@@ -31,19 +31,16 @@ char * parser_uint_to_str(uint32_t num)
 
 char * parser_uint_to_hex(uint64_t num, uint8_t size)
 {
-    static char str[] = "0xFFFFFFFFFFFFFFFF"; // uint64_max
+    static char str[] = "FFFFFFFFFFFFFFFF"; // uint64_max
     uint8_t i = (uint8_t)strlen(str);
     
-    if (size > (i - 2)) size = (i - 2);
+    if (size > i) size = i;
     
     for ( ; size > 0; size--, num >>= 4)
     {
         str[--i] = (num & 0xF);
         str[i] += (str[i] > 9) ? 'A' - 10 : '0';
     }
-    
-    str[--i] = 'x';
-    str[--i] = '0';
     
     return &str[i];
 }

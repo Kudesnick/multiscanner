@@ -121,15 +121,25 @@ static bool parser_get_urt(char ** str, const void * const param, void * const r
             parser_get_stop_bits_decode(sett->stop_bits);
             console_send_string("\tbyte of begin: " TAG_PARAM);
                 if ((sett->byte_of_begin & 0xFF) != sett->byte_of_begin)
+                {
                     console_send_string("not set");
+                }
                 else
+                {
+                    console_send_string("0x");
                     console_send_string(parser_uint_to_hex(sett->byte_of_begin, sizeof(uint8_t)*2));
+                }
                 console_send_string(TAG_DEF "\r\n");
             console_send_string("\tbyte of end: " TAG_PARAM);
                 if ((sett->byte_of_end & 0xFF) != sett->byte_of_end)
+                {
                     console_send_string("not set");
+                }
                 else
+                {
+                    console_send_string("0x");
                     console_send_string(parser_uint_to_hex(sett->byte_of_end, sizeof(uint8_t)*2));
+                }
                 console_send_string(TAG_DEF "\r\n");
             console_send_string("\tmax message length: " TAG_PARAM);
                 if (sett->max_len > 0)
