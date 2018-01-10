@@ -401,6 +401,11 @@
               <FilePath>.\src\main\thread_iface.cpp</FilePath>
             </File>
             <File>
+              <FileName>thread_route.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\thread_route.cpp</FilePath>
+            </File>
+            <File>
               <FileName>main.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\main.cpp</FilePath>
@@ -521,19 +526,19 @@
               <FilePath>.\src\main\parser_help.cpp</FilePath>
             </File>
             <File>
+              <FileName>parser_get.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\parser_get.cpp</FilePath>
+            </File>
+            <File>
               <FileName>parser_set.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\main\parser_set.cpp</FilePath>
             </File>
             <File>
-              <FileName>parser_set_con.cpp</FileName>
+              <FileName>parser_msg.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\src\main\parser_set_con.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>parser_get.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\main\parser_get.cpp</FilePath>
+              <FilePath>.\src\main\parser_msg.cpp</FilePath>
             </File>
           </Files>
         </Group>

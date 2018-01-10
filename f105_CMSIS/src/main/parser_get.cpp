@@ -11,9 +11,18 @@
 #include "bsp_con.h"
 #include "bsp_serial.h"
 
+#define TAG_PARAM TAG_GREEN
+
+static void parser_get_baudrate_decode(uint32_t baud)
+{
+    console_send_string("\tbaudrate: " TAG_PARAM);
+    console_send_string(parser_uint_to_str(baud));
+    console_send_string(TAG_DEF "\r\n");
+}
+
 static void parser_get_parity_decode(uint16_t parity)
 {
-    console_send_string("\tparity: ");
+    console_send_string("\tparity: " TAG_PARAM);
     
     switch (parity)
     {
@@ -27,12 +36,12 @@ static void parser_get_parity_decode(uint16_t parity)
             console_send_string("odd");
             break;
     }
-    console_send_string(" parity\r\n");
+    console_send_string(" parity" TAG_DEF "\r\n");
 };
 
 static void parser_get_stop_bits_decode(uint16_t stop_bits)
 {
-    console_send_string("\tstop bits: ");
+    console_send_string("\tstop bits: " TAG_PARAM);
 
     switch (stop_bits)
     {
@@ -50,20 +59,24 @@ static void parser_get_stop_bits_decode(uint16_t stop_bits)
             break; 
     }
 
-    console_send_string("\r\n");
+    console_send_string(TAG_DEF "\r\n");
+};
+
+static void parser_get_echo_decode(bool echo)
+{
+    console_send_string("\techo of transmit: " TAG_PARAM);
+    console_send_string(parser_bool_to_enable_disable(echo));
+    console_send_string(TAG_DEF "\r\n");
 };
 
 static void parser_get_enable_decode(bool enable)
 {
-    console_send_string((enable) ? "enabled\r\n" : "disabled\r\n");
+    console_send_string("\tenabled interface: " TAG_PARAM);
+    console_send_string(parser_bool_to_yes_no(enable));
+    console_send_string(TAG_DEF "\r\n");
 };
 
-static void parser_get_yes_decode(bool enable)
-{
-    console_send_string((enable) ? "yes\r\n" : "no\r\n");
-};
-
-static bool parser_get_con(char ** str, const void * param)
+static bool parser_get_con(char ** str, const void * const param, void * const result)
 {
     bsp_con * ptr = (bsp_con *)bsp_con::cpp_list<LIST_TYPE_UNIT>::get_object(IFACE_TYPE_CON, (iface_name_t)(uint32_t)param);
     
@@ -72,13 +85,10 @@ static bool parser_get_con(char ** str, const void * param)
         bsp_con_config_t * sett = ptr->get_setting();
         
         console_send_string("Current the console settings:\r\n");
-            console_send_string("\tbaudrate: ");
-                console_send_string(parser_uint_to_str(sett->baudrate));
-                console_send_string("\r\n");
+            parser_get_baudrate_decode(sett->baudrate);
             parser_get_parity_decode(sett->parity);
             parser_get_stop_bits_decode(sett->stop_bits);
-            console_send_string("\techo of transmit: ");
-                parser_get_enable_decode(sett->echo);
+            parser_get_echo_decode(sett->echo);
             console_send_string("\tcolorised console: ");
                 if (sett->color)
                 {
@@ -89,11 +99,15 @@ static bool parser_get_con(char ** str, const void * param)
                     console_send_string("disabled\r\n");
                 }
     }
+    else
+    {
+        console_send_string(parser_str_err_iface_fnd);
+    }
     
     return false;
 };
 
-static bool parser_get_urt(char ** str, const void * param)
+static bool parser_get_urt(char ** str, const void * const param, void * const result)
 {
     bsp_serial * ptr = (bsp_serial *)bsp_serial::cpp_list<LIST_TYPE_UNIT>::get_object(IFACE_TYPE_UART, (iface_name_t)(uint32_t)param);
     
@@ -102,33 +116,39 @@ static bool parser_get_urt(char ** str, const void * param)
         bsp_serial_config_t * sett = ptr->get_setting();
         
         console_send_string("Current the USART interface settings:\r\n");
-            console_send_string("\tbaudrate: ");
-                console_send_string(parser_uint_to_str(sett->baudrate));
-                console_send_string("\r\n");
+            parser_get_baudrate_decode(sett->baudrate);
             parser_get_parity_decode(sett->parity);
             parser_get_stop_bits_decode(sett->stop_bits);
-            console_send_string("\tbyte of begin: ");
+            console_send_string("\tbyte of begin: " TAG_PARAM);
                 if ((sett->byte_of_begin & 0xFF) != sett->byte_of_begin)
+                {
                     console_send_string("not set");
+                }
                 else
+                {
+                    console_send_string("0x");
                     console_send_string(parser_uint_to_hex(sett->byte_of_begin, sizeof(uint8_t)*2));
-                console_send_string("\r\n");
-            console_send_string("\tbyte of end: ");
+                }
+                console_send_string(TAG_DEF "\r\n");
+            console_send_string("\tbyte of end: " TAG_PARAM);
                 if ((sett->byte_of_end & 0xFF) != sett->byte_of_end)
+                {
                     console_send_string("not set");
+                }
                 else
+                {
+                    console_send_string("0x");
                     console_send_string(parser_uint_to_hex(sett->byte_of_end, sizeof(uint8_t)*2));
-                console_send_string("\r\n");
-            console_send_string("\tmax message length: ");
+                }
+                console_send_string(TAG_DEF "\r\n");
+            console_send_string("\tmax message length: " TAG_PARAM);
                 if (sett->max_len > 0)
                     console_send_string(parser_uint_to_str(sett->max_len));
                 else
                     console_send_string(parser_uint_to_str(UART_DATA_LEN_MAX));
-                console_send_string("\r\n");
-            console_send_string("\techo of transmit: ");
-                parser_get_enable_decode(sett->echo);
-            console_send_string("\tenabled interface: ");
-                parser_get_yes_decode(sett->enable);
+                console_send_string(TAG_DEF "\r\n");
+            parser_get_echo_decode(sett->echo);
+            parser_get_enable_decode(sett->enable);
     }
     else
     {
@@ -138,17 +158,17 @@ static bool parser_get_urt(char ** str, const void * param)
     return false;
 };
 
-bool parser_get(char ** str, const void * param)
+bool parser_get(char ** str, const void * const param, void * const result)
 {
     static const parse_fsm_steps_t cmd_list[] =
     {
-        { "con", parser_get_con, (uint32_t *)IFACE_NAME_CON},
+        { "con", parser_get_con, (void *)IFACE_NAME_CON},
         {"can1", NULL, NULL},
         {"can2", NULL, NULL},
         {"lin1", NULL, NULL},
         {"lin2", NULL, NULL},
-        {"urt1", parser_get_urt, (uint32_t *)IFACE_NAME_UART1},
-        {"urt2", parser_get_urt, (uint32_t *)IFACE_NAME_UART2},
+        {"urt1", parser_get_urt, (void *)IFACE_NAME_UART1},
+        {"urt2", parser_get_urt, (void *)IFACE_NAME_UART2},
     };
 
     parser_recursion(str, cmd_list, countof_arr(cmd_list));

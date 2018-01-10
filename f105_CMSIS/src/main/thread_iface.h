@@ -29,7 +29,5 @@ class thread_iface : public thread
         virtual bool send_msg_rdy(void)   = NULL; ///< Модуль интерфейса готов для передачи сообщения
     public:
         thread_iface(iface_type_t _class_type = IFACE_TYPE_DEF, iface_name_t _object_name = IFACE_NAME_DEF);
-        msg_t *msg_get(void);
-        virtual bool msg_send(msg_t *msg);
         virtual void routine(void);
 };

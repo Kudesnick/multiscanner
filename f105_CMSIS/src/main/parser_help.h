@@ -9,4 +9,4 @@
 
 #include "parser.h"
 
-bool parser_help(char ** str, const void * param); // Получить справку о программе
+bool parser_help(char ** str, const void * const param, void * const result); // Получить справку о программе

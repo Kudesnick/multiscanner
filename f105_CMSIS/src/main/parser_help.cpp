@@ -9,7 +9,7 @@
 #include "parser.h"
 #include "parser_help.h"
 
-static bool parser_help_set(char ** str, const void * param)
+static bool parser_help_set(char ** str, const void * const param, void * const result)
 {
     static const char str_con[] = "Console settings:\r\n"
                                     "\t" TAG_BLUE "con"                             TAG_DEF " - interface name\r\n"
@@ -55,13 +55,11 @@ static bool parser_help_set(char ** str, const void * param)
     static const char str_uart[] = "UART interface settings:\r\n"
                                     "\t" TAG_BLUE "urt1 | urt2"                     TAG_DEF " - interface name\r\n"
                                     "\t" TAG_BLUE "-b | -baud | -baudrate"          TAG_DEF " - baudrate, bit/s\r\n"
-                                    "\t" TAG_BLUE "-w -width <7-9>"                 TAG_DEF " - data word width\r\n"
                                     "\t" TAG_BLUE "-pn | -n | -parity-no | -no"     TAG_DEF " - parity no\r\n"
                                     "\t" TAG_BLUE "-pe | -e | -parity-even | -even" TAG_DEF " - parity even\r\n"
                                     "\t" TAG_BLUE "-po | -o | -parity-odd | -odd"   TAG_DEF " - parity odd\r\n"
                                     "\t" TAG_BLUE "-s[1|2] | -stop[1|2]"            TAG_DEF " - stopbits 1 or 2\r\n"
-                                    "\t" TAG_BLUE "-t -endl-timeout"                TAG_DEF " - pause for end the message, ms\r\n"
-                                    "\t" TAG_BLUE "-l -len"                         TAG_DEF " - fixed length of message\r\n"
+                                    "\t" TAG_BLUE "-l | -len"                       TAG_DEF " - fixed length of message\r\n"
                                     "\t" TAG_BLUE "-start"                          TAG_DEF " - id of start message\r\n"
                                     "\t" TAG_BLUE "-end"                            TAG_DEF " - id of end message\r\n"
                                     "\t" TAG_BLUE "-echo <y|n>"                     TAG_DEF " - report on sending a messages\r\n"
@@ -71,11 +69,11 @@ static bool parser_help_set(char ** str, const void * param)
 
     static const parse_fsm_steps_t cmd_list[] =
     {
-        { "con", NULL, str_con},
-        {"can1", NULL, str_can},
-        {"can2", NULL, str_can},
-        {"lin1", NULL, str_lin},
-        {"lin2", NULL, str_lin},
+        { "con", NULL, str_con },
+        {"can1", NULL, str_can },
+        {"can2", NULL, str_can },
+        {"lin1", NULL, str_lin },
+        {"lin2", NULL, str_lin },
         {"urt1", NULL, str_uart},
         {"urt2", NULL, str_uart},
     };
@@ -96,12 +94,12 @@ static bool parser_help_set(char ** str, const void * param)
     return false;
 };
 
-bool parser_help(char ** str, const void * param) // Получить справку о программе
+bool parser_help(char ** str, const void * const param, void * const result) // Получить справку о программе
 {
     static const char str_get[] = "Get the interface settings.\r\n"
                             "\tEnter" TAG_LT "get <con|can1|can2|lin1|lin2|uart1|uart2>" TAG_GT "\r\n"
                             "\tto get the interface settings.\r\n";
-    
+
     static const char str_can[] = "Send CAN message. Syntax:\r\n"
                                 "\t" TAG_BLUE  "<can1|can2> " TAG_GREEN "<id>" TAG_BLUE " <-s|-e> " TAG_GREEN "<len> <data>" TAG_BLUE " [-n|-a] " TAG_GREEN "[-t time] [-c count]" TAG_DEF "\r\n\r\n"
                                 "\t" TAG_BLUE  "can1, can2"   TAG_DEF " - physical interface name\r\n"
@@ -136,12 +134,12 @@ bool parser_help(char ** str, const void * param) // Получить справку о программ
 
     static const parse_fsm_steps_t cmd_list[] =
     {
-        { "get",            NULL, str_get},     // Получить параметры настройки интерфейса
-        { "set", parser_help_set, NULL},     // Настроить интерфейс
-        {"can1",            NULL, str_can},  // Отправить сообщение по can1
-        {"can2",            NULL, str_can},  // Отправить сообщение по can2
-        {"lin1",            NULL, str_lin},  // Отправить сообщение по lin1
-        {"lin2",            NULL, str_lin},  // Отправить сообщение по lin2
+        { "get",            NULL, str_get },     // Получить параметры настройки интерфейса
+        { "set", parser_help_set, NULL    },     // Настроить интерфейс
+        {"can1",            NULL, str_can },  // Отправить сообщение по can1
+        {"can2",            NULL, str_can },  // Отправить сообщение по can2
+        {"lin1",            NULL, str_lin },  // Отправить сообщение по lin1
+        {"lin2",            NULL, str_lin },  // Отправить сообщение по lin2
         {"urt1",            NULL, str_uart}, // Отправить сообщение по uart1
         {"urt2",            NULL, str_uart}, // Отправить сообщение по uart2
     };
