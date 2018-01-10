@@ -14,7 +14,7 @@
 
 thread_iface::thread_iface(iface_type_t _class_type, iface_name_t _object_name):
     thread(_class_type, _object_name),
-    buf()
+    buf(_class_type, _object_name)
 {
 
 }

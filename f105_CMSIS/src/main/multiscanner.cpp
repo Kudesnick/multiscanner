@@ -6,6 +6,7 @@
 #include "thread_con.h"
 #include "thread_serial.h"
 #include "units_config.h"
+#include "thread_route.h"
 
 cpp_multiscanner::cpp_multiscanner(void)
 {
@@ -17,6 +18,8 @@ cpp_multiscanner::cpp_multiscanner(void)
     #if (LIN2_ENABLED == 1)
         static thread_serial serial_2(LIN2_UNIT, IFACE_NAME_UART2);
     #endif
+    
+    thread_route::instance();
 };
 
 int cpp_multiscanner::routine(void)
