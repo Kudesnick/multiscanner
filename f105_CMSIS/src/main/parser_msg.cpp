@@ -139,6 +139,7 @@ bool parser_send_uart(char ** str, const void * const param, void * const result
             msg.msg_type = IFACE_TYPE_UART;
             msg.route = (iface_name_t)(uint32_t)param;
             msg.direct = MSG_TX;
+            msg.counter = 0;
             msg.count = count;
             msg.interval = time;
             

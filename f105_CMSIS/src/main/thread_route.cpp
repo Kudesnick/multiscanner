@@ -25,10 +25,6 @@ void thread_route::routine(void)
             for (uint16_t i = rx->rx.get_full_count(); i > 0; i--)
             {
                 msg_t msg      = rx->rx.extract();
-                
-#warning эхо для тестов
-rx->tx.add(msg);
-                
                 fifo_buff * tx = (fifo_buff *)fifo_buff::get_object(msg.msg_type, msg.route);
 
                 if (tx != NULL)
