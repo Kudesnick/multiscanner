@@ -14,7 +14,8 @@
 
 thread_iface::thread_iface(iface_type_t _class_type, iface_name_t _object_name):
     thread(_class_type, _object_name),
-    buf(_class_type, _object_name)
+    buf(_class_type, _object_name),
+    timestamp(0)
 {
 
 }
@@ -27,8 +28,6 @@ thread_iface::thread_iface(iface_type_t _class_type, iface_name_t _object_name):
  */
 void thread_iface::routine(void)
 {
-    static uint64_t timestamp = 0;
-
     if (send_msg_rdy())
     {
         uint64_t delta_time = timer.get_timestamp() - timestamp;
@@ -47,7 +46,7 @@ void thread_iface::routine(void)
             // Если не можем передать, то закидываем назад в буфер но с обнуленным таймером
             else if (!send_msg_rdy())
             {
-                msg.counter -= delta_time;
+                msg.counter = 0;
                 buf.tx.add(msg);
             }
             // Передаем сообщение
