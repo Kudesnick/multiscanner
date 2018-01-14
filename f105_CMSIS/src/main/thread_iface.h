@@ -23,6 +23,8 @@
  */
 class thread_iface : public thread
 {
+    private:
+        uint64_t timestamp;
     protected:
         fifo_buff buf;
         virtual bool send_msg(msg_t *msg) = NULL; ///< Посылаем сообщение непосредственно в периферийный модуль
