@@ -28,7 +28,7 @@
 //   <o> High-speed Internal Clock <1-999999999>
 #define RTE_HSI                         8000000
 //   <o> High-speed External Clock <1-999999999>
-#define RTE_HSE                         25000000
+#define RTE_HSE                         16000000
 //   <o> System Clock <1-999999999>
 #define RTE_SYSCLK                      72000000
 //   <o> HCLK Clock   <1-999999999>
@@ -36,9 +36,9 @@
 //   <o> APB1 Clock   <1-999999999>
 #define RTE_PCLK1                       36000000
 //   <o> APB2 Clock   <1-999999999>
-#define RTE_PCLK2                       72000000
+#define RTE_PCLK2                       36000000
 //   <o> ADC Clock    <1-999999999>
-#define RTE_ADCCLK                      36000000
+#define RTE_ADCCLK                      9000000
 //       USB Clock
 #define RTE_USBCLK                      48000000
 // </h>
