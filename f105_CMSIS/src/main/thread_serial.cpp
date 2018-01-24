@@ -16,8 +16,8 @@
 /// Посылаем сообщение непосредственно в периферийный модуль
 bool thread_serial::send_msg(msg_t *msg)
 {
-    bool result = false;
-#warning реализовать функцию.
+    bool result = unit.send(msg);
+
     return result;
 };
 
