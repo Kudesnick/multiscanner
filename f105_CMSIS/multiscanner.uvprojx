@@ -10,8 +10,8 @@
       <TargetName>DEBUG</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060422::V5.06 update 4 (build 422)::ARMCC</pArmCC>
       <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
+      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F105RC</Device>
@@ -334,7 +334,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--no_multibyte_chars --cpp11</MiscControls>
-              <Define>STM32F10X_CL, DEBUG, HSE_VALUE=16000000</Define>
+              <Define>STM32F10X_CL, HSE_VALUE=16000000, DEBUG</Define>
               <Undefine></Undefine>
               <IncludePath>.\src\main</IncludePath>
             </VariousControls>
