@@ -37,21 +37,27 @@ void bsp_serial::callback(void)
         send_msg(&msg);
     }
     // Передача сообщения закончена
-    if (   clbk_data.flags & USART_FLAG_IDLE
-        && !internal_tx_buf.is_empty()
-        && internal_tx.is_empty()
-        )
+    if (clbk_data.flags & USART_FLAG_IDLE)
     {
-        msg_t tmp_msg = internal_tx_buf.extract();
-        
-        for (uint8_t i = 0; i < tmp_msg.uart.len; i++)
+        if (   internal_tx_buf.is_not_empty()
+            && internal_tx.is_empty()
+            )
         {
-            internal_tx.add(tmp_msg.uart.data[i]);
+            msg_t tmp_msg = internal_tx_buf.extract();
+            
+            for (uint8_t i = 0; i < tmp_msg.uart.len; i++)
+            {
+                internal_tx.add(tmp_msg.uart.data[i]);
+            }
+            if (internal_tx.is_not_empty())
+            {
+                message_t msg = internal_tx.extract();
+                send_msg(&msg);
+            }
         }
-        if (!internal_tx.is_empty())
+        else
         {
-            message_t msg = internal_tx.extract();
-            send_msg(&msg);
+            tx_empty = true;
         }
     }
 
@@ -73,7 +79,7 @@ void bsp_serial::callback(void)
                 
                 msg_buf.uart.reason = MSG_BRK_UART_FIRST_ID;
             
-                if (!buffer->rx.is_full())
+                if (buffer->rx.is_not_full())
                 {
                     buffer->rx.add(msg_buf);
                 }
@@ -119,7 +125,7 @@ void bsp_serial::callback(void)
 
                 msg_buf.uart.reason = tmp_reason;
                 
-                if (!buffer->rx.is_full())
+                if (buffer->rx.is_not_full())
                 {
                     buffer->rx.add(msg_buf);
                 }
@@ -145,13 +151,13 @@ bsp_serial::bsp_serial(unit_t *_unit_ptr, fifo_buff * _buffer, iface_name_t _nam
 // Переслать данные
 bool bsp_serial::send(msg_t * msg)
 {
-    bool result = (!internal_tx_buf.is_full() || internal_tx.is_empty()) && (msg->msg_type == IFACE_TYPE_UART);
+    bool result = (internal_tx_buf.is_not_full() || internal_tx.is_empty()) && (msg->msg_type == IFACE_TYPE_UART);
     
     if (result)
     {
         __disable_irq();
 
-        if (!internal_tx.is_empty())
+        if (internal_tx.is_not_empty())
         {
             internal_tx_buf.add(*msg);
         }
@@ -159,7 +165,7 @@ bool bsp_serial::send(msg_t * msg)
         {
             msg_t tmp_msg;
             
-            if (!internal_tx_buf.is_empty())
+            if (internal_tx_buf.is_not_empty())
             {
                 tmp_msg = internal_tx_buf.extract();
                 internal_tx_buf.add(*msg);
@@ -176,6 +182,7 @@ bool bsp_serial::send(msg_t * msg)
             
             if (tx_empty)
             {
+                tx_empty = false;
                 message_t s_msg = internal_tx.extract();
                 send_msg(&s_msg);
             }

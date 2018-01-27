@@ -20,7 +20,7 @@ void thread_route::routine(void)
 {
     for (fifo_buff * rx = (fifo_buff *)fifo_buff::get_last_pointer(); rx != NULL; rx = (fifo_buff *)rx->get_prev_pointer())
     {
-        if (!rx->rx.is_empty())
+        if (rx->rx.is_not_empty())
         {
             for (uint16_t i = rx->rx.get_full_count(); i > 0; i--)
             {

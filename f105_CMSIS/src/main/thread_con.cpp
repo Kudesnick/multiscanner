@@ -172,7 +172,7 @@ void thread_con::routine(void)
 {
     // thread_iface::routine();
 
-    while (!buf.tx.is_empty())
+    while (buf.tx.is_not_empty())
     {
         msg_t msg = buf.tx.read_head();
         

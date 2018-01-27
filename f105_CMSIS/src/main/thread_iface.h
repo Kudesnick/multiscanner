@@ -28,7 +28,6 @@ class thread_iface : public thread
     protected:
         fifo_buff buf;
         virtual bool send_msg(msg_t *msg) = NULL; ///< Посылаем сообщение непосредственно в периферийный модуль
-        virtual bool send_msg_rdy(void)   = NULL; ///< Модуль интерфейса готов для передачи сообщения
     public:
         thread_iface(iface_type_t _class_type = IFACE_TYPE_DEF, iface_name_t _object_name = IFACE_NAME_DEF);
         virtual void routine(void);

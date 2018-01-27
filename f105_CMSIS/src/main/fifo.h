@@ -58,7 +58,9 @@ template <typename data_t, const fifo_size_t count> class cpp_fifo
 		fifo_size_t get_count(void);        ///< Получить максимальную длину очереди
 		fifo_ptr_t get_full_count(void);    ///< Получить кол-во элементов в очереди
 		bool is_full(void);                 ///< Очередь заполнена
+        bool is_not_full(void);             ///< Очередь не заполнена
 		bool is_empty(void);                ///< Очередь пуста
+        bool is_not_empty(void);            ///< Очередь не пуста
 		virtual void add(data_t data);      ///< Добавить элемент в очередь
 		virtual data_t extract(void);       ///< Извлечь элемент из очереди
 		data_t read_head(void);             ///< Прочитать голову
@@ -108,6 +110,16 @@ template <typename data_t, const fifo_size_t count> bool cpp_fifo<data_t, count>
 }
 
 /**
+ *  @brief Проверка заполнения очереди
+ *
+ *  @return true - в очереди есть свободное место, false - очередь заполнена
+ */
+template <typename data_t, const fifo_size_t count> bool cpp_fifo<data_t, count>::is_not_full(void)
+{
+    return !is_full();
+}
+
+/**
  *  @brief Проверка опустошения очереди
  *
  *  @return true - очередь пуста, false - очередь содержит непрочитанные элементы
@@ -115,6 +127,16 @@ template <typename data_t, const fifo_size_t count> bool cpp_fifo<data_t, count>
 template <typename data_t, const fifo_size_t count> bool cpp_fifo<data_t, count>::is_empty(void)
 {
     return (end == head);
+}
+
+/**
+ *  @brief Проверка опустошения очереди
+ *
+ *  @return true - очередь содержит непрочитанные элементы, false - очередь пуста
+ */
+template <typename data_t, const fifo_size_t count> bool cpp_fifo<data_t, count>::is_not_empty(void)
+{
+    return !is_empty();
 }
 
 /**

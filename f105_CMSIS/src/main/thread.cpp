@@ -13,7 +13,7 @@
 #include "thread.h"
 
 /// Таймер потоков должен считать с интервалом 1 мс.
-bsp_clk thread::timer = bsp_clk();
+bsp_clk thread::timer;
 
 thread::thread(iface_type_t _class_type, iface_name_t _object_name):
     cpp_list(_class_type, _object_name)

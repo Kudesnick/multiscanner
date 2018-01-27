@@ -1,4 +1,6 @@
 /**
+ *  @file    bsp_io.cpp
+ *
  *  @brief   Класс порта ввода-вывода
  *  @details
  *
@@ -37,10 +39,10 @@ bsp_io::bsp_io(void):
  *  @param[in] value     Значение на выходе пина по умолчанию
  *  @param[in] _invert   Признак инверсии значения при операциях ввода-вывода
  */
-bsp_io::bsp_io(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value, bool invert_mode):
+bsp_io::bsp_io(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value, bool _invert):
     cpp_list()
 {
-    init(GPIO_unit, GPIO_Pin, GPIO_Mode, value, invert_mode);
+    init(GPIO_unit, GPIO_Pin, GPIO_Mode, value, _invert);
 };
 
 

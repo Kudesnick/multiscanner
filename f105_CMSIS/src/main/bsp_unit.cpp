@@ -17,7 +17,7 @@
  */
 bsp_clk * timer_create(void)
 {
-    static bsp_clk _timer = bsp_clk();
+    static bsp_clk _timer;
 
     return &_timer;
 };

@@ -27,7 +27,6 @@ class thread_serial : public thread_iface
         bsp_serial unit;
     protected:
         virtual bool send_msg(msg_t *msg); ///< Посылаем сообщение непосредственно в периферийный модуль
-        virtual bool send_msg_rdy(void); ///< Модуль интерфейса готов для передачи сообщения
     public:
         thread_serial(USART_TypeDef * _unit, iface_name_t _object_name = IFACE_NAME_DEF);
 };

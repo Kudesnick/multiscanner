@@ -21,12 +21,6 @@ bool thread_serial::send_msg(msg_t *msg)
     return result;
 };
 
-/// ћодуль интерфейса готов дл€ передачи сообщени€
-bool thread_serial::send_msg_rdy(void)
-{
-#warning пока заглушка, но надо разрулить
-    return true;
-};
 
 thread_serial::thread_serial(USART_TypeDef * _unit, iface_name_t _object_name):
     thread_iface(IFACE_TYPE_UART, _object_name),

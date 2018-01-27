@@ -88,7 +88,7 @@ void fifo_con_rx_buffer::add(char data)
 
 char fifo_con_rx_buffer::extract(void)
 {
-    char result = (!is_empty()) ? cpp_fifo::extract() : '\0';
+    char result = (is_not_empty()) ? cpp_fifo::extract() : '\0';
     
     switch(result)
     {

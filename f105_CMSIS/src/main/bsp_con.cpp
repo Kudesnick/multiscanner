@@ -26,7 +26,7 @@ void bsp_con::callback(void)
     
     if (clbk_data.flags & USART_FLAG_TXE)
     {
-        if (!bufer->tx.is_empty())
+        if (bufer->tx.is_not_empty())
         {
             message_t s_msg = bufer->tx.extract();
             send_msg(&s_msg);

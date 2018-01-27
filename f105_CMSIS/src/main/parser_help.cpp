@@ -158,3 +158,16 @@ bool parser_help(char ** str, const void * const param, void * const result) // 
     
     return false;
 }
+
+bool parser_cpuinfo(char ** str, const void * const param, void * const result) // Сводная информация о микроконтроллере
+{
+    console_send_string("CPU info:\r\n");
+    console_send_string("\tUnique ID: " TAG_GREEN "0x");
+        console_send_string(parser_uint_to_hex(*(uint64_t *)0x1FFFF7E8, 16));
+        console_send_string(TAG_DEF "\r\n");
+    console_send_string("\tFlash size: " TAG_GREEN);
+        console_send_string(parser_uint_to_str((*(uint32_t *)0x1FFFF7E0) & 0xFFFF));
+        console_send_string(" Kbytes" TAG_DEF "\r\n");
+    
+    return false;
+}

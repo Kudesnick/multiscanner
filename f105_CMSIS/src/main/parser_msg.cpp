@@ -151,7 +151,7 @@ bool parser_send_uart(char ** str, const void * const param, void * const result
             }
             if (buf_ptr != NULL)
             {
-                if (!buf_ptr->rx.is_full())
+                if (buf_ptr->rx.is_not_full())
                 {
                     buf_ptr->rx.add(msg);
                 }
