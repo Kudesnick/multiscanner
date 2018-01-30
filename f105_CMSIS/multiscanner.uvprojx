@@ -10,7 +10,7 @@
       <TargetName>DEBUG</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
+      <pCCUsed>5060528::V5.06 update 5 (build 528)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -336,7 +336,7 @@
               <MiscControls>--no_multibyte_chars --cpp11</MiscControls>
               <Define>STM32F10X_CL, HSE_VALUE=16000000, DEBUG</Define>
               <Undefine></Undefine>
-              <IncludePath>.\src\main</IncludePath>
+              <IncludePath>.\src\main;.\src\segger_rtt</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -543,6 +543,21 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>segger_rtt</GroupName>
+          <Files>
+            <File>
+              <FileName>SEGGER_RTT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\segger_rtt\SEGGER_RTT.c</FilePath>
+            </File>
+            <File>
+              <FileName>SEGGER_RTT_printf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\segger_rtt\SEGGER_RTT_printf.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
         <Group>
@@ -555,8 +570,8 @@
   <RTE>
     <apis/>
     <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.0.1" condition="ARMv6_7_8-M Device">
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.0.2" condition="ARMv6_7_8-M Device">
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.2.0"/>
         <targetInfos>
           <targetInfo name="DEBUG"/>
         </targetInfos>
@@ -617,6 +632,12 @@
         <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1"/>
         <targetInfos/>
       </file>
+      <file attr="config" category="header" name="Config\EventRecorderConf.h" version="1.0.0">
+        <instance index="0" removed="1">RTE\Compiler\EventRecorderConf.h</instance>
+        <component Cbundle="ARM Compiler" Cclass="Compiler" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="Keil" Cversion="1.2.1" condition="Cortex-M Device"/>
+        <package name="ARM_Compiler" schemaVersion="1.4.9" url="http://www.keil.com/pack/" vendor="Keil" version="1.3.3"/>
+        <targetInfos/>
+      </file>
       <file attr="config" category="header" name="RTE_Driver\Config\RTE_Device.h" version="1.1.2">
         <instance index="0">RTE\Device\STM32F105RC\RTE_Device.h</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" condition="STM32F1xx CMSIS"/>
@@ -624,6 +645,12 @@
         <targetInfos>
           <targetInfo name="DEBUG"/>
         </targetInfos>
+      </file>
+      <file attr="config" category="header" name="Device\Source\startup_config.h" version="8.15.2">
+        <instance index="0" removed="1">RTE\Device\STM32F105RC\startup_config.h</instance>
+        <component Cclass="Device" Cgroup="StartupConfig" Cvendor="NordicSemiconductor" Cversion="8.15.2" condition="Startup"/>
+        <package license="License\license.txt" name="nRF_DeviceFamilyPack" schemaVersion="1.3" url="http://developer.nordicsemi.com/nRF5_SDK/pieces/nRF_DeviceFamilyPack/" vendor="NordicSemiconductor" version="8.15.2"/>
+        <targetInfos/>
       </file>
       <file attr="config" category="source" condition="STM32F1xx CL ARMCC" name="Device\Source\ARM\startup_stm32f10x_cl.s" version="1.0.0">
         <instance index="0">RTE\Device\STM32F105RC\startup_stm32f10x_cl.s</instance>
