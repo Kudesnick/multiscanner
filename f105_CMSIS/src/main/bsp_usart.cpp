@@ -97,7 +97,7 @@ void bsp_usart::send_sett(settings_t *sett)
 
         USART_ClearITPendingBit((USART_TypeDef *)unit_ptr, USART_IT_RXNE);
         USART_ITConfig(unit_ptr, USART_IT_RXNE, ENABLE);
-        USART_ITConfig(unit_ptr, USART_IT_IDLE, DISABLE);
+        USART_ITConfig(unit_ptr, USART_IT_IDLE, ENABLE);
         USART_ClearITPendingBit(unit_ptr, USART_IT_LBD);
         USART_ITConfig(unit_ptr, USART_IT_LBD, (setting.USART_LIN_Enable) ? ENABLE : DISABLE);
         USART_ITConfig(unit_ptr, USART_IT_PE, ENABLE);
@@ -204,6 +204,7 @@ void bsp_usart::callback(void)
     if (USART_GetITStatus(unit_ptr, USART_IT_IDLE))
     {
         clbk_data.flags |= USART_FLAG_IDLE;
+        USART_ReceiveData(unit_ptr);
         clbk_data.data = USART_IDLE_DATA;
     }
     if (USART_GetITStatus(unit_ptr, USART_IT_RXNE))

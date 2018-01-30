@@ -184,7 +184,7 @@ bool bsp_serial::send(msg_t * msg)
             {
                 tx_empty = false;
                 message_t s_msg = internal_tx.extract();
-                send_msg(&s_msg);
+                result = send_msg(&s_msg);
             }
         }
         
