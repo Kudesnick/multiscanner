@@ -4,7 +4,9 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <typeinfo>
 
+#include "rtt.h"
 #include "atom.h"
 #include "fifo_con.h"
 
@@ -15,6 +17,8 @@ fifo_con_rx_buffer::fifo_con_rx_buffer(void):
     string_counter(0),
     last_char('\0')
 {
+    RTT_CREATE_LOG;
+    
     cpp_fifo();
 };
 
@@ -103,6 +107,8 @@ char fifo_con_rx_buffer::extract(void)
 //------------------------------------------------------------------------------
 fifo_con_tx_buffer::fifo_con_tx_buffer(void)
 {
+    RTT_CREATE_LOG;
+    
 	cpp_fifo();
 };
 
@@ -146,5 +152,5 @@ fifo_con::fifo_con(void):
     rx(),
     tx()
 {
-
+    RTT_CREATE_LOG;
 };

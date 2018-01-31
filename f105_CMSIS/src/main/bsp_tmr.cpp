@@ -10,9 +10,11 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <typeinfo>
 
 #include <misc.h>
 
+#include "rtt.h"
 #include "bsp_tmr.h"
 
 

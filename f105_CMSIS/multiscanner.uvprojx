@@ -440,6 +440,11 @@
               <FileType>8</FileType>
               <FilePath>.\src\main\fifo_buffers.cpp</FilePath>
             </File>
+            <File>
+              <FileName>rtt.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\main\rtt.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

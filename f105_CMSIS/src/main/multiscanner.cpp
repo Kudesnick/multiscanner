@@ -2,6 +2,9 @@
  * cpp_multiscanner класс основного приложения
  ********************************************************************/
 
+#include <typeinfo>
+
+#include "rtt.h"
 #include "multiscanner.h"
 #include "thread_con.h"
 #include "thread_serial.h"
@@ -10,6 +13,7 @@
 
 cpp_multiscanner::cpp_multiscanner(void)
 {
+    RTT_CREATE_LOG;
     // просто перечисляем здесь все создаваемые потоки c модификатором static
     static thread_con console(parser_parse);
     #if (LIN1_ENABLED == 1)

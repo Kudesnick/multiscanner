@@ -1,8 +1,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "misc.h"
+#include <typeinfo>
 
+#include <misc.h>
+
+#include "rtt.h"
 #include "fifo.h"
 #include "bsp_io.h"
 #include "bsp_usart.h"
@@ -47,6 +50,8 @@ bsp_con::bsp_con(unit_t *_unit_ptr, fifo_con * buf, bsp_con_config_t * _setting)
     bsp_usart(_unit_ptr, IFACE_TYPE_CON, IFACE_NAME_CON),
     bufer(buf)
 {
+    RTT_CREATE_LOG;
+    
     set_setting(_setting);
 }
 

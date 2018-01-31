@@ -10,7 +10,9 @@
  */
 
 #include <string.h>
+#include <typeinfo>
 
+#include "rtt.h"
 #include "bsp_io.h"
 #include "misc.h"
 
@@ -26,6 +28,7 @@ bsp_io::bsp_io(void):
     cpp_list(),
     GPIOx(NULL)
 {
+    RTT_CREATE_LOG;
 };
 
 
@@ -42,6 +45,8 @@ bsp_io::bsp_io(void):
 bsp_io::bsp_io(GPIO_TypeDef* GPIO_unit, uint16_t GPIO_Pin, GPIOMode_TypeDef GPIO_Mode, bool value, bool _invert):
     cpp_list()
 {
+    RTT_CREATE_LOG;
+    
     init(GPIO_unit, GPIO_Pin, GPIO_Mode, value, _invert);
 };
 

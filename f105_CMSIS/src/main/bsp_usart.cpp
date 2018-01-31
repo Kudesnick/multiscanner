@@ -1,5 +1,10 @@
+
+
+#include <typeinfo>
+
 #include "RTE_Device.h"
 
+#include "rtt.h"
 #include "bsp_usart.h"
 
 bsp_usart::bsp_usart(unit_t *_unit_ptr, iface_type_t _class_type, iface_name_t _object_name):
@@ -8,6 +13,8 @@ bsp_usart::bsp_usart(unit_t *_unit_ptr, iface_type_t _class_type, iface_name_t _
     pin_rx(),
     pin_tx()
 {
+    RTT_CREATE_LOG;
+    
     switch ((uint32_t)unit_ptr)
     {
         case (uint32_t)USART1:

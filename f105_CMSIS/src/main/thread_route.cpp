@@ -1,3 +1,7 @@
+
+#include <typeinfo>
+
+#include "rtt.h"
 #include "thread_route.h"
 #include "fifo_buffers.h"
 #include "list.h"
@@ -6,6 +10,7 @@
 thread_route::thread_route(void):
     thread()
 {
+    RTT_CREATE_LOG;
 }
 
 thread_route * thread_route::instance(void)

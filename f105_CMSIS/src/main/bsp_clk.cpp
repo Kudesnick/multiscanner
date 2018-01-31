@@ -10,9 +10,11 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <typeinfo>
 
 #include <misc.h>
 
+#include "rtt.h"
 #include "bsp_clk.h"
 
 bsp_clk::bsp_clk(uint64_t _interval, bsp_clk_callback_t * _callback):
@@ -22,6 +24,8 @@ bsp_clk::bsp_clk(uint64_t _interval, bsp_clk_callback_t * _callback):
     prev_timestamp(0),
     callback(_callback)
 {
+    RTT_CREATE_LOG;
+    
     if (get_prev_pointer() == NULL)
     {
         RCC_ClocksTypeDef RCC_Clocks;

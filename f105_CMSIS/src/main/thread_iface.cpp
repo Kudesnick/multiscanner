@@ -9,7 +9,9 @@
  */
 
 #include <stdbool.h>
+#include <typeinfo>
 
+#include "rtt.h"
 #include "thread_iface.h"
 
 thread_iface::thread_iface(iface_type_t _class_type, iface_name_t _object_name):
@@ -17,7 +19,7 @@ thread_iface::thread_iface(iface_type_t _class_type, iface_name_t _object_name):
     timestamp(0),
     buf(_class_type, _object_name)
 {
-
+    RTT_CREATE_LOG;
 }
 
 /**

@@ -1,8 +1,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <typeinfo>
+
 #include "misc.h"
 
+#include "rtt.h"
 #include "fifo.h"
 #include "msg_types.h"
 #include "bsp_io.h"
@@ -145,6 +148,8 @@ bsp_serial::bsp_serial(unit_t *_unit_ptr, fifo_buff * _buffer, iface_name_t _nam
     bsp_usart(_unit_ptr, IFACE_TYPE_UART, _name),
     buffer(_buffer)
 {
+    RTT_CREATE_LOG;
+    
     set_setting(_setting);
 }
 

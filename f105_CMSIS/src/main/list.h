@@ -12,7 +12,9 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <typeinfo>
 
+#include "rtt.h"
 #include "units_config.h"
 
 /**
@@ -84,6 +86,7 @@ template <const list_type_t list_type> cpp_list<list_type>::cpp_list(iface_type_
     class_type(_class_type),
     object_name(_object_name)
 {
+    RTT_CREATE_LOG;
     prev_pointer = last_pointer;
     last_pointer = this;
 };

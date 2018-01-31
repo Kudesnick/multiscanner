@@ -10,7 +10,9 @@
 #pragma once
 
 #include <stdbool.h>
+#include <typeinfo>
 
+#include "rtt.h"
 #include "list.h"
 #include "bsp_clk.h"
 
@@ -52,5 +54,7 @@ template <typename unit_t, typename message_t, typename settings_t> bsp_unit<uni
     unit_ptr(_unit_ptr),
     tx_empty(true)
 {
+    RTT_CREATE_LOG;
+    
     timer = timer_create();
 };

@@ -11,7 +11,9 @@
 #pragma once
 
 #include <stdint.h>
+#include <typeinfo>
 
+#include "rtt.h"
 #include "misc.h"
 
 /// “ип переменной - указател€ на длину массива буфера (ограничивает максимальный размер очереди)
@@ -76,6 +78,7 @@ template <typename data_t, const fifo_size_t count> cpp_fifo<data_t, count>::cpp
     head(0),
     end(0)
 {
+    RTT_CREATE_LOG;
 }
 
 /**

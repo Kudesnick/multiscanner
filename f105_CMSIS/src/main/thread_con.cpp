@@ -22,7 +22,7 @@ class msg_buf : public cpp_fifo<char, FIFO_SIZE_256>
     private:
     protected:
     public:
-        msg_buf(void): cpp_fifo(){};
+        msg_buf(void): cpp_fifo(){RTT_CREATE_LOG};
         void add_str(const char * str)
         {
             if (str != NULL)
@@ -156,6 +156,7 @@ thread_con::thread_con(void (* _parse)(char * str)):
     unit(CON_UNIT, &con_buf),
     parse(_parse)
 {
+    RTT_CREATE_LOG;
 };
 
 void thread_con::set_parser(void (* _parse)(char * str))
