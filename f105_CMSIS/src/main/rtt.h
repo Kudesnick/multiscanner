@@ -12,7 +12,7 @@
 
 #pragma once
 
-#ifdef DEBUG
+#ifdef RTT
     #define RTT_CREATE_LOG {rtt::send("Obj was created: \"");rtt::send(typeid(*this).name());rtt::send("\"\r\n");}
 #else
     #define RTT_CREATE_LOG {}

@@ -20,7 +20,7 @@ int rtt::buf_create = SEGGER_RTT_ConfigUpBuffer(0, NULL, NULL, 0, SEGGER_RTT_MOD
 
 void rtt::send(const char * str)
 {
-#ifdef DEBUG
+#ifdef RTT
     SEGGER_RTT_WriteString(0, str);
 #endif
 };
