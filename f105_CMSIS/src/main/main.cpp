@@ -13,7 +13,7 @@
 
 int main(void)
 {
-    rtt::send("Main function runing.\r\n");
+    rtt::send("function runing: \"main\"\r\n");
     
     return cpp_multiscanner::routine();
 };
